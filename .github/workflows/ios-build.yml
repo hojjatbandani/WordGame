@@ -1,0 +1,64 @@
+name: iOS Build
+
+# يبني نسخة iOS تلقائيا على خوادم macOS المجانية من GitHub — لا حاجة لجهاز Mac.
+# بدون توقيع (no-codesign) لأن التوقيع يتطلب حساب Apple Developer وشهادات؛
+# الناتج ملف .app يعمل فقط على المحاكي، وهو كاف للتحقق من نجاح البناء.
+#
+# لتوليد IPA قابل للتثبيت على جهاز حقيقي أو رفعه إلى App Store، راجع
+# التعليقات أسفل الملف حول إضافة أسرار التوقيع (Signing Secrets).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: # يسمح بتشغيل يدوي من تبويب Actions في GitHub
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: 'stable'
+          cache: true
+
+      - run: flutter pub get
+
+      - run: flutter analyze
+
+      - run: flutter test
+
+      - name: Build unsigned iOS app
+        run: flutter build ios --release --no-codesign
+
+      - name: Zip the .app bundle
+        run: |
+          cd build/ios/iphoneos
+          zip -r Huruf-ios-unsigned.zip Runner.app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: huruf-ios-unsigned
+          path: build/ios/iphoneos/Huruf-ios-unsigned.zip
+          retention-days: 14
+
+# ─────────────────────────────────────────────────────────────
+# لتوليد IPA موقّع (قابل للتثبيت على جهاز حقيقي أو النشر في App Store):
+#
+# 1. في Apple Developer، أنشئ App ID وشهادة توزيع (Distribution
+#    Certificate) وملف تعريف (Provisioning Profile).
+# 2. صدّر الشهادة كملف .p12 وشفّرها بكلمة مرور.
+# 3. أضف في إعدادات المستودع على GitHub (Settings → Secrets → Actions):
+#      IOS_CERTIFICATE_BASE64       (محتوى ملف .p12 بترميز base64)
+#      IOS_CERTIFICATE_PASSWORD
+#      IOS_PROVISION_PROFILE_BASE64 (محتوى ملف .mobileprovision بترميز base64)
+#      APPSTORE_ISSUER_ID / APPSTORE_KEY_ID / APPSTORE_PRIVATE_KEY (لو رفع تلقائي لـ App Store Connect)
+# 4. استبدل خطوة "Build unsigned iOS app" أعلاه بخطوات استيراد الشهادة
+#    وملف التعريف إلى Keychain، ثم:
+#      flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+#
+# هذا الجزء يُضاف لاحقا عند توفر حساب Apple Developer.
