@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>حروف — لعبة كلمات عربية ممتعة | 500 مرحلة مجانية</title>
+  <meta name="description" content="حروف: لعبة كلمات عربية مجانية. اسحب على عجلة الحروف وكوّن الكلمات عبر 500 مرحلة في 8 عوالم مرسومة، مع 62 تحديا من الأمثال العربية والخليجية وأبيات الشعر. تعمل بدون إنترنت وبدون تسجيل." />
+  <meta name="theme-color" content="#0a0e27" />
+  <meta name="color-scheme" content="dark" />
+  <!-- الروابط المطلقة على GitHub Pages؛ عند ربط نطاق خاص استبدلها (راجع README.md) -->
+  <link rel="canonical" href="https://hojjatbandani.github.io/huruf/" />
+  <link rel="alternate" hreflang="ar" href="https://hojjatbandani.github.io/huruf/" />
+  <link rel="alternate" hreflang="en" href="https://hojjatbandani.github.io/huruf/en.html" />
+  <link rel="alternate" hreflang="x-default" href="https://hojjatbandani.github.io/huruf/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="حروف" />
+  <meta property="og:locale" content="ar_AR" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:title" content="حروف — اسحب الحروف واكتشف الكلمات" />
+  <meta property="og:description" content="500 مرحلة و8 عوالم و62 تحديا لغويا من الأمثال والشعر. لعبة كلمات عربية مجانية تعمل بدون إنترنت." />
+  <meta property="og:url" content="https://hojjatbandani.github.io/huruf/" />
+  <meta property="og:image" content="https://hojjatbandani.github.io/huruf/graphics/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="شعار لعبة حروف مع عجلة الحروف وشخصية العبقري الصغير" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://hojjatbandani.github.io/huruf/graphics/og-image.png" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icon-32.png" />
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png" />
+  <link rel="preload" href="assets/fonts/IRANSans_Bold.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "MobileApplication",
+        "@id": "https://hojjatbandani.github.io/huruf/#app",
+        "name": "حروف",
+        "alternateName": "Huruf",
+        "applicationCategory": "GameApplication",
+        "applicationSubCategory": "لعبة كلمات",
+        "operatingSystem": "Android",
+        "inLanguage": "ar",
+        "url": "https://hojjatbandani.github.io/huruf/",
+        "image": "https://hojjatbandani.github.io/huruf/assets/img/icon-512.png",
+        "installUrl": "https://play.google.com/store/apps/details?id=com.huruf.huruf",
+        "description": "لعبة كلمات عربية: اسحب على عجلة الحروف وكوّن الكلمات عبر 500 مرحلة في 8 عوالم مرسومة، مع 62 تحديا من الأمثال العربية والخليجية وأبيات الشعر.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://hojjatbandani.github.io/huruf/#faq",
+        "inLanguage": "ar",
+        "mainEntity": [
+          { "@type": "Question", "name": "هل لعبة حروف مجانية؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، حروف مجانية بالكامل، والمراحل الخمسمئة كلها متاحة دون دفع. تكسب العملات باللعب وبالمكافأة اليومية وعجلة الحظ، ويمكنك مشاهدة فيديو اختياري لمكافأة إضافية. وتحتوي اللعبة على إعلانات مناسبة للعائلة." } },
+          { "@type": "Question", "name": "هل تتوفّر حروف بالإنجليزية؟", "acceptedAnswer": { "@type": "Answer", "text": "يمكن تحويل قوائم اللعبة إلى الإنجليزية، أما الألغاز نفسها فبالعربية دائما، فهي لعبة كلمات عربية." } },
+          { "@type": "Question", "name": "هل تعمل حروف بدون إنترنت؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، كل المراحل والتحديات اللغوية تعمل بدون اتصال، فتلعب في الطائرة أو في أي مكان." } },
+          { "@type": "Question", "name": "هل أحتاج إلى حساب للعب؟", "acceptedAnswer": { "@type": "Answer", "text": "لا. تبدأ اللعب فورا دون تسجيل ولا استمارات، ويمكنك اختياريا ربط Google Play Games لحفظ إنجازاتك." } },
+          { "@type": "Question", "name": "هل اللعبة مناسبة للأطفال؟", "acceptedAnswer": { "@type": "Answer", "text": "صُمّمت حروف لتناسب العائلة كلها: محتوى لغوي هادف بلا عنف، وإعلانات مضبوطة على فئة المحتوى العامة يمكن إغلاقها خلال ثوانٍ." } },
+          { "@type": "Question", "name": "هل تساعد حروف على تعلّم العربية؟", "acceptedAnswer": { "@type": "Answer", "text": "توسّع حصيلتك اللغوية لأن كل كلمة صحيحة تظهر مع معناها، وتعرّفك بالأمثال العربية والخليجية وأبيات الشعر. وهي أنسب لمن يقرأ الحرف العربي." } },
+          { "@type": "Question", "name": "كم عدد المراحل في حروف؟", "acceptedAnswer": { "@type": "Answer", "text": "500 مرحلة في 8 عوالم، تتراوح عجلة الحروف فيها بين 3 و8 حروف، إضافة إلى 62 تحديا لغويا خاصا." } },
+          { "@type": "Question", "name": "على أي أجهزة تعمل حروف؟", "acceptedAnswer": { "@type": "Answer", "text": "حروف متاحة الآن على أجهزة أندرويد عبر متجر Google Play." } }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script>document.documentElement.classList.remove("no-js");</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+
+  <!-- ═══════════════════════════ Navigation ═══════════════════════════ -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a class="brand" href="#top" aria-label="حروف — الصفحة الرئيسية">
+        <img src="assets/img/icon-192.png" alt="" width="40" height="40" />
+        <span class="gold-text">حروف</span>
+      </a>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="#how">طريقة اللعب</a></li>
+        <li><a href="#worlds">العوالم</a></li>
+        <li><a href="#challenges">التحديات</a></li>
+        <li><a href="#features">المزايا</a></li>
+        <li><a href="#faq">أسئلة شائعة</a></li>
+      </ul>
+      <div class="nav__actions">
+        <a class="lang-switch" href="en.html" hreflang="en" lang="en">EN</a>
+        <a class="btn btn-gold" href="https://play.google.com/store/apps/details?id=com.huruf.huruf" rel="noopener">حمّل مجانا</a>
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="القائمة">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ═══════════════════════════ Hero ═══════════════════════════ -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="pattern" aria-hidden="true"></div>
+      <div class="stars" aria-hidden="true"></div>
+      <div class="floating-letters" aria-hidden="true"></div>
+      <svg class="moon" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="moon-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE082" /><stop offset="1" stop-color="#F4C430" /></linearGradient>
+        </defs>
+        <path d="M44 6a28 28 0 1 0 14 40A24 24 0 0 1 44 6z" fill="url(#moon-g)" />
+      </svg>
+
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <span class="eyebrow">لعبة كلمات عربية · مجانية</span>
+          <h1 id="hero-title">اسحب الحروف…<br /><span class="gold-text">واكتشف الكلمات</span></h1>
+          <p class="hero__lead">
+            لغزٌ ممتع لعقلك بلغة الضاد. مرّر إصبعك على عجلة الحروف، كوّن الكلمات المخبّأة،
+            وارحل عبر ثمانية عوالم مرسومة — من الواحة إلى الديوان — مع أمثال عربية وأبيات من الشعر
+            تزيّن الطريق.
+          </p>
+          <div class="hero__ctas">
+            <a class="btn btn-gold btn-store" href="https://play.google.com/store/apps/details?id=com.huruf.huruf" rel="noopener">
+              <svg class="store-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.6 2.3a1.6 1.6 0 0 0-.6 1.3v16.8c0 .5.2 1 .6 1.3l9.3-9.7-9.3-9.7zm10.7 8.2 2.6-2.7L6.3 1.3l9 9.2zm0 3-9 9.2 11.6-6.5-2.6-2.7zm4.5-4.6-2.9-1.6-2.8 2.9 2.8 2.9 2.9-1.6c.8-.5.8-2.1 0-2.6z" /></svg>
+              <span><small>حمّلها من</small><strong>Google Play</strong></span>
+            </a>
+            <a class="btn btn-ghost" href="#worlds">تعرّف على العوالم</a>
+          </div>
+          <ul class="trust">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>تعمل بدون إنترنت</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>بدون تسجيل</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>مناسبة لكل العائلة</li>
+          </ul>
+        </div>
+
+        <!-- عرض حيّ قابل للعب: نفس آلية اللعبة على مرحلة من ثلاث كلمات -->
+        <div class="hero__visual">
+          <div class="hero__glow" aria-hidden="true"></div>
+          <div class="phone">
+            <div class="phone__screen demo" id="demo" data-lang="ar" data-bonus-label="كلمة إضافية" data-bonus="محل:المكان والدكّان|لمح:نظر نظرة خاطفة|حمل:رفع الشيء ونقله">
+              <div class="demo__top">
+                <span class="demo__coins"><img src="assets/img/icons/coin.webp" alt="" width="18" height="18" /><span id="demo-coins">120</span></span>
+                <span>جرّبها هنا</span>
+              </div>
+              <div class="demo__board" aria-live="polite">
+                <div class="demo__word" data-word="حلم" data-meaning="ما يُرى في النوم"><span class="demo__tile"></span><span class="demo__tile"></span><span class="demo__tile"></span></div>
+                <div class="demo__word" data-word="ملح" data-meaning="ما يطيب به الطعام"><span class="demo__tile"></span><span class="demo__tile"></span><span class="demo__tile"></span></div>
+                <div class="demo__word" data-word="لحم" data-meaning="غذاءٌ من الأنعام والطيور"><span class="demo__tile"></span><span class="demo__tile"></span><span class="demo__tile"></span></div>
+              </div>
+              <p class="demo__meaning" id="demo-meaning" aria-live="polite"></p>
+              <div class="demo__preview" id="demo-preview" aria-hidden="true"></div>
+              <div class="demo__wheel" id="demo-wheel" role="group" aria-label="عجلة الحروف: اضغط الحروف بالترتيب لتكوين كلمة">
+                <svg class="demo__lines" id="demo-lines" viewBox="0 0 100 100" aria-hidden="true"></svg>
+                <button class="demo__letter" type="button" data-letter="م">م</button>
+                <button class="demo__letter" type="button" data-letter="ل">ل</button>
+                <button class="demo__letter" type="button" data-letter="ح">ح</button>
+                <button class="demo__tool" type="button" id="demo-shuffle" aria-label="اخلط الحروف">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" /></svg>
+                </button>
+              </div>
+              <p class="demo__hint-text" id="demo-hint">اسحب إصبعك على الحروف لتكوين كلمة</p>
+              <div class="demo__win" id="demo-win" role="dialog" aria-modal="false" aria-labelledby="demo-win-title">
+                <div class="demo__win-stars" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 2 3 6.6 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.2l1.5-7L2 9.4l7-.8z" /></svg>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 2 3 6.6 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.2l1.5-7L2 9.4l7-.8z" /></svg>
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 2 3 6.6 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21.2l1.5-7L2 9.4l7-.8z" /></svg>
+                </div>
+                <h3 id="demo-win-title" class="gold-text">أحسنت!</h3>
+                <p>وجدت الكلمات الثلاث. هذه مرحلة واحدة من 500 مرحلة بانتظارك في حروف.</p>
+                <a class="btn btn-gold" href="https://play.google.com/store/apps/details?id=com.huruf.huruf" rel="noopener">حمّل اللعبة مجانا</a>
+                <button class="btn btn-ghost" type="button" id="demo-replay">العب مرة أخرى</button>
+              </div>
+            </div>
+          </div>
+          <div class="hero__guide" aria-hidden="true">
+            <div class="bubble">هيا نلعب! الحروف بانتظارك</div>
+            <img src="assets/img/chars/little_genius.webp" alt="" width="190" height="190" />
+          </div>
+        </div>
+      </div>
+
+      <svg class="dunes" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 120c160-60 300-70 440-30s250 70 420 20 330-110 580-40v150H0z" fill="#141a3a" />
+        <path d="M0 160c200-50 380-40 560 0s340 50 520 10 260-60 360-40v110H0z" fill="#171d40" />
+        <path d="M0 190c240-30 480-20 720 5s460 20 720-15v40H0z" fill="#1a1f3a" />
+      </svg>
+    </section>
+
+    <!-- ═══════════════════════════ Stats ═══════════════════════════ -->
+    <section class="stats" aria-label="أرقام اللعبة">
+      <div class="container">
+        <ul class="stats__grid reveal">
+          <li><span class="stat__num gold-text" data-count="500">500</span><span class="stat__label">مرحلة</span></li>
+          <li><span class="stat__num gold-text" data-count="8">8</span><span class="stat__label">عوالم مرسومة</span></li>
+          <li><span class="stat__num gold-text" data-count="62">62</span><span class="stat__label">تحديا لغويا</span></li>
+          <li><span class="stat__num gold-text" data-count="2800" data-prefix="+">+2800</span><span class="stat__label">كلمة عربية</span></li>
+          <li><span class="stat__num gold-text" data-count="9">9</span><span class="stat__label">شخصيات</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ How to play ═══════════════════════════ -->
+    <section class="section" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">طريقة اللعب</span>
+          <h2 id="how-title">سهلة من أول دقيقة، ممتعة حتى آخر مرحلة</h2>
+          <p>ثلاث خطوات فقط، وكل مرحلة تضيف كلمات جديدة إلى حصيلتك.</p>
+        </header>
+        <div class="steps">
+          <article class="step reveal">
+            <svg class="step__art" viewBox="0 0 300 150" aria-hidden="true">
+              <circle cx="150" cy="75" r="60" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" />
+              <polyline points="150,38 190,95 110,95" fill="none" stroke="#F4C430" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+              <g font-family="IRANSans, sans-serif" font-weight="700" font-size="22" text-anchor="middle" dominant-baseline="central">
+                <circle cx="150" cy="38" r="19" fill="#F4C430" /><text x="150" y="40" fill="#241a00">ع</text>
+                <circle cx="190" cy="95" r="19" fill="#F4C430" /><text x="190" y="97" fill="#241a00">ل</text>
+                <circle cx="110" cy="95" r="19" fill="#F4C430" /><text x="110" y="97" fill="#241a00">م</text>
+              </g>
+              <circle cx="122" cy="112" r="11" fill="#fff" opacity=".85" />
+              <circle cx="122" cy="112" r="20" fill="none" stroke="#fff" opacity=".25" />
+            </svg>
+            <h3>اسحب على العجلة</h3>
+            <p>مرّر إصبعك على الحروف بالترتيب لتكوّن كلمة، وبالسرعة التي تناسبك.</p>
+          </article>
+          <article class="step reveal" style="--delay: 0.1s">
+            <svg class="step__art" viewBox="0 0 300 150" aria-hidden="true">
+              <defs>
+                <linearGradient id="tile-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE082" /><stop offset=".55" stop-color="#F4C430" /><stop offset="1" stop-color="#C99A10" /></linearGradient>
+              </defs>
+              <g font-family="IRANSans, sans-serif" font-weight="700" font-size="28" text-anchor="middle" dominant-baseline="central">
+                <rect x="176" y="40" width="50" height="50" rx="12" fill="url(#tile-g)" /><text x="201" y="67" fill="#241a00">ع</text>
+                <rect x="125" y="40" width="50" height="50" rx="12" fill="url(#tile-g)" /><text x="150" y="67" fill="#241a00">ل</text>
+                <rect x="74" y="40" width="50" height="50" rx="12" fill="url(#tile-g)" /><text x="99" y="67" fill="#241a00">م</text>
+              </g>
+              <text x="150" y="118" font-family="IRANSans, sans-serif" font-size="15" fill="#9AA0BE" text-anchor="middle" direction="rtl">علم: معرفة الشيء على حقيقته</text>
+              <g fill="#FFE082"><path d="M242 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" /><path d="M58 92l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" /></g>
+            </svg>
+            <h3>اكتشف الكلمة ومعناها</h3>
+            <p>كل كلمة صحيحة تملأ مكانها في اللوح ويظهر معناها، فتتعلّم وأنت تلعب.</p>
+          </article>
+          <article class="step reveal" style="--delay: 0.2s">
+            <svg class="step__art" viewBox="0 0 300 150" aria-hidden="true">
+              <g>
+                <rect x="96" y="26" width="30" height="30" rx="8" fill="url(#tile-g)" /><rect x="128" y="26" width="30" height="30" rx="8" fill="url(#tile-g)" /><rect x="160" y="26" width="30" height="30" rx="8" fill="url(#tile-g)" />
+                <rect x="80" y="60" width="30" height="30" rx="8" fill="#232A4D" /><rect x="112" y="60" width="30" height="30" rx="8" fill="url(#tile-g)" /><rect x="144" y="60" width="30" height="30" rx="8" fill="url(#tile-g)" /><rect x="176" y="60" width="30" height="30" rx="8" fill="#232A4D" />
+                <rect x="96" y="94" width="30" height="30" rx="8" fill="#232A4D" /><rect x="128" y="94" width="30" height="30" rx="8" fill="#232A4D" /><rect x="160" y="94" width="30" height="30" rx="8" fill="#232A4D" /><rect x="192" y="94" width="30" height="30" rx="8" fill="#232A4D" />
+              </g>
+              <g fill="#F4C430">
+                <path d="m246 40 4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" />
+                <circle cx="56" cy="104" r="12" fill="#F4C430" /><text x="56" y="105" font-family="IRANSans, sans-serif" font-weight="700" font-size="13" fill="#241a00" text-anchor="middle" dominant-baseline="central">+</text>
+              </g>
+            </svg>
+            <h3>أكمل اللوح وانطلق</h3>
+            <p>اجمع العملات، استعن بالتلميحات عند الحاجة، وافتح العالم التالي.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Worlds ═══════════════════════════ -->
+    <section class="section section--alt" id="worlds" aria-labelledby="worlds-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">العوالم</span>
+          <h2 id="worlds-title">ثمانية عوالم، ولكل عالم سحره</h2>
+          <p>رحلة من 500 مرحلة تتصاعد صعوبتها بهدوء، وكل عالم يضيف أسلوب لعب جديدا ومرشدا يرافقك.</p>
+        </header>
+        <div class="worlds">
+          <article class="world reveal" style="--world-accent: #34E89E">
+            <img class="world__bg" src="assets/img/worlds/forest.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 1</span>
+            <img class="world__guide" src="assets/img/chars/little_genius.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>البداية</h3>
+            <p>بداية الرحلة</p>
+            <span class="world__mechanic">العجلة الأساسية</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #FF6B9D; --delay: .05s">
+            <img class="world__bg" src="assets/img/worlds/valley.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 2</span>
+            <img class="world__guide" src="assets/img/chars/clever_girl.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>الواحة</h3>
+            <p>استرح واسقِ عقلك بالكلمات</p>
+            <span class="world__mechanic">جرّة الكلمات الإضافية</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #6FB7D9; --delay: .1s">
+            <img class="world__bg" src="assets/img/worlds/mountains.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 3</span>
+            <img class="world__guide" src="assets/img/chars/young_man.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>السوق</h3>
+            <p>كلمات التجارة والثقافة</p>
+            <span class="world__mechanic">حروف مقفلة</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #9B59B6; --delay: .15s">
+            <img class="world__bg" src="assets/img/worlds/enchanted_forest.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 4</span>
+            <img class="world__guide" src="assets/img/chars/young_woman.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>المدينة</h3>
+            <p>أمثال المدينة</p>
+            <span class="world__mechanic">أكمل المثل</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #F4C430">
+            <img class="world__bg" src="assets/img/worlds/oasis.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 5</span>
+            <img class="world__guide" src="assets/img/chars/story_teller.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>الديوان</h3>
+            <p>شعر الديوان</p>
+            <span class="world__mechanic">أكمل البيت</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #4FC3F7; --delay: .05s">
+            <img class="world__bg" src="assets/img/worlds/desert_river.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 6</span>
+            <img class="world__guide" src="assets/img/chars/friendly_grandma.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>الخليج</h3>
+            <p>لهجة أهل الخليج</p>
+            <span class="world__mechanic">مراحل موقوتة</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #B388FF; --delay: .1s">
+            <img class="world__bg" src="assets/img/worlds/sunset_oasis.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 7</span>
+            <img class="world__guide" src="assets/img/chars/wise_oldman.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>أرض الحكمة</h3>
+            <p>خمّن من المعنى</p>
+            <span class="world__mechanic">خمّن من التعريف</span>
+          </article>
+          <article class="world reveal" style="--world-accent: #FF9F1C; --delay: .15s">
+            <img class="world__bg" src="assets/img/worlds/golden_city.webp" alt="" loading="lazy" width="560" height="560" />
+            <span class="world__num">العالم 8</span>
+            <img class="world__guide" src="assets/img/chars/challenger_boy.webp" alt="" loading="lazy" width="74" height="74" />
+            <h3>الأسطورة</h3>
+            <p>تحدٍّ أخير، بلا خلط</p>
+            <span class="world__mechanic">تحدٍّ مركّب</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Cinematic band ═══════════════════════════ -->
+    <section class="cinema" aria-labelledby="cinema-title">
+      <img class="cinema__bg" src="assets/img/hero-bg.webp" alt="" loading="lazy" width="1024" height="1024" />
+      <div class="container">
+        <div class="cinema__copy reveal">
+          <span class="eyebrow">رحلة في اللغة</span>
+          <h2 id="cinema-title">حروفٌ تضيء الطريق</h2>
+          <p>كلما حللت لغزا اقتربت خطوة من أسرار لغتنا الجميلة — من كلمات الحياة اليومية إلى أمثال الأجداد وأبيات الشعر الخالد.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Challenges ═══════════════════════════ -->
+    <section class="section" id="challenges" aria-labelledby="challenges-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">تحدّيات لغوية</span>
+          <h2 id="challenges-title">أكثر من مجرد لعبة كلمات</h2>
+          <p>62 تحديا خاصا تصلك بالثقافة التي وراء الكلمات.</p>
+        </header>
+        <div class="challenges">
+          <div class="challenge-cards">
+            <article class="challenge-card reveal">
+              <img src="assets/img/icons/challenge_proverb.webp" alt="" loading="lazy" width="64" height="64" />
+              <div><h3>أكمل المثل</h3><p><span class="count">22</span> مثلا عربيا بكلمة ناقصة</p></div>
+            </article>
+            <article class="challenge-card reveal" style="--delay: .05s">
+              <img src="assets/img/icons/challenge_gulf.webp" alt="" loading="lazy" width="64" height="64" />
+              <div><h3>أمثال خليجية</h3><p><span class="count">6</span> أمثال من أهل الخليج</p></div>
+            </article>
+            <article class="challenge-card reveal" style="--delay: .1s">
+              <img src="assets/img/icons/challenge_verse.webp" alt="" loading="lazy" width="64" height="64" />
+              <div><h3>أكمل البيت</h3><p><span class="count">12</span> بيتا من الشعر العربي</p></div>
+            </article>
+            <article class="challenge-card reveal" style="--delay: .15s">
+              <img src="assets/img/icons/challenge_word.webp" alt="" loading="lazy" width="64" height="64" />
+              <div><h3>خمّن الكلمة</h3><p><span class="count">22</span> كلمة أصيلة تُعرف من معناها</p></div>
+            </article>
+          </div>
+          <figure class="proverb reveal" id="proverb">
+            <figcaption class="proverb__label">أكمل المثل</figcaption>
+            <div class="proverb__tiles" aria-hidden="true"><span>ا</span><span>ل</span><span>ط</span><span>ي</span><span>و</span><span>ر</span></div>
+            <p class="proverb__line">على أشكالها تقع</p>
+            <p class="proverb__note">«الطيور على أشكالها تقع» — يُقال في تآلف المتشابهين.</p>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Characters ═══════════════════════════ -->
+    <section class="section section--alt" id="characters" aria-labelledby="cast-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">الشخصيات</span>
+          <h2 id="cast-title">رفاقٌ يشجّعونك في كل مرحلة</h2>
+          <p>تسع شخصيات من بيئتنا ترافقك بالنصائح والتشجيع طوال الرحلة.</p>
+        </header>
+        <ul class="cast">
+          <li class="reveal"><img src="assets/img/chars/puzzle_master.webp" alt="" loading="lazy" width="120" height="120" /><span>أبو الحروف</span></li>
+          <li class="reveal" style="--delay: .04s"><img src="assets/img/chars/little_genius.webp" alt="" loading="lazy" width="120" height="120" /><span>العبقري الصغير</span></li>
+          <li class="reveal" style="--delay: .08s"><img src="assets/img/chars/clever_girl.webp" alt="" loading="lazy" width="120" height="120" /><span>الذكية</span></li>
+          <li class="reveal" style="--delay: .12s"><img src="assets/img/chars/young_man.webp" alt="" loading="lazy" width="120" height="120" /><span>الشاب</span></li>
+          <li class="reveal" style="--delay: .16s"><img src="assets/img/chars/young_woman.webp" alt="" loading="lazy" width="120" height="120" /><span>الشابة</span></li>
+          <li class="reveal" style="--delay: .2s"><img src="assets/img/chars/story_teller.webp" alt="" loading="lazy" width="120" height="120" /><span>الحكواتي</span></li>
+          <li class="reveal" style="--delay: .24s"><img src="assets/img/chars/friendly_grandma.webp" alt="" loading="lazy" width="120" height="120" /><span>الجدة</span></li>
+          <li class="reveal" style="--delay: .28s"><img src="assets/img/chars/wise_oldman.webp" alt="" loading="lazy" width="120" height="120" /><span>الحكيم</span></li>
+          <li class="reveal" style="--delay: .32s"><img src="assets/img/chars/challenger_boy.webp" alt="" loading="lazy" width="120" height="120" /><span>المتحدي</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Features ═══════════════════════════ -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">المزايا</span>
+          <h2 id="features-title">كل ما يجعلك تعود كل يوم</h2>
+        </header>
+        <div class="features">
+          <article class="feature reveal">
+            <div class="feature__icon"><img src="assets/img/icons/dice.webp" alt="" loading="lazy" width="40" height="40" /></div>
+            <h3>عجلة الحظ اليومية</h3>
+            <p>دورة مجانية كل يوم وجوائز من العملات.</p>
+          </article>
+          <article class="feature reveal" style="--delay: .05s">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 3 5 4.5 5 9a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-7.5z" /></svg></div>
+            <h3>مكافآت وسلسلة أيام</h3>
+            <p>مكافأة يومية تكبر كلما واصلت اللعب أياما متتالية.</p>
+          </article>
+          <article class="feature reveal" style="--delay: .1s">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4" /></svg></div>
+            <h3>إنجازات تُحفظ</h3>
+            <p>إنجازات تتابع تقدّمك، مع حفظها في Google Play Games.</p>
+          </article>
+          <article class="feature reveal" style="--delay: .15s">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" /></svg></div>
+            <h3>تلميحات عند التعثّر</h3>
+            <p>اكشف حرفا أو اطلب مساعدة دون أن تفسد متعة الحل.</p>
+          </article>
+          <article class="feature reveal">
+            <div class="feature__icon"><img src="assets/img/icons/gems.webp" alt="" loading="lazy" width="40" height="40" /></div>
+            <h3>جرّة الكلمات الإضافية</h3>
+            <p>كل كلمة إضافية تجدها تملأ الجرّة بالمكافآت.</p>
+          </article>
+          <article class="feature reveal" style="--delay: .05s">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h6v18H6a2 2 0 0 1-2-2zM12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /><path d="M7.5 8h2M14.5 8h2M14.5 12h2" /></svg></div>
+            <h3>معنى كل كلمة</h3>
+            <p>كل كلمة صحيحة تظهر مع معناها، فتكبر حصيلتك بلا جهد.</p>
+          </article>
+          <article class="feature reveal" style="--delay: .1s">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2" /><rect x="13" y="3" width="8" height="8" rx="2" /><rect x="3" y="13" width="8" height="8" rx="2" /><rect x="13" y="13" width="8" height="8" rx="2" /></svg></div>
+            <h3>ودجة الشاشة الرئيسية</h3>
+            <p>تابع مكافآتك اليومية من شاشة هاتفك مباشرة.</p>
+          </article>
+          <article class="feature reveal" style="--delay: .15s">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 4.2-2.6M10.5 5.1A15 15 0 0 1 22 8.8M5 12.6a10 10 0 0 1 3-1.8M16.2 11.4A10 10 0 0 1 19 12.6M8.5 16.4a5 5 0 0 1 7 0M12 20h.01M3 3l18 18" /></svg></div>
+            <h3>بدون إنترنت ولا تسجيل</h3>
+            <p>العب في أي مكان، دون حساب ولا استمارات.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Screenshots ═══════════════════════════ -->
+    <section class="section section--alt" id="screens" aria-labelledby="screens-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">من داخل اللعبة</span>
+          <h2 id="screens-title">لقطات من حروف</h2>
+        </header>
+      </div>
+      <ul class="shots" tabindex="0" aria-label="لقطات شاشة، مرّر أفقيا">
+        <li><figure><img src="assets/img/shots/home.webp" alt="الشاشة الرئيسية في حروف مع زر تابع اللعب وسلسلة الأيام" loading="lazy" width="540" height="960" /><figcaption>الشاشة الرئيسية</figcaption></figure></li>
+        <li><figure><img src="assets/img/shots/progress.webp" alt="شاشة اللعب: كلمات محلولة بالذهبي وعجلة الحروف" loading="lazy" width="540" height="960" /><figcaption>اللعب ومعنى الكلمة</figcaption></figure></li>
+        <li><figure><img src="assets/img/shots/worlds.webp" alt="قائمة العوالم مع شخصيات المرشدين" loading="lazy" width="540" height="960" /><figcaption>العوالم</figcaption></figure></li>
+        <li><figure><img src="assets/img/shots/complete.webp" alt="شاشة إتمام المرحلة والجوائز" loading="lazy" width="540" height="960" /><figcaption>إتمام المرحلة</figcaption></figure></li>
+        <li><figure><img src="assets/img/shots/challenge.webp" alt="تحدي أكمل المثل" loading="lazy" width="540" height="960" /><figcaption>أكمل المثل</figcaption></figure></li>
+        <li><figure><img src="assets/img/shots/wheel.webp" alt="عجلة الحظ اليومية" loading="lazy" width="540" height="960" /><figcaption>عجلة الحظ</figcaption></figure></li>
+        <li><figure><img src="assets/img/shots/achievements.webp" alt="شاشة الإنجازات" loading="lazy" width="540" height="960" /><figcaption>الإنجازات</figcaption></figure></li>
+      </ul>
+    </section>
+
+    <!-- ═══════════════════════════ FAQ ═══════════════════════════ -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <header class="section__head reveal">
+          <span class="eyebrow">أسئلة شائعة</span>
+          <h2 id="faq-title">كل ما تريد معرفته</h2>
+        </header>
+        <div class="faq reveal">
+          <details open><summary>هل لعبة حروف مجانية؟</summary><p>نعم، حروف مجانية بالكامل، والمراحل الخمسمئة كلها متاحة دون دفع. تكسب العملات باللعب وبالمكافأة اليومية وعجلة الحظ، ويمكنك مشاهدة فيديو اختياري لمكافأة إضافية. وتحتوي اللعبة على إعلانات مناسبة للعائلة.</p></details>
+          <details><summary>هل تتوفّر حروف بالإنجليزية؟</summary><p>يمكن تحويل قوائم اللعبة إلى الإنجليزية، أما الألغاز نفسها فبالعربية دائما، فهي لعبة كلمات عربية.</p></details>
+          <details><summary>هل تعمل حروف بدون إنترنت؟</summary><p>نعم، كل المراحل والتحديات اللغوية تعمل بدون اتصال، فتلعب في الطائرة أو في أي مكان.</p></details>
+          <details><summary>هل أحتاج إلى حساب للعب؟</summary><p>لا. تبدأ اللعب فورا دون تسجيل ولا استمارات، ويمكنك اختياريا ربط Google Play Games لحفظ إنجازاتك.</p></details>
+          <details><summary>هل اللعبة مناسبة للأطفال؟</summary><p>صُمّمت حروف لتناسب العائلة كلها: محتوى لغوي هادف بلا عنف، وإعلانات مضبوطة على فئة المحتوى العامة يمكن إغلاقها خلال ثوانٍ.</p></details>
+          <details><summary>هل تساعد حروف على تعلّم العربية؟</summary><p>توسّع حصيلتك اللغوية لأن كل كلمة صحيحة تظهر مع معناها، وتعرّفك بالأمثال العربية والخليجية وأبيات الشعر. وهي أنسب لمن يقرأ الحرف العربي.</p></details>
+          <details><summary>كم عدد المراحل في حروف؟</summary><p>500 مرحلة في 8 عوالم، تتراوح عجلة الحروف فيها بين 3 و8 حروف، إضافة إلى 62 تحديا لغويا خاصا.</p></details>
+          <details><summary>على أي أجهزة تعمل حروف؟</summary><p>حروف متاحة الآن على أجهزة أندرويد عبر متجر Google Play.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ Final CTA ═══════════════════════════ -->
+    <section class="section" aria-labelledby="cta-title" style="padding-top: 0">
+      <div class="container">
+        <div class="cta reveal">
+          <div class="pattern" aria-hidden="true"></div>
+          <div class="cta__grid">
+            <div>
+              <h2 id="cta-title">جاهز لأول <span class="gold-text">كلمة</span>؟</h2>
+              <p>حمّل حروف مجانا وابدأ رحلتك في 500 مرحلة من الكلمات العربية.</p>
+              <a class="btn btn-gold btn-store" href="https://play.google.com/store/apps/details?id=com.huruf.huruf" rel="noopener">
+                <svg class="store-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.6 2.3a1.6 1.6 0 0 0-.6 1.3v16.8c0 .5.2 1 .6 1.3l9.3-9.7-9.3-9.7zm10.7 8.2 2.6-2.7L6.3 1.3l9 9.2zm0 3-9 9.2 11.6-6.5-2.6-2.7zm4.5-4.6-2.9-1.6-2.8 2.9 2.8 2.9 2.9-1.6c.8-.5.8-2.1 0-2.6z" /></svg>
+                <span><small>حمّلها من</small><strong>Google Play</strong></span>
+              </a>
+            </div>
+            <img class="cta__art" src="assets/img/logo-boy.webp" alt="" loading="lazy" width="230" height="230" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a class="brand" href="#top"><img src="assets/img/icon-192.png" alt="" width="40" height="40" loading="lazy" /><span class="gold-text">حروف</span></a>
+      <nav aria-label="روابط التذييل">
+        <a href="https://play.google.com/store/apps/details?id=com.huruf.huruf" rel="noopener">Google Play</a>
+        <a href="#faq">أسئلة شائعة</a>
+        <a href="en.html" hreflang="en" lang="en">English</a>
+      </nav>
+      <p>© <span id="year">2026</span> حروف · صُنعت بحبّ للغة العربية</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

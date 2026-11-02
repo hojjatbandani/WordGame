@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- الحجم الصغير (2×2): الطبقة المُبرَزة وحدها + السلسلة.
+
+     كل المحاذاة بـstart/end لا left/right، واتجاه التخطيط يُضبط وقت
+     التشغيل من لغة اللعبة لا من لغة النظام (راجع
+     HurufWidgetProvider.applyDirection): لاعب يلعب بالعربية على هاتف
+     إنجليزي يجب أن يرى ودجته عربية. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/huruf_widget_bg"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/huruf_text_secondary"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:text="@string/huruf_widget_name"/>
+
+    <TextView
+        android:id="@+id/widget_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/huruf_gold"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="start"/>
+
+    <TextView
+        android:id="@+id/widget_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/huruf_text_primary"
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="start"/>
+
+    <TextView
+        android:id="@+id/widget_streak"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/huruf_text_secondary"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="start"/>
+</LinearLayout>

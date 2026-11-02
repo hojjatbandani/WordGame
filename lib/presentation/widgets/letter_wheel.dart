@@ -72,7 +72,13 @@ class LetterWheelState extends State<LetterWheel>
     return center + Offset(cos(angle) * radius, sin(angle) * radius);
   }
 
-  double _tileRadius(Size size) => size.shortestSide * 0.115;
+  double _tileRadius(Size size) {
+    final base = size.shortestSide * 0.115;
+    final n = _letters.length;
+    // عجلات الكلمات الطويلة (حتى 10 حروف) تحتاج خانات أصغر كي لا تتراكب
+    if (n <= 6) return base;
+    return base * (6 / n).clamp(0.55, 1.0);
+  }
 
   void _handlePointer(Offset pos, Size size) {
     final hitRadius = _tileRadius(size) * 1.25;

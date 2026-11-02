@@ -4,7 +4,15 @@
     {
       "name": "huruf-web",
       "runtimeExecutable": "flutter",
-      "runtimeArgs": ["run", "-d", "web-server", "--web-port=8642", "--release"],
+      "runtimeArgs": [
+        "run",
+        "-d",
+        "web-server",
+        "--web-port=8642",
+        "--release",
+        "--dart-define=SUPABASE_URL=https://dgzaigukluaxjflzpnda.supabase.co",
+        "--dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_qWFBRdCaZbxGn0SOhP7ChA_QsTLyivC"
+      ],
       "port": 8642
     }
   ]

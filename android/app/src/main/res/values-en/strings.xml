@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="huruf_widget_name">Huruf</string>
+    <string name="huruf_widget_label">Huruf — Rewards</string>
+    <string name="huruf_widget_description">Track your daily, weekly and monthly rewards and your streak from the home screen.</string>
+</resources>

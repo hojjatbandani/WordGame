@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- نصوص يعرضها *النظام* لا التطبيق (منتقي الأدوات في الشاشة
+     الرئيسية)، فتتبع لغة الجهاز لا لغة اللعبة. القيم الافتراضية عربية
+     لأن اللعبة عربية أولا، وvalues-en تغطّي الأجهزة الإنجليزية.
+
+     كل ما تعرضه الودجة نفسها من نصوص يأتي من Flutter وقت التشغيل
+     (راجع lib/data/widget/widget_text.dart)، فلا يوجد هنا. -->
+<resources>
+    <string name="huruf_widget_name">حروف</string>
+    <string name="huruf_widget_label">حروف — المكافآت</string>
+    <string name="huruf_widget_description">تابع مكافآتك اليومية والأسبوعية والشهرية وسلسلتك من شاشتك الرئيسية.</string>
+</resources>

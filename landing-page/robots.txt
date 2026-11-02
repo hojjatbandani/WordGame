@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hojjatbandani.github.io/huruf/sitemap.xml

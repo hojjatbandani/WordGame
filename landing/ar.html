@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- ================================================== سيو أساسي -->
+    <title>حروف — لعبة كلمات عربية تقوّي ذكاءك وذاكرتك | 500 مرحلة</title>
+    <meta
+      name="description"
+      content="حروف: لعبة كلمات عربية تشحذ ذهنك. اسحب على عجلة الحروف عبر 500 مرحلة، وسّع حصيلتك اللغوية، وتعلّم أمثالا عربية وخليجية وأبياتا من الشعر الكلاسيكي. مجانية على أندرويد وآيفون، وتشتغل بدون نت."
+    />
+    <meta
+      name="keywords"
+      content="لعبة كلمات عربية, لعبة حروف, ألغاز كلمات, كلمات متقاطعة عربية, تحدي كلمات, ألعاب ذكاء عربية, تنمية الذكاء, تقوية الذاكرة, أمثال عربية, أمثال خليجية, شعر عربي, لعبة كلمات بدون نت, ألعاب عربية, وصلة كلمات, Arabic word game"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="author" content="حروف" />
+    <meta name="theme-color" content="#0A0E27" />
+
+    <!-- TODO(قبل النشر): استبدل huruf.game بنطاقك الحقيقي هنا وفي
+         robots.txt و sitemap.xml -->
+    <link rel="canonical" href="https://huruf.game/ar.html" />
+    <link rel="alternate" hreflang="ar" href="https://huruf.game/ar.html" />
+    <link rel="alternate" hreflang="en" href="https://huruf.game/" />
+    <link rel="alternate" hreflang="x-default" href="https://huruf.game/" />
+
+    <link rel="icon" href="assets/img/app_icon.png" />
+    <link rel="apple-touch-icon" href="assets/img/app_icon.png" />
+
+    <!-- ================================================== بطاقات التواصل -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="حروف" />
+    <meta property="og:locale" content="ar_SA" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content="https://huruf.game/ar.html" />
+    <meta property="og:title" content="حروف — لعبة كلمات عربية تقوّي ذكاءك وذاكرتك" />
+    <meta
+      property="og:description"
+      content="500 مرحلة و8 عوالم و62 تحديا من أمثال عربية وخليجية وشعر كلاسيكي. درّب عقلك وأنت تلعب. مجانية على أندرويد وآيفون."
+    />
+    <meta property="og:image" content="https://huruf.game/assets/img/golden_city.jpg" />
+    <meta property="og:image:width" content="720" />
+    <meta property="og:image:height" content="720" />
+    <meta property="og:image:alt" content="عالم مدينة القباب الذهبية في لعبة حروف" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="حروف — لعبة كلمات عربية تقوّي ذكاءك وذاكرتك" />
+    <meta
+      name="twitter:description"
+      content="اسحب على عجلة الحروف عبر 500 مرحلة عربية. وسّع حصيلتك، تعلّم الأمثال والشعر، وتحدَّ أصدقاءك."
+    />
+    <meta name="twitter:image" content="https://huruf.game/assets/img/golden_city.jpg" />
+
+    <!-- بدون الصنف js يبقى كل المحتوى ظاهرا حتى لو تعطّل جافاسكربت -->
+    <script>
+      document.documentElement.classList.add('js');
+    </script>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- ================================================== بيانات منظمة
+         تساعد جوجل على البطاقات الغنية، وتساعد مساعدات الذكاء الاصطناعي
+         على وصف اللعبة بدقة بدل التخمين.
+         ملاحظة: لا نضيف aggregateRating لأننا لا نملك تقييمات حقيقية بعد،
+         واختلاق التقييمات مخالف لإرشادات جوجل ومضلل للمستخدم. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "MobileApplication",
+            "@id": "https://huruf.game/#app",
+            "name": "حروف",
+            "alternateName": "Huruf",
+            "applicationCategory": "GameApplication",
+            "applicationSubCategory": "لعبة كلمات",
+            "genre": ["لعبة كلمات", "ألغاز", "تنمية ذكاء", "تعليمية"],
+            "operatingSystem": "Android, iOS",
+            "inLanguage": "ar",
+            "url": "https://huruf.game/ar.html",
+            "image": "https://huruf.game/assets/img/app_icon.png",
+            "description": "لعبة كلمات عربية تشحذ الذهن: اسحب على عجلة الحروف وكوّن كلمات عربية حقيقية عبر 500 مرحلة في 8 عوالم مرسومة، وحل 62 تحديا مبنيا على أمثال عربية وخليجية أصيلة وأبيات من الشعر الكلاسيكي.",
+            "installUrl": "https://play.google.com/store/apps/details?id=com.huruf.huruf",
+            "featureList": [
+              "500 مرحلة مضبوطة يدويا في 8 عوالم مرسومة",
+              "لعب بالسحب على عجلة حروف من 3 إلى 10 حروف",
+              "62 تحديا من أمثال عربية وخليجية وشعر كلاسيكي",
+              "تحدٍّ يومي مشترك بين كل اللاعبين مع سلسلة أيام",
+              "لوحة أصدقاء برموز نصية من ستة محارف",
+              "تحدٍّ ثنائي على نفس اللوح تماما",
+              "الحملة كاملة تشتغل بدون إنترنت",
+              "بدون تسجيل حساب"
+            ],
+            "offers": [
+              {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+                "description": "تحميل ولعب مجاني"
+              },
+              {
+                "@type": "Offer",
+                "price": "1.99",
+                "priceCurrency": "USD",
+                "name": "حزمة صغيرة — 500 نقطة"
+              },
+              {
+                "@type": "Offer",
+                "price": "4.99",
+                "priceCurrency": "USD",
+                "name": "حزمة متوسطة — 1,800 نقطة"
+              },
+              {
+                "@type": "Offer",
+                "price": "9.99",
+                "priceCurrency": "USD",
+                "name": "حزمة كبيرة — 5,200 نقطة"
+              },
+              {
+                "@type": "Offer",
+                "price": "19.99",
+                "priceCurrency": "USD",
+                "name": "الحزمة الأسطورية — 15,000 نقطة"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://huruf.game/#website-ar",
+            "url": "https://huruf.game/ar.html",
+            "name": "حروف",
+            "inLanguage": "ar",
+            "about": { "@id": "https://huruf.game/#app" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://huruf.game/ar.html#faq",
+            "inLanguage": "ar",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "هل لعبة حروف مجانية؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "إي، كل الـ500 مرحلة مجانية. ونقاط التلميحات تقدر تكسبها من داخل اللعبة بإنهاء المراحل أو من عجلة الحظ اليومية أو بمشاهدة فيديو، والشراء اختياري تماما."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "هل تقوّي لعبة حروف الذكاء والذاكرة؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "اللعبة مصمّمة كتمرين ذهني: تكوين الكلمات من حروف مبعثرة ينشّط الاسترجاع وتمييز الأنماط والتفكير في تركيب الحروف والتركيز المتواصل. وكل جلسة توسّع حصيلتك اللغوية لأن كل كلمة تأتي بمعناها من القاموس."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "هل أحتاج تسجيل حساب للعب؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "لا. اللعبة تشتغل على طول بدون تسجيل. والتحدي اليومي واللوحة والتحدي الثنائي ينشئون لك ملفا مجهولا تلقائيا — ما فيه أي استمارة تعبّيها."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "هل تشتغل لعبة حروف بدون إنترنت؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "إي. كل المراحل الـ500 والتحديات اللغوية الـ62 تشتغل بدون اتصال. الإنترنت مطلوب فقط للتحدي اليومي ولوحة الأصدقاء والتحدي الثنائي."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "كيف يشتغل التحدي اليومي؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "كل لاعب في العالم يجيه نفس اللغز كل يوم، وتقدر تلعبه مرة وحدة. إذا خلّصته أياما متتالية تكبر سلسلتك، وإذا فوّتّ يوما ترجع لواحد. واللغز يتغيّر منتصف الليل بتوقيت UTC."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "هل حروف مفيدة لتعلّم العربية؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "توسّع الحصيلة اللغوية وطلاقة القراءة، وتعلّم أمثالا عربية وخليجية أصيلة وأبياتا من الشعر الكلاسيكي. لكن الواجهة عربية بالكامل، فهي تناسب من يقرأ الحرف العربي أصلا أكثر من المبتدئ تماما."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "كيف أضيف صديق في لعبة حروف؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "كل لاعب عنده رمز من ستة محارف. أرسل رمزك كنص عادي في أي تطبيق، أو اكتب رمز صاحبك. بدون روابط ولا أذونات ولا وصول لجهات الاتصال."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "وش اللغات المدعومة في لعبة حروف؟",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "اللعبة عربية بالكامل، مكتوبة بلهجة خليجية ومصمّمة من اليمين لليسار في كل شاشاتها. ومفردات الألغاز نفسها بالفصحى."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- ==================================================== الترويسة -->
+    <header class="site-header">
+      <div class="container nav">
+        <a class="brand" href="#top" aria-label="الصفحة الرئيسية لحروف">
+          <img src="assets/img/app_icon.png" alt="أيقونة تطبيق حروف" width="38" height="38" />
+          <span>حروف</span>
+        </a>
+
+        <nav class="nav-links" aria-label="التنقل الرئيسي">
+          <a href="#game">اللعبة</a>
+          <a href="#brain">الذكاء والثقافة</a>
+          <a href="#worlds">العوالم</a>
+          <a href="#challenges">التحدّيات</a>
+          <a href="#faq">أسئلة</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="lang-switch" href="index.html" lang="en" hreflang="en">English</a>
+          <a class="btn btn-primary btn-sm" href="#download">حمّل مجانا</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- ==================================================== البطل -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">لعبة كلمات عربية · تمرين ذهني</span>
+            <h1 id="hero-title">لعبة الكلمات العربية اللي تشحذ ذهنك.</h1>
+            <p class="lead">
+              اسحب إصبعك على عجلة الحروف وطلّع كل الكلمات المخبّأة. 500 مرحلة
+              تدرّب ذاكرتك وتركيزك وتوسّع حصيلتك اللغوية — و62 تحديا مأخوذا من
+              أمثال عربية وخليجية أصيلة وأبيات من الشعر الكلاسيكي توصلك بالثقافة
+              اللي وراء الكلمات.
+            </p>
+
+            <div class="store-badges" style="margin-bottom: 1.6rem">
+              <a
+                class="store-badge"
+                href="https://play.google.com/store/apps/details?id=com.huruf.huruf"
+                rel="noopener"
+                aria-label="حمّل حروف من جوجل بلاي"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#EA4335" d="M3.6 1.8a1.9 1.9 0 0 0-.5 1.3v17.8c0 .5.2 1 .5 1.3l12-10.2z" />
+                  <path fill="#FBBC04" d="M19.9 10.3 16.4 8.3 12.6 12l3.8 3.7 3.5-2c1.1-.6 1.1-2.8 0-3.4z" />
+                  <path fill="#4285F4" d="m3.1 22.2 12.4-10.5 3.9 2.2c1.1.6 1.1 2 0 2.6L5.2 23.6c-.7.4-1.6.1-2.1-.6z" />
+                  <path fill="#34A853" d="M3.1 1.8 15.5 12.3 19.4 10c1.1-.6 1.1-2 0-2.6L5.2 1.2c-.7-.4-1.6-.1-2.1.6z" />
+                </svg>
+                <span class="store-text">
+                  <small>حمّلها من</small>
+                  <strong>Google Play</strong>
+                </span>
+              </a>
+
+              <!-- TODO(قبل النشر): استبدل id000000000 برقم التطبيق الذي
+                   تعطيه آبل بعد أول رفع للتطبيق. -->
+              <a
+                class="store-badge"
+                href="https://apps.apple.com/app/id000000000"
+                rel="noopener"
+                aria-label="حمّل حروف من آب ستور"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff">
+                  <path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.7.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.6.7 2.8.7c1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.4zM14.3 5.9c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z" />
+                </svg>
+                <span class="store-text">
+                  <small>حمّلها من</small>
+                  <strong>App Store</strong>
+                </span>
+              </a>
+            </div>
+
+            <p class="hero-note">
+              <span class="dot"></span>
+              مجانية · تشتغل بدون نت · بدون تسجيل حساب
+            </p>
+          </div>
+
+          <!-- محاكاة الجهاز مبنية بـ CSS بدل صورة ثقيلة -->
+          <div class="device" aria-hidden="true">
+            <div class="device-screen">
+              <span class="glow"></span>
+
+              <div class="mock-word">
+                <span class="mock-tile solved">س</span>
+                <span class="mock-tile solved">ر</span>
+                <span class="mock-tile solved">ا</span>
+                <span class="mock-tile solved">د</span>
+                <span class="mock-tile solved">م</span>
+              </div>
+              <div class="mock-word">
+                <span class="mock-tile solved">س</span>
+                <span class="mock-tile solved">ر</span>
+                <span class="mock-tile solved">د</span>
+                <span class="mock-tile solved">م</span>
+              </div>
+              <div class="mock-word">
+                <span class="mock-tile"></span>
+                <span class="mock-tile"></span>
+                <span class="mock-tile solved">ا</span>
+                <span class="mock-tile"></span>
+              </div>
+              <div class="mock-word">
+                <span class="mock-tile"></span>
+                <span class="mock-tile"></span>
+                <span class="mock-tile"></span>
+              </div>
+
+              <div class="mock-wheel">
+                <span class="mock-letter active">م</span>
+                <span class="mock-letter active">د</span>
+                <span class="mock-letter">ا</span>
+                <span class="mock-letter">ر</span>
+                <span class="mock-letter">س</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== الأرقام -->
+      <section class="stats" aria-label="حروف بالأرقام">
+        <div class="container">
+          <div class="stats-grid reveal">
+            <div class="stat">
+              <b data-count="500" data-suffix="+">+500</b>
+              <span>مرحلة مضبوطة</span>
+            </div>
+            <div class="stat">
+              <b data-count="8">8</b>
+              <span>عوالم مرسومة</span>
+            </div>
+            <div class="stat">
+              <b data-count="9">9</b>
+              <span>مرشدين متحركين</span>
+            </div>
+            <div class="stat">
+              <b data-count="62">62</b>
+              <span>تحدي أمثال وشعر</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== الذكاء والثقافة -->
+      <section id="brain" aria-labelledby="brain-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">ليش تستاهل وقتك</span>
+            <h2 id="brain-title">لعبة كلمات ترجع لك شيئا مقابل وقتك.</h2>
+            <p class="lead">
+              أغلب ألعاب الألغاز تقتل الوقت. «حروف» تصرفه عليك أنت — كل مرحلة
+              تمرين صغير لذاكرتك، وكل تحدٍّ يعلّمك شيئا حقيقيا عن العربية.
+            </p>
+          </div>
+
+          <div class="benefit-split reveal">
+            <article class="benefit-panel" style="--halo: rgb(79 195 247 / 0.16)">
+              <div class="panel-icon">🧠</div>
+              <h3>درّب عقلك، كلمة كلمة</h3>
+              <p>
+                ترتيب حروف مبعثرة في كلمة صحيحة تمرين ذهني حقيقي. كل مرحلة تشتغل
+                على الاسترجاع وتمييز الأنماط والتركيز المتواصل — ولأن العجلة تكبر
+                من 3 حروف إلى 10، الصعوبة تمشي معك بدل ما تثبت عند حد معيّن. عشر
+                دقائق في اليوم عادة تستاهل.
+              </p>
+              <div class="metric-row">
+                <div>
+                  <b>3 ← 10</b>
+                  <span>حروف في العجلة</span>
+                </div>
+                <div>
+                  <b>8</b>
+                  <span>كلمات في أصعب المراحل</span>
+                </div>
+                <div>
+                  <b>يوميا</b>
+                  <span>سلسلة تبقيك متيقّظا</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="benefit-panel" style="--halo: rgb(255 159 28 / 0.16)">
+              <div class="panel-icon">🕌</div>
+              <h3>اكتشف الثقافة اللي وراء اللغة</h3>
+              <p>
+                «حروف» مو حشوا مترجما — مبنية على الأصل. كمّل أمثالا عربية
+                كلاسيكية، وأتمّ أبياتا من الشعر، واعرف الأمثال الخليجية اللي كان
+                يقولها جدّك. وكل كلمة تجيك بمعناها من القاموس، فتطلع من كل مرحلة
+                تعرف أكثر مما دخلت.
+              </p>
+              <div class="metric-row">
+                <div>
+                  <b>22</b>
+                  <span>مثلا عربيا</span>
+                </div>
+                <div>
+                  <b>12</b>
+                  <span>بيتا من الشعر</span>
+                </div>
+                <div>
+                  <b>6</b>
+                  <span>أمثال خليجية</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== اللعبة -->
+      <section id="game" aria-labelledby="game-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">كيف تُلعب</span>
+            <h2 id="game-title">حركة وحدة بسيطة. ومئات الساعات.</h2>
+            <p class="lead">
+              اسحب إصبعك على العجلة وكوّن الكلمة. كل مرحلة مبنية من قاموس عربي
+              حقيقي ومفحوصة آليا — ما فيه حشو ولا كلمات مخترعة.
+            </p>
+          </div>
+
+          <div class="grid-3 reveal">
+            <article class="card">
+              <div class="card-emoji">🎯</div>
+              <h3>عجلة الحروف</h3>
+              <p>
+                اسحب بين الحروف وكوّن الكلمات. اخلط الحروف مجانا وقت ما تبي،
+                واصرف نقاطك على تلميح إذا وقفت عند كلمة.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-emoji">📈</div>
+              <h3>تدرّج صعوبة حقيقي</h3>
+              <p>
+                المراحل تتصاعد درجة درجة — 3 حروف، ثم 4، ثم 5 — بدون قفزة مفاجئة
+                من كلمة قصيرة إلى كلمة بعشرة حروف.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-emoji">🫙</div>
+              <h3>كلمات إضافية</h3>
+              <p>
+                لقيت كلمة عربية صحيحة مو موجودة على اللوح؟ تنحسب لك برضه، وكل
+                كلمة إضافية تنزّل نقاط في جرّتك.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== الاجتماعي -->
+      <section aria-labelledby="social-title">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="eyebrow">العبوا سوا</span>
+            <h2 id="social-title">مصنوعة عشان تُلعب مع الناس، مو لحالك.</h2>
+          </div>
+
+          <div class="feature-row reveal">
+            <div>
+              <h3>تحدي كلمات يومي يلعبه الكل</h3>
+              <p class="lead" style="margin-bottom: 0">
+                لغز واحد كل يوم، نفسه لكل لاعب في العالم. تلعبه مرة وحدة، تبني
+                سلسلتك، وبعدين تشارك شبكة نتيجتك — بدون ما تحرق الإجابة على أحد.
+              </p>
+              <ul class="check-list">
+                <li>نفس اللغز للجميع، يتجدد منتصف الليل بتوقيت UTC</li>
+                <li>عدّاد سلسلة بشعلة نار من ثاني يوم</li>
+                <li>شبكة نتيجة ما تكشف الحل، تنشرها في أي مكان</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img
+                src="assets/img/sunset_oasis.jpg"
+                alt="خريطة عالم واحة الغروب في لعبة الكلمات العربية حروف"
+                width="720"
+                height="540"
+                loading="lazy"
+              />
+              <span class="overlay"></span>
+              <span class="badge">🔥 سلسلة يومية</span>
+            </div>
+          </div>
+
+          <div class="feature-row reverse reveal">
+            <div>
+              <h3>لوحة خاصة بربعك بس</h3>
+              <p class="lead" style="margin-bottom: 0">
+                ما فيه لوحات عالمية ما لها معنى. شارك رمزك المكوّن من ستة محارف،
+                وقارن نفسك بالناس اللي تعرفهم فعلا.
+              </p>
+              <ul class="check-list">
+                <li>رتّب حسب السلسلة أو كلمات الأسبوع أو مجموع النقاط</li>
+                <li>صفّك أنت يبقى ثابت قدامك وأنت تمرّر</li>
+                <li>أضف أصدقاءك برمز نصّي — بدون روابط ولا أذونات</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img
+                src="assets/img/golden_city.jpg"
+                alt="عالم مدينة القباب ولوحة الأصدقاء في لعبة حروف"
+                width="720"
+                height="540"
+                loading="lazy"
+              />
+              <span class="overlay"></span>
+              <span class="badge">🏆 لوحة الأصدقاء</span>
+            </div>
+          </div>
+
+          <div class="feature-row reveal">
+            <div>
+              <h3>تحدَّ صديقك على نفس اللغز</h3>
+              <p class="lead" style="margin-bottom: 0">
+                أنشئ غرفة، أرسل الرمز، وكل واحد فيكم يحل نفس اللوح على راحته.
+                وأول ما تخلّصون، تظهر النتيجتين جنب بعض.
+              </p>
+              <ul class="check-list">
+                <li>نفس اللوح للاثنين — والتلميحات مقفلة للتكافؤ</li>
+                <li>الشاشة تتحدث لحظة ما يخلّص خصمك</li>
+                <li>بدون طوابير انتظار ولا تصنيفات ولا تعقيد</li>
+              </ul>
+            </div>
+            <div class="feature-visual">
+              <img
+                src="assets/img/mountains.jpg"
+                alt="عالم الجبال الضبابية المستخدم في التحدي الثنائي بلعبة حروف"
+                width="720"
+                height="540"
+                loading="lazy"
+              />
+              <span class="overlay"></span>
+              <span class="badge">⚔️ تحدٍّ ثنائي</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== الأصالة -->
+      <section aria-labelledby="auth-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">وش يميّزها</span>
+            <h2 id="auth-title">عربية أصيلة، مو ترجمة آلية.</h2>
+          </div>
+
+          <div class="grid-3 reveal">
+            <article class="card">
+              <h3>كلمات حقيقية ومتحقَّق منها</h3>
+              <p>
+                كل مرحلة مولّدة من قاموس عربي منتقى ومفحوصة آليا — كل كلمة هدف
+                مثبَت أنها قابلة للتكوين من حروف عجلتها، وكل وحدة تجيك بمعناها.
+              </p>
+            </article>
+            <article class="card">
+              <h3>لهجة خليجية بالكامل</h3>
+              <p>
+                المرشدون يتكلمون مثل ما يتكلم الناس فعلا، مو فصحى الكتب. وواجهة
+                من اليمين لليسار من الأساس.
+              </p>
+            </article>
+            <article class="card">
+              <h3>تشتغل بدون نت</h3>
+              <p>
+                كل الـ500 مرحلة تشتغل بدون اتصال — في الطيارة، في البر، في أي
+                مكان. الإنترنت للميزات الاجتماعية بس.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== العوالم -->
+      <section id="worlds" aria-labelledby="worlds-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">ثمانية عوالم</span>
+            <h2 id="worlds-title">رحلة، مو مجرد قائمة مراحل.</h2>
+            <p class="lead">
+              كل عالم له خريطته وألوانه ومرشده المتحرك اللي يمشي معك على الطريق.
+            </p>
+          </div>
+
+          <div class="worlds-grid reveal">
+            <figure class="world">
+              <img src="assets/img/forest.jpg" alt="عالم الغابة في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>الغابة</b><span>بداية الرحلة بين الأشجار</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/valley.jpg" alt="عالم الوادي الملون في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>الوادي الملون</b><span>حيث تتفتح الكلمات كالأزهار</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/mountains.jpg" alt="عالم الجبال الضبابية في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>الجبال الضبابية</b><span>قمم عالية وكلمات أعلى</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/enchanted_forest.jpg" alt="عالم الغابة المسحورة في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>الغابة المسحورة</b><span>أسرار تختبئ خلف كل حرف</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/oasis.jpg" alt="عالم الواحة في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>الواحة</b><span>استرح واسق عقلك بالكلمات</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/desert_river.jpg" alt="عالم نهر الصحراء في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>نهر الصحراء</b><span>ماء وسط الرمال الذهبية</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/sunset_oasis.jpg" alt="عالم واحة الغروب في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>واحة الغروب</b><span>ألوان الأصيل وحكمة الكلمات</span></figcaption>
+            </figure>
+            <figure class="world">
+              <img src="assets/img/golden_city.jpg" alt="عالم مدينة القباب في لعبة حروف" width="720" height="720" loading="lazy" />
+              <figcaption><b>مدينة القباب</b><span>التحدي الأخير</span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== التحديات -->
+      <section id="challenges" aria-labelledby="challenges-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">أمثال وشعر وتراث</span>
+            <h2 id="challenges-title">الثقافة العربية — كلعبة، مو ككتاب مدرسي.</h2>
+            <p class="lead">
+              62 تحديا منتقى تلعبها بنفس عجلة الحروف. ما تقرأ الجواب أبدا — أنت
+              اللي تكوّنه، وعشان كذا يثبت في ذاكرتك.
+            </p>
+          </div>
+
+          <div class="grid-4 reveal">
+            <article class="card">
+              <img class="card-icon" src="assets/img/challenge_proverb.png" alt="أيقونة تحدي الأمثال العربية" width="66" height="66" loading="lazy" />
+              <h3>أكمل المثل</h3>
+              <p>أكمل المثل العربي بالكلمة الناقصة.</p>
+            </article>
+            <article class="card">
+              <img class="card-icon" src="assets/img/challenge_gulf.png" alt="أيقونة تحدي الأمثال الخليجية" width="66" height="66" loading="lazy" />
+              <h3>أمثال خليجية</h3>
+              <p>أمثال أهل الخليج المتوارثة بين البيوت.</p>
+            </article>
+            <article class="card">
+              <img class="card-icon" src="assets/img/challenge_verse.png" alt="أيقونة تحدي الشعر العربي" width="66" height="66" loading="lazy" />
+              <h3>أكمل البيت</h3>
+              <p>كمّل شطر بيت الشعر العربي الكلاسيكي.</p>
+            </article>
+            <article class="card">
+              <img class="card-icon" src="assets/img/challenge_word.png" alt="أيقونة تحدي المفردات العربية" width="66" height="66" loading="lazy" />
+              <h3>خمّن الكلمة</h3>
+              <p>خمّن الكلمة العربية الأصيلة من معناها فقط.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== المرشدون -->
+      <!--
+        ملاحظة: القالب المرجعي فيه قسم آراء عملاء هنا. تعمّدنا عدم اختراع
+        آراء لاعبين وهمية — نشر شهادات مفبركة على صفحة منتج حقيقي خداع
+        للمستخدم، وقد يخالف سياسات المتاجر وإرشادات البيانات المنظمة في
+        جوجل. هذا القسم يحافظ على نفس التخطيط لكن بشخصيات اللعبة الحقيقية
+        وعباراتها الفعلية. استبدلها بآراء حقيقية حين تتوفر.
+      -->
+      <section aria-labelledby="guides-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">مرشدوك</span>
+            <h2 id="guides-title">ما تلعب أي عالم لحالك.</h2>
+            <p class="lead">
+              تسعة رفقاء متحركين يشجعونك، ويلمّحون لك إذا وقفت، ويحتفلون معك أول
+              ما تخلّص العالم.
+            </p>
+          </div>
+
+          <div class="quote-grid reveal">
+            <figure class="quote">
+              <p>«أحسنت! إجابة رائعة»</p>
+              <figcaption>
+                <img src="assets/img/char_puzzle_master.jpg" alt="شخصية أبو الحروف، المرشد الأساسي في لعبة حروف" width="42" height="42" loading="lazy" />
+                <span>أبو الحروف · مرشدك الأساسي</span>
+              </figcaption>
+            </figure>
+            <figure class="quote">
+              <p>«قريب! حاول مرة أخرى»</p>
+              <figcaption>
+                <img src="assets/img/char_wise_oldman.jpg" alt="شخصية الحكيم، مرشد التحديات في لعبة حروف" width="42" height="42" loading="lazy" />
+                <span>الحكيم · مرشد التحدّيات</span>
+              </figcaption>
+            </figure>
+            <figure class="quote">
+              <p>«خذ وقتك، الحل قريب»</p>
+              <figcaption>
+                <img src="assets/img/char_clever_girl.jpg" alt="شخصية الذكية، مرشدة الوادي في لعبة حروف" width="42" height="42" loading="lazy" />
+                <span>الذكية · مرشدة الوادي</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== الحزم -->
+      <section id="packs" aria-labelledby="packs-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">حزم النقاط</span>
+            <h2 id="packs-title">مجانية بالكامل. وتقدر تكمّل أبعد وقت ما تبي.</h2>
+            <p class="lead">
+              النقاط تشتري لك تلميحات، فما تصير المرحلة الصعبة طريقا مسدودا.
+              تكسبها من إنهاء المراحل أو من عجلة الحظ اليومية أو بمشاهدة فيديو —
+              أو تختصر الطريق وتحافظ على سلسلتك.
+            </p>
+          </div>
+
+          <div class="grid-4 reveal">
+            <article class="price-card">
+              <h3>حزمة صغيرة</h3>
+              <div class="price-amount">$1.99</div>
+              <div class="price-points">
+                <img src="assets/img/gems.png" alt="" width="26" height="26" loading="lazy" /> 500 نقطة
+              </div>
+              <a class="btn btn-ghost" href="#download">من داخل اللعبة</a>
+            </article>
+
+            <article class="price-card featured">
+              <span class="price-badge">الأكثر مبيعا</span>
+              <h3>حزمة متوسطة</h3>
+              <div class="price-amount">$4.99</div>
+              <div class="price-points">
+                <img src="assets/img/gems.png" alt="" width="26" height="26" loading="lazy" /> 1,800 نقطة
+              </div>
+              <span class="bonus-tag">+20% هدية</span>
+              <a class="btn btn-primary" href="#download">من داخل اللعبة</a>
+            </article>
+
+            <article class="price-card">
+              <h3>حزمة كبيرة</h3>
+              <div class="price-amount">$9.99</div>
+              <div class="price-points">
+                <img src="assets/img/gems.png" alt="" width="26" height="26" loading="lazy" /> 5,200 نقطة
+              </div>
+              <span class="bonus-tag">+30% هدية</span>
+              <a class="btn btn-ghost" href="#download">من داخل اللعبة</a>
+            </article>
+
+            <article class="price-card">
+              <span class="price-badge">الأفضل قيمة</span>
+              <h3>الحزمة الأسطورية</h3>
+              <div class="price-amount">$19.99</div>
+              <div class="price-points">
+                <img src="assets/img/gems.png" alt="" width="26" height="26" loading="lazy" /> 15,000 نقطة
+              </div>
+              <span class="bonus-tag">+50% هدية</span>
+              <a class="btn btn-ghost" href="#download">من داخل اللعبة</a>
+            </article>
+          </div>
+
+          <p class="lead reveal" style="text-align: center; margin: 2rem auto 0">
+            ما تبي إعلانات نهائيا؟ دفعة وحدة بـ
+            <strong style="color: var(--gold)">$4.99</strong> تشيلها للأبد ومعها
+            300 نقطة هدية.
+          </p>
+        </div>
+      </section>
+
+      <!-- ==================================================== الأسئلة -->
+      <section id="faq" aria-labelledby="faq-title">
+        <div class="container">
+          <div class="section-head center reveal">
+            <span class="eyebrow">أسئلة شائعة</span>
+            <h2 id="faq-title">أسئلتك، وأجوبتها.</h2>
+          </div>
+
+          <div class="faq reveal">
+            <details open>
+              <summary>هل لعبة حروف مجانية؟</summary>
+              <p>
+                إي، كل الـ500 مرحلة مجانية. ونقاط التلميحات تقدر تكسبها من داخل
+                اللعبة بإنهاء المراحل أو من عجلة الحظ اليومية أو بمشاهدة فيديو،
+                والشراء اختياري تماما.
+              </p>
+            </details>
+            <details>
+              <summary>هل تقوّي اللعبة الذكاء والذاكرة؟</summary>
+              <p>
+                اللعبة مصمّمة كتمرين ذهني: تكوين الكلمات من حروف مبعثرة ينشّط
+                الاسترجاع وتمييز الأنماط والتفكير في تركيب الحروف والتركيز
+                المتواصل. وكل جلسة توسّع حصيلتك اللغوية لأن كل كلمة تأتي بمعناها
+                من القاموس.
+              </p>
+            </details>
+            <details>
+              <summary>لازم أسجّل حساب؟</summary>
+              <p>
+                لا. اللعبة تشتغل على طول بدون تسجيل. والتحدي اليومي واللوحة
+                والتحدي الثنائي ينشئون لك ملفا مجهولا تلقائيا — ما فيه أي استمارة
+                تعبّيها.
+              </p>
+            </details>
+            <details>
+              <summary>أقدر ألعب بدون إنترنت؟</summary>
+              <p>
+                إي. كل المراحل الـ500 والتحديات اللغوية الـ62 تشتغل بدون اتصال.
+                الإنترنت مطلوب فقط للتحدي اليومي ولوحة الأصدقاء والتحدي الثنائي.
+              </p>
+            </details>
+            <details>
+              <summary>كيف يشتغل التحدي اليومي؟</summary>
+              <p>
+                كل لاعب في العالم يجيه نفس اللغز كل يوم، وتقدر تلعبه مرة وحدة.
+                إذا خلّصته أياما متتالية تكبر سلسلتك، وإذا فوّتّ يوما ترجع لواحد.
+                واللغز يتغيّر منتصف الليل بتوقيت UTC.
+              </p>
+            </details>
+            <details>
+              <summary>هل حروف مفيدة لتعلّم العربية؟</summary>
+              <p>
+                توسّع الحصيلة اللغوية وطلاقة القراءة، وتعلّم أمثالا عربية وخليجية
+                أصيلة وأبياتا من الشعر الكلاسيكي. لكن الواجهة عربية بالكامل، فهي
+                تناسب من يقرأ الحرف العربي أصلا أكثر من المبتدئ تماما.
+              </p>
+            </details>
+            <details>
+              <summary>كيف أضيف صديق؟</summary>
+              <p>
+                كل لاعب عنده رمز من ستة محارف. أرسل رمزك كنص عادي في أي تطبيق، أو
+                اكتب رمز صاحبك. بدون روابط ولا أذونات ولا وصول لجهات الاتصال.
+              </p>
+            </details>
+            <details>
+              <summary>وش اللغات المدعومة؟</summary>
+              <p>
+                اللعبة عربية بالكامل، مكتوبة بلهجة خليجية ومصمّمة من اليمين لليسار
+                في كل شاشاتها. ومفردات الألغاز نفسها بالفصحى.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== الدعوة -->
+      <section id="download" aria-labelledby="cta-title">
+        <div class="container">
+          <div class="cta-box reveal">
+            <span class="eyebrow">ابدأ اللعب</span>
+            <h2 id="cta-title">خمسمئة مرحلة تنتظرك.</h2>
+            <p class="lead" style="margin-inline: auto">
+              حمّل «حروف» مجانا، احل تحدي اليوم، وأرسل رمزك لواحد يظن نفسه أشطر
+              منك في الكلمات.
+            </p>
+            <div class="store-badges center" style="margin-top: 1.8rem">
+              <a
+                class="store-badge"
+                href="https://play.google.com/store/apps/details?id=com.huruf.huruf"
+                rel="noopener"
+                aria-label="حمّل حروف من جوجل بلاي"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#EA4335" d="M3.6 1.8a1.9 1.9 0 0 0-.5 1.3v17.8c0 .5.2 1 .5 1.3l12-10.2z" />
+                  <path fill="#FBBC04" d="M19.9 10.3 16.4 8.3 12.6 12l3.8 3.7 3.5-2c1.1-.6 1.1-2.8 0-3.4z" />
+                  <path fill="#4285F4" d="m3.1 22.2 12.4-10.5 3.9 2.2c1.1.6 1.1 2 0 2.6L5.2 23.6c-.7.4-1.6.1-2.1-.6z" />
+                  <path fill="#34A853" d="M3.1 1.8 15.5 12.3 19.4 10c1.1-.6 1.1-2 0-2.6L5.2 1.2c-.7-.4-1.6-.1-2.1.6z" />
+                </svg>
+                <span class="store-text">
+                  <small>حمّلها من</small>
+                  <strong>Google Play</strong>
+                </span>
+              </a>
+
+              <a
+                class="store-badge"
+                href="https://apps.apple.com/app/id000000000"
+                rel="noopener"
+                aria-label="حمّل حروف من آب ستور"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff">
+                  <path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.7.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.6.7 2.8.7c1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.4zM14.3 5.9c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z" />
+                </svg>
+                <span class="store-text">
+                  <small>حمّلها من</small>
+                  <strong>App Store</strong>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==================================================== التذييل -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <a class="brand" href="#top" aria-label="الصفحة الرئيسية لحروف">
+              <img src="assets/img/app_icon.png" alt="" width="38" height="38" loading="lazy" />
+              <span>حروف</span>
+            </a>
+            <p class="footer-note">
+              لعبة كلمات عربية مصنوعة لأهل الخليج — كلمات حقيقية، وأمثال أصيلة،
+              وعجلة صعب تتركها.
+            </p>
+          </div>
+
+          <div>
+            <h4>تصفّح</h4>
+            <ul>
+              <li><a href="#game">اللعبة</a></li>
+              <li><a href="#brain">الذكاء والثقافة</a></li>
+              <li><a href="#worlds">العوالم</a></li>
+              <li><a href="#challenges">التحدّيات</a></li>
+              <li><a href="#packs">حزم النقاط</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4>حمّل اللعبة</h4>
+            <ul>
+              <li>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.huruf.huruf"
+                  rel="noopener"
+                  >جوجل بلاي</a
+                >
+              </li>
+              <li><a href="https://apps.apple.com/app/id000000000" rel="noopener">آب ستور</a></li>
+              <li><a href="#faq">أسئلة شائعة</a></li>
+              <li><a href="index.html" lang="en" hreflang="en">English</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 حروف. جميع الحقوق محفوظة.</span>
+          <span>صُنعت لمحبّي اللغة العربية.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

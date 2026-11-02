@@ -20,7 +20,7 @@ void main() {
       final level = levels[i];
       expect(level.id, i + 1, reason: 'ids must be sequential');
       expect(level.words, isNotEmpty, reason: 'level ${level.id} has no words');
-      expect(level.letters.length, inInclusiveRange(3, 7));
+      expect(level.letters.length, inInclusiveRange(3, 10));
 
       final key = (List.of(level.letters)..sort()).join();
       expect(seenLetterSets.add(key), isTrue,

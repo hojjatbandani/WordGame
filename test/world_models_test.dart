@@ -11,15 +11,18 @@ void main() {
     for (final size in worldSizes) {
       expect(size, greaterThanOrEqualTo(50));
     }
-    // حدود العالم الأول (62 مرحلة)
+    // الحدود تطابق نظام التقدّم (BalanceConfig): 60 للعوالم 1-4 و65 للعوالم 5-8
+    expect(worldSizes, [60, 60, 60, 60, 65, 65, 65, 65]);
     expect(worldForLevel(1).id, 1);
-    expect(worldForLevel(62).id, 1);
-    expect(worldForLevel(63).id, 2);
+    expect(worldForLevel(60).id, 1);
+    expect(worldForLevel(61).id, 2);
+    expect(worldForLevel(240).id, 4);
+    expect(worldForLevel(241).id, 5);
     expect(worldForLevel(500).id, 8);
     expect(worlds.last.lastLevelId, 500);
 
     final level = GameLevel(
-        id: 63, letters: const [], words: const [], bonusWords: const [], difficulty: 1);
+        id: 61, letters: const [], words: const [], bonusWords: const [], difficulty: 1);
     expect(level.worldId, 2);
     expect(level.indexInWorld, 1);
 

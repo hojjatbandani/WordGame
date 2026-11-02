@@ -51,6 +51,24 @@
 			</array>
 		</dict>
 	</dict>
+	<!-- روابط الدعوة (huruf://i/CODE). أما روابط https://huruf.game/i/…
+	     فتحتاج Associated Domains في Signing & Capabilities بقيمة
+	     applinks:huruf.game، مع رفع apple-app-site-association على
+	     النطاق. حتى ذلك الحين يعمل المخطّط المخصّص، ويبقى إدخال الرمز
+	     يدويا مسارا كاملا (راجع lib/core/referral_link.dart). -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>game.huruf.invite</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>huruf</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -64,6 +82,22 @@
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<!-- اللعبة رأسية فقط (عجلة الحروف والشبكة والخريطة). على iPad لا
+	     يقبل App Store تطبيقا يدعم اتجاها واحدا إلا إن أعلن أنه لا يدعم
+	     تعدّد النوافذ (ITMS-90474)، فبلا هذا المفتاح يُرفض الرفع. -->
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<!-- AdMob: معرّف Google الاختباري — استبدله بمعرّف تطبيقك من لوحة AdMob
+	     قبل النشر. بلا هذا المفتاح يتعطّل التطبيق عند الإقلاع على iOS. -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cbq39lhu72.skadnetwork</string>
+		</dict>
 	</array>
 </dict>
 </plist>

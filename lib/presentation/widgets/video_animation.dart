@@ -177,10 +177,6 @@ class CharacterAnimation extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.35),
-          width: 2,
-        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
@@ -188,6 +184,15 @@ class CharacterAnimation extends StatelessWidget {
             offset: const Offset(0, 5),
           ),
         ],
+      ),
+      // الحلقة فوق الفيديو لا تحته: decoration تُرسم قبل الطفل، والفيديو
+      // يملأ الدائرة حتى حافة القصّ فيخفيها تماما
+      foregroundDecoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.35),
+          width: 2,
+        ),
       ),
       clipBehavior: Clip.antiAlias,
       child: VideoAnimationWidget(
@@ -220,7 +225,6 @@ class CharacterPortrait extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
-        border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.25),
@@ -228,6 +232,12 @@ class CharacterPortrait extends StatelessWidget {
             offset: const Offset(0, 3),
           ),
         ],
+      ),
+      // الحلقة فوق الصورة لا تحتها: decoration تُرسم قبل الطفل،
+      // والصورة تملأ الدائرة حتى حافة القصّ فتخفي الحلقة تماما
+      foregroundDecoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
       ),
       clipBehavior: Clip.antiAlias,
       child: Image.asset(

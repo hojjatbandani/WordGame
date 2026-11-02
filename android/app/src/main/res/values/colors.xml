@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- خلفية الأيقونة التكيّفية — أبيض صلب، يطابق _bg في
+         tool/generate_launcher_icons.dart -->
+    <color name="ic_launcher_background">#FFFFFFFF</color>
+    <!-- لون تمييز الإشعار (HurufTheme.gold) — يصبغ به النظام أيقونة
+         الإشعار الأحادية ونصّ اسم التطبيق -->
+    <color name="notification_accent">#FFF4C430</color>
+
+    <!-- ودجة الشاشة الرئيسية — منقولة حرفيا من HurufTheme في
+         lib/core/theme.dart. الودجة جزء من اللعبة بصريا، فلا ألوان
+         خاصة بها ولا ألوان النظام الديناميكية (Material You): هوية
+         «ليل الصحراء» هي ما يعرفه اللاعب. -->
+    <color name="huruf_bg_top">#FF0A0E27</color>
+    <color name="huruf_bg_bottom">#FF1A1F3A</color>
+    <color name="huruf_gold">#FFF4C430</color>
+    <color name="huruf_gold_dark">#FFC99A10</color>
+    <color name="huruf_surface">#FF171C36</color>
+    <color name="huruf_tile_empty">#FF232A4D</color>
+    <color name="huruf_text_primary">#FFF2F1EC</color>
+    <color name="huruf_text_secondary">#FF9AA0BE</color>
+    <color name="huruf_success">#FF34E89E</color>
+    <color name="huruf_hairline">#26FFFFFF</color>
+</resources>

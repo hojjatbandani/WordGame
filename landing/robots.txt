@@ -1,0 +1,43 @@
+# حروف — Huruf
+# استبدل النطاق أدناه بنطاقك الحقيقي قبل النشر
+# Replace the domain below with your real domain before publishing.
+
+User-agent: *
+Allow: /
+
+# زواحف الذكاء الاصطناعي مسموح لها صراحة كي تظهر اللعبة في إجابات
+# المساعدات الذكية (ChatGPT, Perplexity, Gemini, Claude...)
+# AI crawlers are explicitly allowed so the game can surface in
+# AI assistant answers.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://huruf.game/sitemap.xml

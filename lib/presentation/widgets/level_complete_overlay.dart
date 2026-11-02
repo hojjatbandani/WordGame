@@ -1,18 +1,32 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/share_templates.dart';
 import '../../core/theme.dart';
+import '../../data/ads/rewarded_ads.dart';
 import '../../data/world_models.dart';
+import '../providers.dart';
 import 'character_bubble.dart';
+import 'double_reward.dart';
 import 'glass_card.dart';
+import 'pressable.dart';
+import 'share_result_row.dart';
 import 'video_animation.dart';
 
 /// شاشة إتمام المرحلة: احتفال المرشد بالفيديو + جسيمات + عد تصاعدي
-class LevelCompleteOverlay extends StatefulWidget {
+class LevelCompleteOverlay extends ConsumerStatefulWidget {
+  final int levelId;
+  final List<ShareWordStatus> wordResults;
   final int reward;
   final int bonusFound;
   final bool isLastLevel;
+
+  /// آخر مرحلة في فصلها: زرّ المتابعة يقول "أنهيت الفصل" ويقود إلى
+  /// قائمة الفصول مع التهنئة، لا إلى المرحلة التالية مباشرة
+  final bool isChapterFinale;
+
   final VoidCallback onNext;
   final VoidCallback onMap;
   final String? characterId;
@@ -21,9 +35,12 @@ class LevelCompleteOverlay extends StatefulWidget {
 
   const LevelCompleteOverlay({
     super.key,
+    required this.levelId,
+    required this.wordResults,
     required this.reward,
     required this.bonusFound,
     required this.isLastLevel,
+    this.isChapterFinale = false,
     required this.onNext,
     required this.onMap,
     this.characterId,
@@ -32,14 +49,18 @@ class LevelCompleteOverlay extends StatefulWidget {
   });
 
   @override
-  State<LevelCompleteOverlay> createState() => _LevelCompleteOverlayState();
+  ConsumerState<LevelCompleteOverlay> createState() =>
+      _LevelCompleteOverlayState();
 }
 
-class _LevelCompleteOverlayState extends State<LevelCompleteOverlay>
+class _LevelCompleteOverlayState extends ConsumerState<LevelCompleteOverlay>
     with TickerProviderStateMixin {
   late final AnimationController _confetti;
   late final AnimationController _card;
   late final List<_Burst> _bursts;
+
+  /// ما أُضيف بمشاهدة الإعلان (0 قبلها) — يُعرض فوق الجائزة الأصلية
+  int _doubledBonus = 0;
 
   @override
   void initState() {
@@ -65,6 +86,7 @@ class _LevelCompleteOverlayState extends State<LevelCompleteOverlay>
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.watch(languageProvider);
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -81,94 +103,154 @@ class _LevelCompleteOverlayState extends State<LevelCompleteOverlay>
               padding: const EdgeInsets.all(HurufTheme.s6),
               child: GlassCard(
                 padding: const EdgeInsets.all(HurufTheme.s6),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // احتفال المرشد بمقطع MP4، أو الكأس إن لم تحدد شخصية
-                    if (widget.characterId != null)
-                      CharacterAnimation(
-                        characterId: widget.characterId!,
-                        emotion: CharacterEmotion.celebrating,
-                        size: 110,
-                      )
-                    else
-                      const Text('🏆', style: TextStyle(fontSize: 56)),
-                    const SizedBox(height: HurufTheme.s3),
-                    Text(
-                      widget.worldBonus > 0 ? 'أتممت العالم!' : 'أحسنت!',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        color: HurufTheme.gold,
+                // قابلة للتمرير: مع مكافأة العالم والكلمات الإضافية وزرّ
+                // المضاعفة وصفّ المشاركة تتجاوز البطاقة ارتفاع الشاشات
+                // القصيرة (iPhone SE ونحوها) أو مقياس خطّ كبير
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // احتفال المرشد بمقطع MP4، أو الكأس إن لم تحدد شخصية
+                      if (widget.characterId != null)
+                        CharacterAnimation(
+                          characterId: widget.characterId!,
+                          emotion: CharacterEmotion.celebrating,
+                          size: 110,
+                        )
+                      else
+                        const Text('🏆', style: TextStyle(fontSize: 56)),
+                      const SizedBox(height: HurufTheme.s3),
+                      Text(
+                        widget.worldBonus > 0
+                            ? lang.t('أتممت العالم!', 'World complete!')
+                            : lang.t('أحسنت!', 'Well done!'),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          color: HurufTheme.gold,
+                        ),
                       ),
-                    ),
-                    if (widget.characterId != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: HurufTheme.s1),
-                        child: Text(
-                          randomMessage(CharacterEmotion.celebrating),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: HurufTheme.textSecondary,
+                      if (widget.characterId != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: HurufTheme.s1),
+                          child: Text(
+                            randomMessage(CharacterEmotion.celebrating),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: HurufTheme.textSecondary,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: HurufTheme.s4),
+                      TweenAnimationBuilder<int>(
+                        tween: IntTween(
+                          begin: 0,
+                          end: widget.reward + _doubledBonus,
+                        ),
+                        duration: const Duration(milliseconds: 900),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, value, _) => Text(
+                          lang.t('+$value نقطة', '+$value points'),
+                          style: TextStyle(
+                            fontSize: _doubledBonus > 0 ? 26 : 22,
+                            fontWeight: FontWeight.w700,
+                            color: _doubledBonus > 0
+                                ? HurufTheme.success
+                                : HurufTheme.textPrimary,
                           ),
                         ),
                       ),
-                    const SizedBox(height: HurufTheme.s4),
-                    TweenAnimationBuilder<int>(
-                      tween: IntTween(begin: 0, end: widget.reward),
-                      duration: const Duration(milliseconds: 900),
-                      curve: Curves.easeOutCubic,
-                      builder: (context, value, _) => Text(
-                        '+$value نقطة',
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    if (widget.worldBonus > 0)
-                      Padding(
-                        padding: const EdgeInsets.only(top: HurufTheme.s2),
-                        child: Text(
-                          '🏆 مكافأة «${widget.worldName}»: +${widget.worldBonus}',
+                      if (_doubledBonus > 0)
+                        Text(
+                          lang.t('تضاعفت الجائزة! ×2', 'Reward doubled! ×2'),
                           style: const TextStyle(
+                            fontSize: 12,
                             fontWeight: FontWeight.w800,
                             color: HurufTheme.success,
                           ),
                         ),
-                      ),
-                    if (widget.bonusFound > 0)
+                      if (widget.worldBonus > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(top: HurufTheme.s2),
+                          child: Text(
+                            lang.t(
+                              '🏆 مكافأة «${widget.worldName}»: +${widget.worldBonus}',
+                              '🏆 "${widget.worldName}" bonus: +${widget.worldBonus}',
+                            ),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: HurufTheme.success,
+                            ),
+                          ),
+                        ),
+                      if (widget.bonusFound > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(top: HurufTheme.s2),
+                          child: Text(
+                            lang.t(
+                              '🫙 ${widget.bonusFound} كلمة إضافية',
+                              '🫙 ${widget.bonusFound} bonus words',
+                            ),
+                            style: const TextStyle(
+                              color: HurufTheme.textSecondary,
+                            ),
+                          ),
+                        ),
+                      // مضاعفة جائزة المرحلة بمشاهدة فيديو قصير — يختفي
+                      // الزرّ بعد المضاعفة أو حين تنفد ميزانية إعلانات اليوم
                       Padding(
-                        padding: const EdgeInsets.only(top: HurufTheme.s2),
-                        child: Text(
-                          '🫙 ${widget.bonusFound} كلمة إضافية',
-                          style: const TextStyle(
-                            color: HurufTheme.textSecondary,
-                          ),
+                        padding: const EdgeInsets.only(top: HurufTheme.s3),
+                        child: DoubleRewardButton(
+                          amount: widget.reward,
+                          lang: lang,
+                          // نهاية المرحلة — إعلان قصير
+                          surface: RewardedSurface.levelReward,
+                          onDoubled: (granted) =>
+                              setState(() => _doubledBonus = granted),
                         ),
                       ),
-                    const SizedBox(height: HurufTheme.s5),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _GoldButton(
-                          label: widget.isLastLevel
-                              ? 'خريطة المراحل'
-                              : 'المرحلة التالية',
-                          onTap: widget.isLastLevel
-                              ? widget.onMap
-                              : widget.onNext,
+                      const SizedBox(height: HurufTheme.s4),
+                      ShareResultRow(
+                        text: ShareTemplates.level(
+                          levelId: widget.levelId,
+                          words: widget.wordResults,
+                          bonusFound: widget.bonusFound,
+                          lang: lang,
                         ),
-                        const SizedBox(width: HurufTheme.s3),
-                        if (!widget.isLastLevel)
-                          IconButton(
-                            onPressed: widget.onMap,
-                            icon: const Icon(Icons.map_outlined,
-                                color: HurufTheme.textSecondary),
+                      ),
+                      const SizedBox(height: HurufTheme.s4),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // مرن لا ثابت: عناوين الأزرار الإنجليزية أطول من
+                          // العربية، وبعرض ثابت تفيض البطاقة على الشاشات
+                          // الضيّقة بدل أن يتقلّص الزرّ
+                          Flexible(
+                            child: _GoldButton(
+                              label: widget.isLastLevel
+                                  ? lang.t('خريطة المراحل', 'Level Map')
+                                  : widget.isChapterFinale
+                                  ? lang.t('أتممت الفصل!', 'Chapter complete!')
+                                  : lang.t('المرحلة التالية', 'Next Level'),
+                              onTap: widget.isLastLevel
+                                  ? widget.onMap
+                                  : widget.onNext,
+                            ),
                           ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: HurufTheme.s3),
+                          if (!widget.isLastLevel)
+                            IconButton(
+                              tooltip: lang.t('خريطة المراحل', 'Level Map'),
+                              onPressed: widget.onMap,
+                              icon: const Icon(
+                                Icons.map_outlined,
+                                color: HurufTheme.textSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -187,8 +269,9 @@ class _GoldButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Pressable(
       onTap: onTap,
+      semanticLabel: label,
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: HurufTheme.s6,
@@ -207,6 +290,10 @@ class _GoldButton extends StatelessWidget {
         ),
         child: Text(
           label,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w800,
@@ -261,7 +348,8 @@ class _ConfettiPainter extends CustomPainter {
       final eased = Curves.easeOutCubic.transform(local);
       final dist = eased * b.speed * size.shortestSide;
       final gravity = local * local * size.height * 0.35;
-      final pos = origin +
+      final pos =
+          origin +
           Offset(cos(b.angle) * dist, sin(b.angle) * dist * 0.7 + gravity);
       paint.color = b.color.withValues(alpha: (1 - local).clamp(0.0, 1.0));
       canvas.drawCircle(pos, b.size * (1 - local * 0.5), paint);

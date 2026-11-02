@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.6+10
 
 environment:
   sdk: ^3.12.2
@@ -35,9 +35,27 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^3.3.2
-  google_fonts: ^8.2.0
   shared_preferences: ^2.5.5
   video_player: ^2.13.0
+  supabase_flutter: ^2.10.4
+  share_plus: ^11.0.0
+  games_services: ^5.3.0
+  audioplayers: ^6.8.1
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.9.4
+  # روابط الدعوة العميقة (huruf.game/i/CODE) — كانت تبعية غير مباشرة
+  # عبر supabase_flutter، ورُقّيت إلى تبعية مباشرة لأننا نستوردها فعلا
+  app_links: ^7.2.1
+  # حفظ صورة المشاركة في ملف مؤقّت قبل تمريرها لورقة المشاركة
+  path_provider: ^2.1.6
+  # فتح صفحة التطبيق في المتجر لطلب التقييم
+  url_launcher: ^6.3.1
+  home_widget: ^0.9.3
+  google_mobile_ads: ^9.1.0
+  # الدفع: RevenueCat (lib/data/store/revenuecat_iap_service.dart)
+  purchases_flutter: ^10.17.0
+  # التحليلات: PostHog وحده (lib/data/analytics/posthog_sink.dart)
+  posthog_flutter: ^5.56.0
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +67,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  image: ^4.9.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -63,8 +82,19 @@ flutter:
 
   assets:
     - assets/data/levels.json
+    - assets/data/literature.json
+    - assets/data/challenges.json
     - assets/backgrounds/
+    - assets/gold/
+    - assets/icons/
+    - assets/logo/
+    - assets/main/
+    - assets/more-missions/
     - assets/video/
+    - assets/audio/
+    # ملفات الخطوط تُحمَّل أيضا عبر rootBundle في مولّد اللقطات، وهذا
+    # يتطلّب إدراجها كأصول لا كخطوط فقط
+    - assets/fonts/
     - assets/characters/challenger_boy/images/
     - assets/characters/challenger_boy/animations/
     - assets/characters/clever_girl/images/
@@ -91,6 +121,20 @@ flutter:
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
+
+  fonts:
+    - family: IRANSans
+      fonts:
+        - asset: assets/fonts/IRANSans_UltraLight.ttf
+          weight: 200
+        - asset: assets/fonts/IRANSans_Light.ttf
+          weight: 300
+        - asset: assets/fonts/IRANSans.ttf
+          weight: 400
+        - asset: assets/fonts/IRANSans_Medium.ttf
+          weight: 500
+        - asset: assets/fonts/IRANSans_Bold.ttf
+          weight: 700
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package

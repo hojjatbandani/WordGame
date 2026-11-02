@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- رمز الإشعار الأحادي يُذكر من Dart باسمه نصّا فقط
+     (NotificationService.androidSmallIcon)، فلا يراه تقليص الموارد
+     (shrinkResources) مُستعملا ويحذفه من نسخة الإصدار — وعندها يرفض
+     أندرويد الإشعار كله بصمت. هذا الملف يثبّته. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_stat_huruf" />

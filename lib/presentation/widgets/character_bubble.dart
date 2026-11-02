@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme.dart';
 import '../../data/world_models.dart';
+import '../providers.dart';
 import 'glass_card.dart';
 import 'video_animation.dart';
 
@@ -12,8 +14,9 @@ String randomMessage(CharacterEmotion emotion) {
   return pool[Random().nextInt(pool.length)];
 }
 
-/// شخصية + فقاعة كلام زجاجية، تنزلق للداخل عند الظهور
-class CharacterBubble extends StatelessWidget {
+/// شخصية + فقاعة كلام زجاجية، تنزلق للداخل عند الظهور، وتُسمع بصمة
+/// الشخصية الصوتية مع ظهورها
+class CharacterBubble extends ConsumerStatefulWidget {
   final String characterId;
   final CharacterEmotion emotion;
   final String? message;
@@ -30,9 +33,21 @@ class CharacterBubble extends StatelessWidget {
   });
 
   @override
+  ConsumerState<CharacterBubble> createState() => _CharacterBubbleState();
+}
+
+class _CharacterBubbleState extends ConsumerState<CharacterBubble> {
+  @override
+  void initState() {
+    super.initState();
+    // بصمة الشخصية تُسمع مرة عند ظهور الفقاعة لا مع كل إعادة رسم
+    ref.read(audioServiceProvider).playCharacter(widget.characterId);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final text = message ?? randomMessage(emotion);
-    final name = characters[characterId]!.nameAr;
+    final text = widget.message ?? randomMessage(widget.emotion);
+    final name = characters[widget.characterId]!.nameAr;
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 450),
@@ -44,14 +59,15 @@ class CharacterBubble extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          animated
+          widget.animated
               ? CharacterAnimation(
-                  characterId: characterId,
-                  emotion: emotion,
-                  size: characterSize,
+                  characterId: widget.characterId,
+                  emotion: widget.emotion,
+                  size: widget.characterSize,
                 )
               : CharacterPortrait(
-                  characterId: characterId, size: characterSize),
+                  characterId: widget.characterId,
+                  size: widget.characterSize),
           const SizedBox(width: HurufTheme.s3),
           Expanded(
             child: GlassCard(

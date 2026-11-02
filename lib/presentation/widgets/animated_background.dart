@@ -22,9 +22,9 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   @override
   void initState() {
     super.initState();
+    // التشغيل/الإيقاف يُدار في build حسب إعداد تقليل الحركة
     _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 40))
-          ..repeat();
+        AnimationController(vsync: this, duration: const Duration(seconds: 40));
     final rng = Random(7);
     _particles = List.generate(40, (_) => _Particle.random(rng));
   }
@@ -37,15 +37,22 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
 
   @override
   Widget build(BuildContext context) {
+    // حقل الجسيمات زخرفي بحت: يتجمّد عند طلب تقليل الحركة
+    final reduce = context.reduceMotion;
+    if (reduce && _controller.isAnimating) _controller.stop();
+    if (!reduce && !_controller.isAnimating) _controller.repeat();
+
     return DecoratedBox(
       decoration: const BoxDecoration(gradient: HurufTheme.bgGradient),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, _) => CustomPaint(
-              painter: _ParticlePainter(_particles, _controller.value),
+          RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, _) => CustomPaint(
+                painter: _ParticlePainter(_particles, _controller.value),
+              ),
             ),
           ),
           widget.child,

@@ -1,8 +1,23 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// مفتاح توقيع الإصدار: android/key.properties (خارج git) بالشكل:
+//   storeFile=../keystore/huruf-release.jks
+//   storePassword=...
+//   keyAlias=huruf
+//   keyPassword=...
+// إن غاب الملف تُوقَّع نسخة الإصدار بمفتاح debug كي يعمل
+// `flutter run --release` محليا — لكن تلك النسخة لا تُقبل في المتجر.
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("key.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val hasReleaseKeystore = keystoreProperties.getProperty("storeFile") != null
 
 android {
     namespace = "com.huruf.huruf"
@@ -12,6 +27,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // flutter_local_notifications يتطلب desugaring لمكتبات Java 8+
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
@@ -25,11 +42,29 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+            // قواعد الإبقاء للإشعارات المجدولة — راجع proguard-rules.pro
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
@@ -42,4 +77,9 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // النسخة 2.1.4 هي الحد الأدنى الذي تشترطه flutter_local_notifications v18
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

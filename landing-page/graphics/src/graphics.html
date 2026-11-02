@@ -1,0 +1,152 @@
+<!doctype html>
+<!--
+  قوالب رسومات المتجر والمشاركة. تُصيَّر إلى PNG بـ render.mjs:
+    #feature  1024×500   صورة الواجهة في Google Play (Feature graphic)
+    #og       1200×630   صورة المشاركة (Open Graph) للموقع
+    #square   1080×1080  منشور مربّع لوسائل التواصل
+-->
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: "IRANSans"; src: url("../../assets/fonts/IRANSans_Bold.ttf"); font-weight: 700; }
+  @font-face { font-family: "IRANSans"; src: url("../../assets/fonts/IRANSans_Medium.ttf"); font-weight: 500; }
+  :root { --gold: #F4C430; --gold-light: #FFE082; --gold-dark: #C99A10; --bg: #0A0E27; --bg2: #1A1F3A; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+  body { font-family: "IRANSans", sans-serif; color: #F2F1EC; }
+
+  .art {
+    position: relative; width: 100vw; height: 100vh; overflow: hidden;
+    background:
+      radial-gradient(60% 80% at 22% 45%, rgba(244,196,48,.22), transparent 60%),
+      radial-gradient(70% 90% at 85% 10%, rgba(88,104,210,.35), transparent 60%),
+      linear-gradient(180deg, #0A0E27, #12173A 60%, #1A1F3A);
+  }
+  .pattern { position: absolute; inset: 0; opacity: .07; background: url("../../assets/svg/pattern.svg") 0 0 / 96px 96px; }
+  .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; }
+  .dunes { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; z-index: 1; }
+  /* المحتوى فوق الكثبان دائما */
+  .copy, .wheel-wrap, .guide, .art > .store { z-index: 2; }
+  .float { position: absolute; color: var(--gold); font-weight: 700; text-shadow: 0 0 16px rgba(244,196,48,.8); }
+
+  .gold { background: linear-gradient(170deg, var(--gold-light), var(--gold) 55%, var(--gold-dark)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .wordmark { font-weight: 700; line-height: 1; filter: drop-shadow(0 6px 26px rgba(244,196,48,.45)); }
+  .tagline { font-weight: 700; line-height: 1.35; }
+  .chips { display: flex; gap: 10px; }
+  .chips span { padding: 6px 16px; border-radius: 999px; background: rgba(244,196,48,.12); box-shadow: inset 0 0 0 1.5px rgba(244,196,48,.45); color: var(--gold-light); font-weight: 500; }
+  .store { display: inline-flex; align-items: center; gap: 12px; padding: 12px 24px; border-radius: 18px; background: linear-gradient(160deg, var(--gold-light), var(--gold) 55%, var(--gold-dark)); color: #241a00; font-weight: 700; }
+  .store svg { width: 28px; height: 28px; }
+  .store small { display: block; font-size: .55em; font-weight: 500; opacity: .8; }
+  .latin { direction: ltr; font-family: "IRANSans", sans-serif; }
+
+  .wheel-wrap { position: absolute; }
+  .guide { position: absolute; border-radius: 50%; border: 6px solid var(--gold); background: #fff; box-shadow: 0 20px 50px rgba(0,0,0,.55), 0 0 50px rgba(244,196,48,.35); }
+
+  /* ── 1024×500: Google Play feature graphic ──
+     المحتوى المهم في الوسط الآمن: Google قد تضع زرّ تشغيل فيديو في
+     المنتصف أو تقصّ الأطراف في بعض المواضع. */
+  .feature .copy { position: absolute; right: 64px; top: 92px; width: 470px; text-align: right; }
+  .feature .wordmark { font-size: 150px; }
+  .feature .tagline { margin-top: 14px; font-size: 34px; }
+  .feature .chips { margin-top: 22px; font-size: 19px; }
+  .feature .wheel-wrap { left: 92px; top: 66px; width: 330px; height: 330px; }
+  .feature .guide { left: 26px; bottom: 26px; width: 132px; height: 132px; }
+
+  /* ── 1200×630: Open Graph ── */
+  .og .copy { position: absolute; right: 80px; top: 104px; width: 560px; text-align: right; }
+  .og .wordmark { font-size: 170px; }
+  .og .tagline { margin-top: 16px; font-size: 40px; }
+  .og .chips { margin-top: 24px; font-size: 21px; }
+  .og .store { margin-top: 28px; font-size: 24px; }
+  .og .wheel-wrap { left: 96px; top: 96px; width: 400px; height: 400px; }
+  .og .guide { left: 40px; bottom: 40px; width: 150px; height: 150px; }
+
+  /* ── 1080×1080: square post ── */
+  .square .copy { position: absolute; left: 0; right: 0; top: 78px; text-align: center; }
+  .square .wordmark { font-size: 200px; }
+  .square .tagline { margin-top: 10px; font-size: 46px; }
+  .square .chips { justify-content: center; margin-top: 22px; font-size: 24px; }
+  .square .wheel-wrap { left: 50%; top: 520px; width: 420px; height: 420px; transform: translateX(-50%); }
+  .square .guide { left: 70px; bottom: 90px; width: 190px; height: 190px; }
+  .square .store { position: absolute; right: 70px; bottom: 120px; font-size: 26px; }
+</style>
+</head>
+<body>
+<div class="art" id="art">
+  <div class="pattern"></div>
+  <div class="stars" id="stars"></div>
+
+  <div class="copy">
+    <div class="wordmark gold">حروف</div>
+    <div class="tagline">اسحب الحروف… <span class="gold">واكتشف الكلمات</span></div>
+    <div class="chips"><span>500 مرحلة</span><span>8 عوالم</span><span>مجانية</span></div>
+    <div class="store-slot"></div>
+  </div>
+
+  <div class="wheel-wrap">
+    <svg viewBox="0 0 400 400" width="100%" height="100%">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE082"/><stop offset=".55" stop-color="#F4C430"/><stop offset="1" stop-color="#C99A10"/></linearGradient>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <!-- لوح الكلمة المحلولة فوق العجلة -->
+      <g font-family="IRANSans" font-weight="700" font-size="40" text-anchor="middle" dominant-baseline="central">
+        <rect x="236" y="6" width="62" height="62" rx="15" fill="url(#g)"/><text x="267" y="40" fill="#241a00">ح</text>
+        <rect x="169" y="6" width="62" height="62" rx="15" fill="url(#g)"/><text x="200" y="40" fill="#241a00">ل</text>
+        <rect x="102" y="6" width="62" height="62" rx="15" fill="url(#g)"/><text x="133" y="40" fill="#241a00">م</text>
+      </g>
+      <circle cx="200" cy="245" r="148" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.16)" stroke-width="2"/>
+      <polyline points="200,150 282,292 118,292" fill="none" stroke="#F4C430" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+      <g font-family="IRANSans" font-weight="700" font-size="46" text-anchor="middle" dominant-baseline="central">
+        <circle cx="200" cy="150" r="44" fill="url(#g)"/><text x="200" y="153" fill="#241a00">ح</text>
+        <circle cx="282" cy="292" r="44" fill="url(#g)"/><text x="282" y="295" fill="#241a00">ل</text>
+        <circle cx="118" cy="292" r="44" fill="url(#g)"/><text x="118" y="295" fill="#241a00">م</text>
+      </g>
+    </svg>
+  </div>
+
+  <img class="guide" src="../../assets/img/chars/little_genius.webp" alt="" />
+
+  <svg class="dunes" viewBox="0 0 1440 220" preserveAspectRatio="none">
+    <path d="M0 150c160-60 300-70 440-30s250 70 420 20 330-110 580-40v120H0z" fill="#141a3a"/>
+    <path d="M0 185c200-50 380-40 560 0s340 50 520 10 260-60 360-40v65H0z" fill="#171d40"/>
+  </svg>
+</div>
+
+<script>
+  // اللوحة من الرابط: graphics.html#feature | #og | #square
+  var kind = (location.hash || "#feature").slice(1);
+  var art = document.getElementById("art");
+  art.classList.add(kind);
+  if (kind === "og" || kind === "square") {
+    var store = document.createElement("div");
+    store.className = "store";
+    store.innerHTML = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M4.6 2.3a1.6 1.6 0 0 0-.6 1.3v16.8c0 .5.2 1 .6 1.3l9.3-9.7-9.3-9.7zm10.7 8.2 2.6-2.7L6.3 1.3l9 9.2zm0 3-9 9.2 11.6-6.5-2.6-2.7zm4.5-4.6-2.9-1.6-2.8 2.9 2.8 2.9 2.9-1.6c.8-.5.8-2.1 0-2.6z"/></svg><span><small>حمّلها من</small><span class="latin">Google Play</span></span>';
+    if (kind === "og") document.querySelector(".store-slot").appendChild(store);
+    else art.appendChild(store);
+  }
+  // سماء ثابتة (بذرة ثابتة كي تُعاد الصورة نفسها في كل تصيير)
+  var seed = 7;
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  var stars = document.getElementById("stars");
+  for (var i = 0; i < 90; i++) {
+    var s = document.createElement("i");
+    s.style.left = rnd() * 100 + "%"; s.style.top = rnd() * 75 + "%";
+    s.style.opacity = (0.25 + rnd() * 0.7).toFixed(2);
+    var z = 1 + rnd() * 1.8; s.style.width = s.style.height = z + "px";
+    stars.appendChild(s);
+  }
+  var letters = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي";
+  for (var j = 0; j < 14; j++) {
+    var f = document.createElement("span");
+    f.className = "float";
+    f.textContent = letters[Math.floor(rnd() * letters.length)];
+    f.style.left = (rnd() * 92 + 2) + "%"; f.style.top = (rnd() * 80 + 4) + "%";
+    f.style.fontSize = (16 + rnd() * 26) + "px"; f.style.opacity = (0.12 + rnd() * 0.2).toFixed(2);
+    f.style.transform = "rotate(" + Math.round(rnd() * 60 - 30) + "deg)";
+    art.insertBefore(f, art.querySelector(".copy"));
+  }
+</script>
+</body>
+</html>

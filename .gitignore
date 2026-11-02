@@ -43,3 +43,19 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# مخرجات فشل مقارنة golden (test/generate_screenshots.dart) — مؤقّتة
+/test/failures/
+
+# goldie store assets (regenerate with: goldie frame)
+goldie/out/
+
+# مفاتيح توقيع الإصدار — لا تُرفع إلى git أبدا. فقدان هذا الملف
+# يعني استحالة تحديث التطبيق على Google Play مستقبلا، وتسريبه
+# يعني قدرة غيرك على توقيع نسخ باسمك. احتفظ بنسخة احتياطية خارج المستودع.
+/android/key.properties
+**/*.jks
+**/*.keystore
+
+# Build deliverables (AAB, mapping) — large, never commit
+/release/

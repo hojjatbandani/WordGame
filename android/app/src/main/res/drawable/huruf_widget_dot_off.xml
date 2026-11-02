@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- نقطة تقدّم لم تُبلَغ بعد (○) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/huruf_tile_empty"/>
+    <size android:width="8dp" android:height="8dp"/>
+</shape>

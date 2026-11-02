@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- وصف ودجة الشاشة الرئيسية.
+
+     الأحجام: 2×2 (صغير) هو الأدنى، والافتراضي 4×2 (متوسط)، وقابلة
+     للتمدّد في الاتجاهين حتى 4×4 (كبير). التخطيط يُختار وقت التشغيل من
+     أبعاد الودجة الفعلية — راجع HurufWidgetProvider.
+
+     targetCellWidth/Height (أندرويد 12+) تعطي النظام الحجم بالخلايا
+     مباشرة بدل تقديره من dp، فتظهر الودجة بالحجم المقصود في المنتقي
+     ولا تُضاف بحجم مشوّه. minWidth/minHeight تبقى للأجهزة الأقدم.
+
+     updatePeriodMillis = 30 دقيقة: أقصر ما يقبله النظام فعليا هو 30
+     دقيقة، وهو ما يلتقط تغيّر اليوم بلا أي عمل خلفي من التطبيق ولا
+     استهلاك بطارية إضافي (النظام يجمّع التحديثات لكل الودجات معا).
+     التحديث الفوري بعد كل حدث يأتي من التطبيق نفسه عبر
+     HomeWidget.updateWidget — راجع syncHomeWidget. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="140dp"
+    android:minHeight="110dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:maxResizeWidth="320dp"
+    android:maxResizeHeight="320dp"
+    android:updatePeriodMillis="1800000"
+    android:initialLayout="@layout/huruf_widget_medium"
+    android:previewLayout="@layout/huruf_widget_medium"
+    android:previewImage="@mipmap/ic_launcher"
+    android:description="@string/huruf_widget_description"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"/>

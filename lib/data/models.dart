@@ -10,6 +10,8 @@ class WordEntry {
         word: json['word'] as String,
         definition: json['definition'] as String,
       );
+
+  Map<String, dynamic> toJson() => {'word': word, 'definition': definition};
 }
 
 class GameLevel {
@@ -37,8 +39,13 @@ class GameLevel {
         difficulty: json['difficulty'] as int,
       );
 
-  /// مكافأة إتمام المرحلة حسب الصعوبة (10–30 نقطة)
-  int get completionReward => 5 + difficulty * 5;
+  /// مكافأة إتمام المرحلة حسب الصعوبة.
+  /// سخاء في أول 20 مرحلة كي لا يُحبَط اللاعب المبتدئ، ثم تطبيع بعدها
+  /// فتزداد الحاجة إلى شراء النقاط أو مشاهدة الإعلانات مع صعوبة المراحل.
+  int get completionReward {
+    final base = 5 + difficulty * 5; // 10..30
+    return id <= 20 ? base + 10 : base;
+  }
 
   /// العالم الذي تنتمي إليه المرحلة
   int get worldId => worldForLevel(id).id;

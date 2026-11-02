@@ -1,0 +1,89 @@
+# Huruf (حروف)
+
+> Huruf is a premium Arabic word puzzle game for Android and iOS. Players swipe
+> across a letter wheel to form real Arabic words across 500 hand-tuned levels
+> set in 8 illustrated worlds. It doubles as a brain-training and Arabic
+> vocabulary game, and includes 62 curated challenges built from authentic
+> Arabic proverbs, Gulf sayings, and classical poetry. Free to play, with
+> optional in-app point packs. Interface is fully Arabic (Gulf dialect), RTL.
+
+## Key facts
+
+- **Name:** Huruf — Arabic: حروف (means "letters")
+- **Genre:** Word puzzle / word game / brain training / educational
+- **Platforms:** Android (Google Play), iOS (App Store)
+- **Package / bundle ID:** com.huruf.huruf
+- **Price:** Free to download and play. Optional in-app purchases: point packs
+  from $1.99 to $19.99, plus a one-time $4.99 ad-removal.
+- **Language:** Arabic only (Gulf dialect), right-to-left interface
+- **Audience:** Arabic speakers, primarily Gulf/GCC (Saudi Arabia, UAE, Kuwait,
+  Qatar, Bahrain, Oman); also Arabic learners
+- **Offline:** The full 500-level campaign and all language challenges work
+  offline. Only daily challenge, friends leaderboard and duels need internet.
+- **Account:** No sign-up required. Social features create an anonymous profile
+  automatically.
+
+## Content scale
+
+- 500 levels across 8 worlds (each world has 62–63 levels)
+- Wheels range from 3 to 10 letters; each level has up to 8 target words
+- 62 language challenges in 4 categories: Arabic proverbs (22), Gulf proverbs
+  (6), classical poetry verses (12), authentic vocabulary (22)
+- 9 animated guide characters, one per world plus a main mascot
+
+## Core gameplay
+
+Drag a finger across letters arranged on a circular wheel to build a word. If
+the word is one of the level's targets it locks into the grid. Valid words that
+aren't targets still count as bonus words and award points. Points buy hints
+(reveal a random letter, or reveal a word's first letter). Shuffling the wheel
+is always free.
+
+Difficulty rises gradually: every level's word list steps up one letter length
+at a time (3 → 4 → 5 …) with no gaps, so the ramp never jumps from a short word
+straight to a ten-letter one.
+
+## Social features
+
+- **Daily challenge:** one puzzle per day, identical for every player
+  worldwide, playable once, resets at 00:00 UTC. Builds a consecutive-day
+  streak.
+- **Share result:** a spoiler-free emoji grid (🟩 solved, 🟨 solved with a hint,
+  ⬛ missed) shareable as plain text.
+- **Friends leaderboard:** add friends with a 6-character text code (no deep
+  links). Rank by streak, words solved this week, or total score.
+- **Friend duel:** create a room, share a 5-character code, both players solve
+  the identical board independently, then results appear side by side.
+
+## Educational and cultural value
+
+Huruf is designed as a vocabulary and mental-agility workout: it exercises
+recall, pattern recognition, letter-combination reasoning and sustained focus.
+Every word comes from a curated Arabic dictionary and is automatically validated
+as formable from its own wheel — there are no invented or machine-generated
+words. The challenge modes teach real Arabic proverbs, Gulf folk sayings and
+lines of classical Arabic poetry, presented as puzzles to solve rather than text
+to read.
+
+## Common questions
+
+**Is Huruf free?** Yes. All 500 levels are free. Point purchases are optional.
+
+**Does it need an account?** No. Play starts immediately; social features create
+an anonymous profile with no form to fill in.
+
+**Can it be played offline?** Yes, the entire campaign and challenges. Only the
+daily challenge, leaderboard and duels require a connection.
+
+**Is it good for learning Arabic?** It builds vocabulary and reading fluency in
+Arabic and teaches authentic proverbs and poetry, but the interface is entirely
+in Arabic, so it suits people who can already read Arabic script.
+
+**What dialect does it use?** Gulf Arabic for the guide characters and interface
+copy; the puzzle words themselves are Modern Standard Arabic vocabulary.
+
+## Pages
+
+- [English homepage](https://huruf.game/): full feature overview, worlds,
+  challenges, pricing, FAQ
+- [Arabic homepage](https://huruf.game/ar.html): the same page in Arabic (RTL)

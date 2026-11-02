@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// تم «ليل الصحراء» — الهوية البصرية الافتراضية
 class HurufTheme {
@@ -26,6 +25,8 @@ class HurufTheme {
     colors: [Color(0xFFFFE082), gold, goldDark],
   );
 
+  static const String fontFamily = 'IRANSans';
+
   static ThemeData build() {
     final base = ThemeData(
       brightness: Brightness.dark,
@@ -37,11 +38,30 @@ class HurufTheme {
         error: error,
       ),
       useMaterial3: true,
+      fontFamily: fontFamily,
     );
     return base.copyWith(
-      textTheme: GoogleFonts.cairoTextTheme(base.textTheme).apply(
+      textTheme: base.textTheme.apply(
+        fontFamily: fontFamily,
         bodyColor: textPrimary,
         displayColor: textPrimary,
+      ),
+      // لون نصّ الرسائل المنبثقة صراحة: الافتراضي في Material 3 هو
+      // onInverseSurface، وهو لون *داكن* في سمة داكنة. كل رسائل التطبيق
+      // تُمرّر خلفية داكنة (HurufTheme.surface) وتترك لون النصّ
+      // للافتراضي، فكانت تظهر لوحا داكنا فارغا بلا كلمة واحدة مقروءة.
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: surface,
+        behavior: SnackBarBehavior.floating,
+        contentTextStyle: TextStyle(
+          fontFamily: fontFamily,
+          color: textPrimary,
+          fontWeight: FontWeight.w600,
+        ),
+        actionTextColor: gold,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(rButton),
+        ),
       ),
     );
   }
@@ -52,4 +72,25 @@ class HurufTheme {
 
   // أنصاف الأقطار
   static const double rCard = 24, rButton = 16, rTile = 12;
+
+  // مقاسات الأيقونات كرموز تصميم (بدل قيم عشوائية)
+  static const double iconSm = 20, iconMd = 24, iconLg = 32;
+
+  /// أدنى مساحة لمس مقبولة (Apple 44pt / Material 48dp)
+  static const double minTouch = 48;
+
+  // رموز الحركة: مدّة واحدة موحّدة لكل التطبيق
+  static const Duration durFast = Duration(milliseconds: 150);
+  static const Duration durBase = Duration(milliseconds: 220);
+  static const Duration durSlow = Duration(milliseconds: 320);
+
+  /// الدخول يبطئ في النهاية، والخروج يسرّع — قاعدة Material
+  static const Curve curveEnter = Curves.easeOutCubic;
+  static const Curve curveExit = Curves.easeInCubic;
+}
+
+/// اختصارات سياقية للوصولية وتقليل الحركة
+extension HurufContext on BuildContext {
+  /// هل طلب المستخدم تقليل الحركة من إعدادات النظام؟
+  bool get reduceMotion => MediaQuery.maybeDisableAnimationsOf(this) ?? false;
 }

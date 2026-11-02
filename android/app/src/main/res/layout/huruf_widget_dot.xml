@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- نقطة تقدّم واحدة. تُضاف وقت التشغيل بعدد أيام دورة الطبقة عبر
+     RemoteViews.addView — العدد متغيّر (7 للأسبوعية)، وRemoteViews لا
+     تعرف قوائم ديناميكية خارج هذا النمط. -->
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_dot"
+    android:layout_width="8dp"
+    android:layout_height="8dp"
+    android:layout_marginEnd="5dp"
+    android:importantForAccessibility="no"
+    android:src="@drawable/huruf_widget_dot_off"/>
