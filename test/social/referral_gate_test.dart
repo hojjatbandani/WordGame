@@ -128,11 +128,11 @@ void main() {
       for (final input in [
         code,
         '  abcd2345 ',
-        'https://huruf.game/i/$code',
-        'http://www.huruf.game/i/$code',
+        'https://huruf.site/i/$code',
+        'http://www.huruf.site/i/$code',
         'huruf://i/$code',
-        'https://huruf.game/get?code=$code',
-        'https://huruf.game/x/y/i/$code',
+        'https://huruf.site/get?code=$code',
+        'https://huruf.site/x/y/i/$code',
       ]) {
         expect(ReferralLink.extractCode(input), code, reason: input);
       }
@@ -146,7 +146,7 @@ void main() {
         'ABC',
         'ABCD23451',
         'ABCD2340', // صفر ليس في الأبجدية (ملتبس مع O)
-        'https://huruf.game/i/',
+        'https://huruf.site/i/',
         'مرحبا',
         '::::',
       ]) {

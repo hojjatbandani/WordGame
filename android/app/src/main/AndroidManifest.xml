@@ -60,18 +60,23 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- روابط الدعوة: huruf.game/i/CODE
+            <!-- روابط الدعوة: huruf.site/i/CODE (HTTPS فقط)
                  autoVerify يجعل النظام يفتح الرابط في التطبيق مباشرة بلا
                  نافذة اختيار، وشرطه رفع /.well-known/assetlinks.json على
-                 النطاق ببصمة توقيع الإصدار. قبل رفعه يبقى الرابط عاملا
-                 لكن عبر نافذة الاختيار، ويبقى إدخال الرمز يدويا مسارا
-                 كاملا على أي حال (راجع lib/core/referral_link.dart). -->
+                 كل مضيف هنا ببصمة توقيع الإصدار، بلا أي إعادة توجيه — أداة
+                 التحقق لا تتبع التحويلات. www مضاف لأن النطاق المجرّد يحوّل
+                 إليه (308) على Vercel، فهو المضيف الذي يصل إليه الزائر فعلا.
+                 قبل رفع الملف يبقى الرابط عاملا لكن عبر نافذة الاختيار،
+                 ويبقى إدخال الرمز يدويا مسارا كاملا على أي حال (راجع
+                 lib/core/referral_link.dart). -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="https" android:host="huruf.game" android:pathPrefix="/i/"/>
-                <data android:scheme="http" android:host="huruf.game" android:pathPrefix="/i/"/>
+                <data android:scheme="https"/>
+                <data android:host="huruf.site"/>
+                <data android:host="www.huruf.site"/>
+                <data android:pathPrefix="/i/"/>
             </intent-filter>
 
             <!-- خطّة ثانية: مخطّط مخصّص يعمل حيث لا تُفتح روابط الويب -->

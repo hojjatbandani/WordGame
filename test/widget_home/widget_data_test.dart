@@ -315,7 +315,7 @@ void main() {
 
     test('روابط الدعوة لا تُلتقط هنا — لكلٍّ مساره', () {
       expect(
-        WidgetDeepLink.parse(Uri.parse('https://huruf.game/i/ABCD2345')).$1,
+        WidgetDeepLink.parse(Uri.parse('https://huruf.site/i/ABCD2345')).$1,
         isFalse,
       );
       expect(WidgetDeepLink.parse(Uri.parse('huruf://invite/ABCD')).$1, isFalse);

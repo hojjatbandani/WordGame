@@ -13,7 +13,7 @@ class ReferralLink {
   /// نطاق صفحة الهبوط (landing/) — نفس النطاق المستخدم في وسوم canonical
   /// هناك. تغييره يتطلب تحديث assetlinks.json وapple-app-site-association
   /// على الخادم أيضا، وإلا فُتح الرابط في المتصفّح بدل التطبيق.
-  static const domain = 'huruf.game';
+  static const domain = 'huruf.site';
 
   /// مسار الدعوة. قصير عمدا: يُقرأ ويُملى صوتيا.
   static const path = 'i';
@@ -62,7 +62,7 @@ class ReferralLink {
       if (value != null && isWellFormed(value)) return normalize(value);
     }
 
-    // huruf.game/i/XXXXXXXX أو huruf://i/XXXXXXXX — نمسح كل المقاطع بدل
+    // huruf.site/i/XXXXXXXX أو huruf://i/XXXXXXXX — نمسح كل المقاطع بدل
     // افتراض موقع ثابت: بعض المنصّات تضيف مقاطع تتبّع قبل مقطعنا
     for (final segment in uri.pathSegments.reversed) {
       if (isWellFormed(segment)) return normalize(segment);

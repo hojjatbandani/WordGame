@@ -43,7 +43,7 @@ dependencies:
   audioplayers: ^6.8.1
   flutter_local_notifications: ^18.0.1
   timezone: ^0.9.4
-  # روابط الدعوة العميقة (huruf.game/i/CODE) — كانت تبعية غير مباشرة
+  # روابط الدعوة العميقة (huruf.site/i/CODE) — كانت تبعية غير مباشرة
   # عبر supabase_flutter، ورُقّيت إلى تبعية مباشرة لأننا نستوردها فعلا
   app_links: ^7.2.1
   # حفظ صورة المشاركة في ملف مؤقّت قبل تمريرها لورقة المشاركة
