@@ -100,6 +100,7 @@ class _NearMissSheetState extends ConsumerState<_NearMissSheet> {
         .showRewarded(
           context,
           length: AdFormats.forSurface(RewardedSurface.coinTopUp),
+          placement: RewardedSurface.coinTopUp.placement,
         );
     if (!mounted) return;
     if (!watched) {
@@ -217,7 +218,10 @@ class _NearMissSheetState extends ConsumerState<_NearMissSheet> {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => ShopScreen(highlightPackId: pack.id),
+                      builder: (_) => ShopScreen(
+                        highlightPackId: pack.id,
+                        source: 'near_miss',
+                      ),
                     ),
                   );
                 },

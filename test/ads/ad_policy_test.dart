@@ -159,6 +159,7 @@ class _RecordingAdService implements AdService {
   Future<InterstitialResult> showInterstitial(
     BuildContext context, {
     VoidCallback? onOpenShop,
+    String? placement,
   }) {
     calls.add('showInterstitial');
     onOpenShopReceived = onOpenShop;
@@ -166,7 +167,11 @@ class _RecordingAdService implements AdService {
   }
 
   @override
-  Future<bool> showRewarded(BuildContext context, {required AdLength length}) {
+  Future<bool> showRewarded(
+    BuildContext context, {
+    required AdLength length,
+    String? placement,
+  }) {
     calls.add('showRewarded:${length.name}');
     return rewardedClosed.future;
   }

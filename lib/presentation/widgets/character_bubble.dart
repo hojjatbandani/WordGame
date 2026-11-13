@@ -67,7 +67,8 @@ class _CharacterBubbleState extends ConsumerState<CharacterBubble> {
                 )
               : CharacterPortrait(
                   characterId: widget.characterId,
-                  size: widget.characterSize),
+                  size: widget.characterSize,
+                ),
           const SizedBox(width: HurufTheme.s3),
           Expanded(
             child: GlassCard(

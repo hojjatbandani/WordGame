@@ -48,6 +48,14 @@ enum AdBlockReason {
   coldStart,
 }
 
+/// السبب كما يظهر في PostHog (ad_skipped.reason): snake_case
+extension AdBlockReasonWire on AdBlockReason {
+  String get wire => name.replaceAllMapped(
+    RegExp('[A-Z]'),
+    (m) => '_${m[0]!.toLowerCase()}',
+  );
+}
+
 class InterstitialDecision {
   final bool allowed;
   final AdBlockReason? reason;

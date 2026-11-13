@@ -40,7 +40,27 @@ enum RewardedSurface {
   /// مضاعفة صندوق نهاية الفصل
   chapterChest,
 
+  /// تلميح بإعلان حين لا تكفي العملات (شاشة اللعب)
+  hint,
+
+  /// مضاعفة المكافأة اليومية بعد استلامها (المتجر)
+  dailyReward,
+
   other,
+}
+
+/// اسم السطح كما يظهر في PostHog (خاصية placement)
+extension RewardedSurfacePlacement on RewardedSurface {
+  String get placement => switch (this) {
+    RewardedSurface.wheel => 'wheel',
+    RewardedSurface.safetyMode => 'safety_mode',
+    RewardedSurface.coinTopUp => 'coin_top_up',
+    RewardedSurface.levelReward => 'level_reward',
+    RewardedSurface.chapterChest => 'chapter_chest',
+    RewardedSurface.hint => 'hint',
+    RewardedSurface.dailyReward => 'daily_reward',
+    RewardedSurface.other => 'other',
+  };
 }
 
 /// منحة اكتملت مشاهدتها ولم تُضَف بعد إلى المحفظة

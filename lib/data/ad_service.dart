@@ -21,6 +21,10 @@ import 'package:flutter/widgets.dart';
 import 'ads/ad_format.dart';
 
 /// ما آل إليه طلب إعلان بيني
+/// ناقل أحداث دورة حياة الإعلان إلى التحليلات (AnalyticsService.log).
+/// تمرّره main.dart؛ null = لا تحليلات (الاختبارات وسطح المكتب).
+typedef AdEventSink = void Function(String event, Map<String, Object?> props);
+
 enum InterstitialResult {
   /// لم يُعرض شيء (لا إعلان محمَّل، أو فشل العرض) — المستدعي يمضي فورا
   unavailable,
@@ -45,12 +49,20 @@ abstract class AdService {
 
   /// يعرض إعلانا بينيا ويعود بعد إغلاقه. [onOpenShop] يُستعمل في
   /// النسخة المحاكاة وحدها (زر «أزل الإعلانات»).
+  ///
+  /// [placement] موضع الطلب في اللعبة (next_stage، home…) — يحمله كل حدث
+  /// من أحداث دورة حياة هذا الإعلان.
   Future<InterstitialResult> showInterstitial(
     BuildContext context, {
     VoidCallback? onOpenShop,
+    String? placement,
   });
 
   /// يعرض إعلان مكافأة. [length] تعنيه النسخة المحاكاة فقط — الإعلان
   /// الحقيقي طوله من الشبكة.
-  Future<bool> showRewarded(BuildContext context, {required AdLength length});
+  Future<bool> showRewarded(
+    BuildContext context, {
+    required AdLength length,
+    String? placement,
+  });
 }

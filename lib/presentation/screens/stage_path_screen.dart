@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/app_language.dart';
 import '../../core/theme.dart';
+import '../../data/analytics/analytics_event.dart';
 import '../../data/models.dart';
 import '../../data/assistant_tips.dart';
 import '../../data/world_models.dart';
@@ -258,9 +259,11 @@ class _StagePathScreenState extends ConsumerState<StagePathScreen> {
         .firstOrNull;
     if (legacyLevel == null) return; // خارج مدى المحتوى القديم المتاح حاليا
 
+    ref.logEvent(Ev.stageSelected, {'stage_id': stageId, 'source': 'map'});
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => GameScreen(level: legacyLevel, allLevels: levels),
+        builder: (_) =>
+            GameScreen(level: legacyLevel, allLevels: levels, source: 'map'),
       ),
     );
     // التسجيل في نظام التقدّم (v2) يقع داخل شاشة اللعب نفسها لا هنا:
@@ -522,12 +525,14 @@ class _StageNodeState extends State<_StageNode>
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(data.isBoss ? '👑' : '✓',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-                color: HurufTheme.bgTop,
-              )),
+          Text(
+            data.isBoss ? '👑' : '✓',
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              color: HurufTheme.bgTop,
+            ),
+          ),
         ],
       );
     }

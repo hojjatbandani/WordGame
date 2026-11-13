@@ -40,7 +40,7 @@ void main() {
 
   setUp(
     () =>
-        SharedPreferences.setMockInitialValues({'points': 120, 'bonus_jar': 3, 'player_name_asked': true}),
+        SharedPreferences.setMockInitialValues({'points': 120, 'bonus_jar': 3, 'player_name_asked': true, 'max_unlocked': 2, 'onboarding_completed': true}),
   );
 
   testWidgets('تبديل اللغة من ورقة الإعدادات يترجم الرئيسية ويعود', (
@@ -83,7 +83,7 @@ void main() {
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({
-    'player_name_asked': true,
+    'player_name_asked': true, 'max_unlocked': 2, 'onboarding_completed': true,
       'points': 120,
       'bonus_jar': 3,
       'ui_language': 'en',
@@ -109,7 +109,7 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-    'player_name_asked': true,
+    'player_name_asked': true, 'max_unlocked': 2, 'onboarding_completed': true,
         'points': 120,
         'bonus_jar': 3,
         'ui_language': 'en',

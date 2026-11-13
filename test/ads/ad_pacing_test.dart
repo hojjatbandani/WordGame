@@ -46,9 +46,13 @@ void main() {
       }
     });
 
+    // 2026-11-09: كل 4 من المرحلة 21 (كانت من 41) — دخل أكثر بعد أن
+    // يكون اللاعب قد ثبت في اللعبة، والتعليم والفصل الأول بلا تغيير
     test('المدَيات الثلاثة: 5 ثم 4 ثم 3', () {
       expect(BalanceConfig.interstitialCadenceForStage(13), 5);
-      expect(BalanceConfig.interstitialCadenceForStage(40), 5);
+      expect(BalanceConfig.interstitialCadenceForStage(20), 5);
+      expect(BalanceConfig.interstitialCadenceForStage(21), 4);
+      expect(BalanceConfig.interstitialCadenceForStage(40), 4);
       expect(BalanceConfig.interstitialCadenceForStage(41), 4);
       expect(BalanceConfig.interstitialCadenceForStage(120), 4);
       expect(BalanceConfig.interstitialCadenceForStage(121), 3);

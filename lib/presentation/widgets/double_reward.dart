@@ -73,7 +73,11 @@ class _DoubleRewardButtonState extends ConsumerState<DoubleRewardButton> {
               if (!mounted) return false;
               final watched = await ref
                   .read(adServiceProvider)
-                  .showRewarded(context, length: length);
+                  .showRewarded(
+                    context,
+                    length: length,
+                    placement: widget.surface.placement,
+                  );
               if (!watched && mounted) {
                 showAdUnavailableToast(context, widget.lang);
               }

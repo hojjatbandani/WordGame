@@ -55,8 +55,10 @@ class _AchievementToastState extends ConsumerState<AchievementToast>
     final a = widget.achievement;
     final lang = ref.watch(languageProvider);
     final tierColor = Color(a.tier.color);
-    final curve =
-        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
+    final curve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutBack,
+    );
 
     return SafeArea(
       child: Align(
@@ -96,10 +98,13 @@ class _AchievementToastState extends ConsumerState<AchievementToast>
                           shape: BoxShape.circle,
                           color: tierColor.withValues(alpha: 0.18),
                           border: Border.all(
-                              color: tierColor.withValues(alpha: 0.5)),
+                            color: tierColor.withValues(alpha: 0.5),
+                          ),
                         ),
-                        child: Text(a.emoji,
-                            style: const TextStyle(fontSize: 26)),
+                        child: Text(
+                          a.emoji,
+                          style: const TextStyle(fontSize: 26),
+                        ),
                       ),
                       const SizedBox(width: HurufTheme.s3),
                       Expanded(
@@ -108,8 +113,10 @@ class _AchievementToastState extends ConsumerState<AchievementToast>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              lang.t('إنجاز جديد! · ${a.tier.titleAr}',
-                                  'New achievement! · ${a.tier.titleEn}'),
+                              lang.t(
+                                'إنجاز جديد! · ${a.tier.titleAr}',
+                                'New achievement! · ${a.tier.titleEn}',
+                              ),
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
@@ -139,12 +146,14 @@ class _AchievementToastState extends ConsumerState<AchievementToast>
                       const SizedBox(width: HurufTheme.s2),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: HurufTheme.s3,
-                            vertical: HurufTheme.s1),
+                          horizontal: HurufTheme.s3,
+                          vertical: HurufTheme.s1,
+                        ),
                         decoration: BoxDecoration(
                           gradient: HurufTheme.goldGradient,
-                          borderRadius:
-                              BorderRadius.circular(HurufTheme.rButton),
+                          borderRadius: BorderRadius.circular(
+                            HurufTheme.rButton,
+                          ),
                         ),
                         // الأسطوري بلا عملات: «+0» على أصعب إنجاز في
                         // اللعبة يقرأ عقوبة لا مكافأة
@@ -171,8 +180,7 @@ class _AchievementToastState extends ConsumerState<AchievementToast>
 }
 
 /// يعرض بطاقات الإنجازات المفتوحة واحدة تلو الأخرى فوق الشاشة الحالية
-void showAchievementUnlocked(
-    BuildContext context, List<Achievement> unlocked) {
+void showAchievementUnlocked(BuildContext context, List<Achievement> unlocked) {
   if (unlocked.isEmpty) return;
   final overlay = Overlay.maybeOf(context);
   if (overlay == null) return;

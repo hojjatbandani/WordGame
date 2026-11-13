@@ -11,11 +11,26 @@ class LetterWheel extends StatefulWidget {
   final void Function(String word) onWordSubmitted;
   final void Function(String preview) onSelectionChanged;
 
+  /// بدأ اللاعب لمس العجلة (يوقف عرض الإصبع)
+  final VoidCallback? onTouchStart;
+
+  /// رُفع الإصبع وحرف واحد مختار: لمسة لا سحب. كانت تُبتلع بصمت، فلا يعرف
+  /// لاعب جديد اعتاد النقر حرفا حرفا لماذا لا يحدث شيء
+  final VoidCallback? onSingleLetter;
+
+  /// الكلمة التي يرسم إصبعُ العرض مسارها (المرحلة الأولى)
+  final String? demoWord;
+  final bool demoActive;
+
   const LetterWheel({
     super.key,
     required this.letters,
     required this.onWordSubmitted,
     required this.onSelectionChanged,
+    this.onTouchStart,
+    this.onSingleLetter,
+    this.demoWord,
+    this.demoActive = false,
   });
 
   @override
@@ -23,11 +38,14 @@ class LetterWheel extends StatefulWidget {
 }
 
 class LetterWheelState extends State<LetterWheel>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late List<String> _letters;
   final List<int> _selected = [];
   Offset? _finger;
   late final AnimationController _shuffleController;
+
+  /// دورة إصبع العرض: سحب على المسار ثم وقفة قصيرة
+  late final AnimationController _demo;
 
   @override
   void initState() {
@@ -37,6 +55,11 @@ class LetterWheelState extends State<LetterWheel>
       vsync: this,
       duration: const Duration(milliseconds: 450),
     );
+    _demo = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    );
+    _syncDemo();
   }
 
   @override
@@ -47,11 +70,45 @@ class LetterWheelState extends State<LetterWheel>
       _selected.clear();
       _finger = null;
     }
+    if (oldWidget.demoActive != widget.demoActive ||
+        oldWidget.demoWord != widget.demoWord) {
+      _syncDemo();
+    }
+  }
+
+  bool get _showDemo =>
+      widget.demoActive && (widget.demoWord?.isNotEmpty ?? false);
+
+  void _syncDemo() {
+    if (_showDemo) {
+      if (!_demo.isAnimating) _demo.repeat();
+    } else {
+      _demo.stop();
+      _demo.value = 0;
+    }
+  }
+
+  /// مواضع حروف [LetterWheel.demoWord] في ترتيب العجلة الحالي (بعد أي
+  /// خلط)، كلّ حرف في خانة مختلفة — الحرف المكرّر يأخذ خانته الثانية
+  List<int> _demoIndices() {
+    final used = <int>{};
+    final out = <int>[];
+    for (final c in (widget.demoWord ?? '').split('')) {
+      final i = Iterable<int>.generate(_letters.length).firstWhere(
+        (i) => _letters[i] == c && !used.contains(i),
+        orElse: () => -1,
+      );
+      if (i < 0) return const [];
+      used.add(i);
+      out.add(i);
+    }
+    return out;
   }
 
   @override
   void dispose() {
     _shuffleController.dispose();
+    _demo.dispose();
     super.dispose();
   }
 
@@ -102,47 +159,112 @@ class LetterWheelState extends State<LetterWheel>
       _finger = null;
     });
     widget.onSelectionChanged('');
-    if (word.length >= 2) widget.onWordSubmitted(word);
+    if (word.length >= 2) {
+      widget.onWordSubmitted(word);
+    } else if (word.length == 1) {
+      widget.onSingleLetter?.call();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final size = Size(constraints.maxWidth, constraints.maxHeight);
-      return GestureDetector(
-        onPanStart: (d) {
-          _handlePointer(d.localPosition, size);
-          setState(() => _finger = d.localPosition);
-        },
-        onPanUpdate: (d) {
-          _handlePointer(d.localPosition, size);
-          setState(() => _finger = d.localPosition);
-        },
-        onPanEnd: (_) => _submit(),
-        onPanCancel: _submit,
-        child: RotationTransition(
-          turns: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: _shuffleController,
-            curve: Curves.easeInOutCubic,
-          )),
-          child: CustomPaint(
-            painter: _WheelPainter(
-              letters: _letters,
-              selected: _selected,
-              finger: _finger,
-              centerOf: (i) => _letterCenter(i, size),
-              tileRadius: _tileRadius(size),
-            ),
-            child: Stack(
-              children: [
-                for (var i = 0; i < _letters.length; i++)
-                  _buildLetter(i, size),
-              ],
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = Size(constraints.maxWidth, constraints.maxHeight);
+        return GestureDetector(
+          onPanStart: (d) {
+            widget.onTouchStart?.call();
+            _handlePointer(d.localPosition, size);
+            setState(() => _finger = d.localPosition);
+          },
+          onPanUpdate: (d) {
+            _handlePointer(d.localPosition, size);
+            setState(() => _finger = d.localPosition);
+          },
+          onPanEnd: (_) => _submit(),
+          onPanCancel: _submit,
+          child: Stack(
+            children: [
+              Positioned.fill(child: _buildWheel(size)),
+              if (_showDemo)
+                Positioned.fill(child: IgnorePointer(child: _buildDemo(size))),
+            ],
           ),
+        );
+      },
+    );
+  }
+
+  /// إصبع العرض: أثر ذهبي يمتدّ من حرف إلى حرف ويد تتبعه
+  Widget _buildDemo(Size size) {
+    final indices = _demoIndices();
+    if (indices.length < 2) return const SizedBox.shrink();
+    final points = [for (final i in indices) _letterCenter(i, size)];
+    return AnimatedBuilder(
+      animation: _demo,
+      builder: (context, _) {
+        // 73% من الدورة سحب، والباقي وقفة عند آخر حرف
+        final t = (_demo.value / 0.73).clamp(0.0, 1.0);
+        final head = _pointAlong(points, t);
+        const handSize = 40.0;
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _DemoTrailPainter(
+                  points: points,
+                  progress: t,
+                  width: _tileRadius(size) * 0.35,
+                ),
+              ),
+            ),
+            Positioned(
+              left: head.dx - handSize * 0.35,
+              top: head.dy - handSize * 0.1,
+              child: const Icon(
+                Icons.touch_app_rounded,
+                size: handSize,
+                color: Colors.white,
+                shadows: [Shadow(blurRadius: 8, color: Colors.black54)],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Offset _pointAlong(List<Offset> points, double t) {
+    final segments = points.length - 1;
+    final scaled = t * segments;
+    final i = scaled.floor().clamp(0, segments - 1);
+    final local = scaled - i;
+    return Offset.lerp(points[i], points[i + 1], local.clamp(0.0, 1.0))!;
+  }
+
+  Widget _buildWheel(Size size) {
+    return RotationTransition(
+      turns: Tween(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _shuffleController,
+          curve: Curves.easeInOutCubic,
         ),
-      );
-    });
+      ),
+      child: CustomPaint(
+        painter: _WheelPainter(
+          letters: _letters,
+          selected: _selected,
+          finger: _finger,
+          centerOf: (i) => _letterCenter(i, size),
+          tileRadius: _tileRadius(size),
+        ),
+        child: Stack(
+          children: [
+            for (var i = 0; i < _letters.length; i++) _buildLetter(i, size),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildLetter(int index, Size size) {
@@ -170,8 +292,9 @@ class LetterWheelState extends State<LetterWheel>
             ),
             boxShadow: [
               BoxShadow(
-                color: (isSelected ? HurufTheme.gold : Colors.black)
-                    .withValues(alpha: isSelected ? 0.45 : 0.35),
+                color: (isSelected ? HurufTheme.gold : Colors.black).withValues(
+                  alpha: isSelected ? 0.45 : 0.35,
+                ),
                 blurRadius: isSelected ? 18 : 10,
                 offset: const Offset(0, 4),
               ),
@@ -229,10 +352,7 @@ class _WheelPainter extends CustomPainter {
     if (selected.isEmpty) return;
 
     // خط الاتصال المتدرج بين الحروف المختارة
-    final points = [
-      for (final i in selected) centerOf(i),
-      ?finger,
-    ];
+    final points = [for (final i in selected) centerOf(i), ?finger];
     final path = Path()..moveTo(points.first.dx, points.first.dy);
     for (final p in points.skip(1)) {
       path.lineTo(p.dx, p.dy);
@@ -256,4 +376,44 @@ class _WheelPainter extends CustomPainter {
       oldDelegate.selected.length != selected.length ||
       oldDelegate.finger != finger ||
       oldDelegate.letters != letters;
+}
+
+/// أثر إصبع العرض: نفس خطّ الاتصال الذهبي، مقطوعا عند [progress]
+class _DemoTrailPainter extends CustomPainter {
+  final List<Offset> points;
+  final double progress;
+  final double width;
+
+  _DemoTrailPainter({
+    required this.points,
+    required this.progress,
+    required this.width,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 2 || progress <= 0) return;
+    final segments = points.length - 1;
+    final scaled = progress * segments;
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var i = 0; i < segments; i++) {
+      if (scaled <= i) break;
+      final local = (scaled - i).clamp(0.0, 1.0);
+      final end = Offset.lerp(points[i], points[i + 1], local)!;
+      path.lineTo(end.dx, end.dy);
+    }
+    canvas.drawPath(
+      path,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round
+        ..strokeWidth = width
+        ..color = HurufTheme.gold.withValues(alpha: 0.55),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_DemoTrailPainter oldDelegate) =>
+      oldDelegate.progress != progress || oldDelegate.points != points;
 }

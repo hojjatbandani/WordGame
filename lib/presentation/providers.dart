@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show BuildContext;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/balance_config.dart';
@@ -402,11 +403,10 @@ class PointsNotifier extends Notifier<int> {
       (economy) => economy.spend(amount, _spendReasonFor(reason)),
     );
     if (result.isFailure) {
-      ref.read(analyticsProvider)?.log(Ev.coinsSpent, {
+      ref.read(analyticsProvider)?.log(Ev.coinsSpendFailed, {
         'amount': amount,
         'reason': reason,
         'balance': state,
-        'failed': true,
       });
       return false;
     }
@@ -1014,12 +1014,9 @@ class InterstitialGateNotifier extends Notifier<int> {
     ref.read(progressStoreProvider).setCompletionsSinceInterstitial(state);
   }
 
-  /// يطلب إعلانا بينيا الآن. يعيد [AdCue.interstitial] إن سمحت كل
-  /// القواعد، بعد تسجيل وقت الإعلان وتصفير عدّاد الإيقاع.
-  ///
-  /// اللحظة الصحيحة للطلب هي بعد اكتمال تسلسل المكافأة ومغادرة اللاعب
-  /// للمرحلة بنفسه — لا لحظة الإتمام.
-  AdCue requestInterstitial({
+  /// القرار وحده بلا أثر: لا يصفّر العدّاد ولا يبدأ مهلة. مدخلاته كلها
+  /// من التخزين والحالة الحيّة، والقاعدة نفسها في [AdPacing].
+  InterstitialDecision evaluate({
     required int stageNumber,
     required bool stageCleared,
     required bool rewardSequenceComplete,
@@ -1027,8 +1024,7 @@ class InterstitialGateNotifier extends Notifier<int> {
   }) {
     final store = ref.read(progressStoreProvider);
     final now = nowOverride ?? DateTime.now();
-
-    final decision = AdPacing.decideInterstitial(
+    return AdPacing.decideInterstitial(
       InterstitialRequest(
         stageNumber: stageNumber,
         completionsSinceLastInterstitial: state,
@@ -1046,32 +1042,76 @@ class InterstitialGateNotifier extends Notifier<int> {
         lastPurchaseAt: store.lastPurchaseAt,
       ),
     );
+  }
 
+  /// أثر القرار المسموح: العدّاد يُصفَّر ووقت الإعلان يُسجَّل هنا لا في
+  /// الودجة — المهلة العامة تبدأ من لحظة القرار حتى لو أُغلق التطبيق فورا
+  void commit({DateTime? nowOverride}) {
+    final store = ref.read(progressStoreProvider);
+    state = 0;
+    store.setCompletionsSinceInterstitial(0);
+    store.setLastAdShownAt(nowOverride ?? DateTime.now());
+  }
+
+  /// يطلب إعلانا بينيا الآن (بلا تحليلات). يعيد [AdCue.interstitial] إن
+  /// سمحت كل القواعد، بعد تسجيل وقت الإعلان وتصفير عدّاد الإيقاع.
+  AdCue requestInterstitial({
+    required int stageNumber,
+    required bool stageCleared,
+    required bool rewardSequenceComplete,
+    DateTime? nowOverride,
+  }) {
+    final decision = evaluate(
+      stageNumber: stageNumber,
+      stageCleared: stageCleared,
+      rewardSequenceComplete: rewardSequenceComplete,
+      nowOverride: nowOverride,
+    );
     if (!decision.allowed) {
       if (kDebugMode) {
         debugPrint('إعلان بيني: مُنع — ${decision.reason?.name}');
       }
-      // سبب المنع نفسه معلومة تحليلية: «لماذا لا تظهر إعلانات في اليوم
-      // الأول» يُجاب برقم لا بتخمين
-      ref.read(analyticsProvider)?.log(Ev.adFailed, {
-        'kind': 'interstitial',
-        'reason': decision.reason?.name,
-        'stage': stageNumber,
-      });
       return AdCue.none;
     }
+    commit(nowOverride: nowOverride);
+    return AdCue.interstitial;
+  }
 
-    // العدّاد يُصفَّر ووقت الإعلان يُسجَّل هنا لا في الودجة: المهلة
-    // العامة يجب أن تبدأ من لحظة القرار حتى لو أُغلق التطبيق فورا
-    state = 0;
-    store.setCompletionsSinceInterstitial(0);
-    store.setLastAdShownAt(now);
+  /// مغادرة مرحلة مكتملة: يسجّل الطلب ثم الأهلية أو سبب التخطّي.
+  ///
+  /// «مبكّر جدا» و«لم يحن الدور» قراران مقصودان لا أعطال — كانا يُسجَّلان
+  /// ad_failed فبدا نظام الإعلانات معطّلا. إعلان لم يُحمَّل بعد لا يستهلك
+  /// دورة إيقاع ([adReady] false): يُسجَّل not_loaded ويبقى العدّاد.
+  /// العرض نفسه (ad_shown) يسجّله مزوّد الإعلان من نداء SDK الفعلي.
+  AdCue decideOnLeave({
+    required int stageNumber,
+    required String placement,
+    required bool adReady,
+    DateTime? nowOverride,
+  }) {
     final analytics = ref.read(analyticsProvider);
-    analytics?.log(Ev.adRequested, {
-      'kind': 'interstitial',
-      'stage': stageNumber,
-    });
-    analytics?.log(Ev.adShown, {'kind': 'interstitial', 'stage': stageNumber});
+    final props = <String, Object?>{
+      'ad_type': 'interstitial',
+      'placement': placement,
+      'stage_id': stageNumber,
+    };
+    analytics?.log(Ev.adRequested, props);
+    final decision = evaluate(
+      stageNumber: stageNumber,
+      stageCleared: true,
+      rewardSequenceComplete: true,
+      nowOverride: nowOverride,
+    );
+    if (!decision.allowed) {
+      analytics?.log(Ev.adSkipped, {...props, 'reason': decision.reason?.wire});
+      return AdCue.none;
+    }
+    if (!adReady) {
+      analytics?.log(Ev.adSkipped, {...props, 'reason': 'not_loaded'});
+      return AdCue.none;
+    }
+    commit(nowOverride: nowOverride);
+    analytics?.log(Ev.adEligible, props);
     return AdCue.interstitial;
   }
 
@@ -1133,20 +1173,28 @@ class RewardedAdsNotifier extends Notifier<RewardedLedger> {
       rewardedEnabled: available,
       amount: amount,
     );
-    ref
-        .read(analyticsProvider)
-        ?.log(request == null ? Ev.adFailed : Ev.adRequested, {
-          'surface': surface.name,
-          'kind': 'rewarded',
-          if (request != null) 'reward': request.quotedAmount,
-          if (request != null) 'view_number': request.viewNumber,
-          if (request == null)
-            'reason': !formatAllowed
-                ? 'format_disabled'
-                : !available
-                ? 'kill_switch'
-                : 'budget_exhausted',
-        });
+    final analytics = ref.read(analyticsProvider);
+    final props = <String, Object?>{
+      'ad_type': 'rewarded',
+      'placement': surface.placement,
+    };
+    analytics?.log(Ev.adRequested, props);
+    if (request == null) {
+      analytics?.log(Ev.adSkipped, {
+        ...props,
+        'reason': !formatAllowed
+            ? 'format_disabled'
+            : !available
+            ? 'kill_switch'
+            : 'budget_exhausted',
+      });
+    } else {
+      analytics?.log(Ev.adEligible, {
+        ...props,
+        'reward': request.quotedAmount,
+        'view_number': request.viewNumber,
+      });
+    }
     return request;
   }
 
@@ -1165,15 +1213,10 @@ class RewardedAdsNotifier extends Notifier<RewardedLedger> {
     );
     if (isDuplicate) return 0;
 
-    ref.read(analyticsProvider)?.log(Ev.adShown, {
-      'surface': request.surface.name,
-      'kind': 'rewarded',
-      'view_number': request.viewNumber,
-    });
-
-    // الإعلان الجائزي يدخل مهلة التسعين ثانية العامة أيضا
+    // الإعلان الجائزي يدخل مهلة التسعين ثانية العامة أيضا. العرض نفسه
+    // (ad_shown) سجّله مزوّد الإعلان من نداء SDK
     ref.read(interstitialGateProvider.notifier).recordAdShown(nowOverride: now);
-    return flush();
+    return flush(placement: request.surface.placement);
   }
 
   /// يستهلك مشاهدة من الميزانية بلا منح عملات — للسطوح التي مكافأتها
@@ -1247,16 +1290,40 @@ class RewardedAdsNotifier extends Notifier<RewardedLedger> {
     ref.read(pointsProvider.notifier).add(granted, reason: 'reward_doubled');
     ref.read(achievementsProvider.notifier).bump(StatKey.pointsEarned, granted);
     ref.read(analyticsProvider)?.log(Ev.adRewardGranted, {
+      'ad_type': 'rewarded',
+      'placement': surface.placement,
+      'reward_type': 'double_reward',
       'coins': granted,
-      'surface': surface.name,
-      'kind': 'double_reward',
     });
     return granted;
   }
 
+  /// تلميح بإعلان (ورقة «الرصيد لا يكفي» في شاشة اللعب): المكافأة هي
+  /// التلميح نفسه لا عملات، فتُستهلك المشاهدة من الميزانية بلا منح عملات.
+  /// يعيد true إن اكتملت المشاهدة واستُحقّت.
+  Future<bool> watchForHint(BuildContext context) async {
+    final request = begin(RewardedSurface.hint);
+    if (request == null) return false;
+    final watched = await ref
+        .read(adServiceProvider)
+        .showRewarded(
+          context,
+          length: AdFormats.forSurface(RewardedSurface.hint),
+          placement: RewardedSurface.hint.placement,
+        );
+    if (!watched) return false;
+    consumeViewWithoutCoins(request);
+    // ad_reward_granted تسجّله شاشة اللعب بعد أن يُكشف الحرف فعلا: منحٌ
+    // يُسجَّل هنا ثم لا يُطبَّق يخفي بالضبط الفجوة التي يجب أن تُرى
+    return true;
+  }
+
   /// يفرّغ ما اكتمل ولم يُضَف بعد ويضيفه إلى المحفظة. يُستدعى فور
   /// الاكتمال وعند كل إقلاع — منحة لم تصل نداءتها قبل الإغلاق تصل هنا.
-  int flush() {
+  ///
+  /// [placement] = السطح الذي اكتملت مشاهدته الآن؛ null = منح معلّق
+  /// يصل في إقلاع لاحق (recovered).
+  int flush({String? placement}) {
     final result = RewardedAds.flushQueue(state);
     if (result.isEmpty) return 0;
     _persist(result.ledger);
@@ -1265,8 +1332,12 @@ class RewardedAdsNotifier extends Notifier<RewardedLedger> {
         .read(achievementsProvider.notifier)
         .bump(StatKey.pointsEarned, result.coins);
     ref.read(analyticsProvider)?.log(Ev.adRewardGranted, {
+      'ad_type': 'rewarded',
+      'placement': ?placement,
+      'reward_type': 'coins',
       'coins': result.coins,
       'grants': result.applied.length,
+      if (placement == null) 'recovered': true,
     });
     return result.coins;
   }
@@ -1433,6 +1504,33 @@ class WheelState {
 }
 
 class WheelNotifier extends Notifier<WheelState> {
+  /// يُسأل قبل عرض إعلان الدورة: يسجّل الطلب ثم الأهلية أو سبب التخطّي
+  /// (المواصفة §4.4) — كان العرض يُسجَّل بلا طلب فيبدو القمع مقلوبا
+  bool beginAdSpin() {
+    final analytics = ref.read(analyticsProvider);
+    final props = <String, Object?>{
+      'ad_type': 'rewarded',
+      'placement': RewardedSurface.wheel.placement,
+    };
+    analytics?.log(Ev.adRequested, props);
+    final String? reason;
+    if (!ref.read(adFormatPolicyProvider).allowsRewardAds) {
+      reason = 'format_disabled';
+    } else if (!ref.read(rewardedAdsAvailableProvider)) {
+      reason = 'kill_switch';
+    } else if (state.adSpinsRemaining <= 0) {
+      reason = 'budget_exhausted';
+    } else {
+      reason = null;
+    }
+    if (reason != null) {
+      analytics?.log(Ev.adSkipped, {...props, 'reason': reason});
+      return false;
+    }
+    analytics?.log(Ev.adEligible, props);
+    return true;
+  }
+
   @override
   WheelState build() {
     final freeAvailable = _freeSpinAvailableNow();
@@ -1486,9 +1584,10 @@ class WheelNotifier extends Notifier<WheelState> {
       final store = ref.read(progressStoreProvider);
       store.setWheelAdDate(_dateKey(DateTime.now()));
       store.setWheelAdSpinsUsed(used + 1);
-      ref.read(analyticsProvider)?.log(Ev.adShown, {
-        'surface': RewardedSurface.wheel.name,
-        'kind': 'rewarded',
+      ref.read(analyticsProvider)?.log(Ev.adRewardGranted, {
+        'ad_type': 'rewarded',
+        'placement': RewardedSurface.wheel.placement,
+        'reward_type': 'spin',
         'view_number': used + 1,
       });
       // الإعلان الجائزي يدخل مهلة التسعين ثانية العامة أيضا

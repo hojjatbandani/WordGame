@@ -79,9 +79,17 @@ class PostHogSink {
     put('player_level', e.playerLevel);
     put('stage_id', e.stageId);
     put('coin_balance', e.coinBalance);
+    put('build_type', buildType);
     e.properties.forEach(put);
     return out;
   }
+
+  /// نوع البناء: يفصل أحداث نسخ التطوير عن اللاعبين الحقيقيين
+  static String get buildType => kReleaseMode
+      ? 'release'
+      : kProfileMode
+      ? 'profile'
+      : 'debug';
 
   static Object? _value(Object? v) => switch (v) {
     null => null,

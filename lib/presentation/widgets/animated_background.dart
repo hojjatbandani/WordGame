@@ -23,8 +23,10 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
   void initState() {
     super.initState();
     // التشغيل/الإيقاف يُدار في build حسب إعداد تقليل الحركة
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 40));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 40),
+    );
     final rng = Random(7);
     _particles = List.generate(40, (_) => _Particle.random(rng));
   }
@@ -70,16 +72,23 @@ class _Particle {
   final double phase;
   final double opacity;
 
-  _Particle(this.x, this.startY, this.size, this.speed, this.phase, this.opacity);
+  _Particle(
+    this.x,
+    this.startY,
+    this.size,
+    this.speed,
+    this.phase,
+    this.opacity,
+  );
 
   factory _Particle.random(Random rng) => _Particle(
-        rng.nextDouble(),
-        rng.nextDouble(),
-        0.8 + rng.nextDouble() * 2.2,
-        0.3 + rng.nextDouble() * 0.7,
-        rng.nextDouble() * 2 * pi,
-        0.12 + rng.nextDouble() * 0.35,
-      );
+    rng.nextDouble(),
+    rng.nextDouble(),
+    0.8 + rng.nextDouble() * 2.2,
+    0.3 + rng.nextDouble() * 0.7,
+    rng.nextDouble() * 2 * pi,
+    0.12 + rng.nextDouble() * 0.35,
+  );
 }
 
 class _ParticlePainter extends CustomPainter {
@@ -95,8 +104,7 @@ class _ParticlePainter extends CustomPainter {
       final y = (p.startY - t * p.speed) % 1.0;
       final drift = sin(t * 2 * pi * p.speed + p.phase) * 0.015;
       final twinkle = 0.6 + 0.4 * sin(t * 6 * pi + p.phase);
-      paint.color =
-          HurufTheme.gold.withValues(alpha: p.opacity * twinkle);
+      paint.color = HurufTheme.gold.withValues(alpha: p.opacity * twinkle);
       canvas.drawCircle(
         Offset((p.x + drift) * size.width, y * size.height),
         p.size,

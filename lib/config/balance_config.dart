@@ -237,6 +237,45 @@ class BalanceConfig {
   static int coinsHintOrderedLetter = 40;
   static int coinsHintRandomLetter = 25;
 
+  // ─────────────── بداية اللعبة: التعليم وتلميحات المراحل الأولى ───────────────
+  //
+  // راجع docs/superpowers/specs/2026-11-07-first-session-retention-design.md
+  // §6-7: لاعب جديد كان يحرق عملاته على التلميح في ثوانيه الأولى.
+
+  /// مراحل التعليم: المدرّب يعمل فيها حتى أول إتمام لآخرها
+  static int onboardingStageCount = 3;
+
+  /// حتى هذه المرحلة: أول تلميح في كل محاولة مجاني، والبقية بسعر مخفّض،
+  /// ولا عرض شراء
+  static int earlyGameStageLimit = 10;
+  static int coinsHintOrderedLetterEarly = 20;
+  static int coinsHintRandomLetterEarly = 10;
+
+  /// تأكيد التلميح المدفوع بعد المراحل الأولى: حين يبلغ ثمنه هذه النسبة
+  /// من الرصيد
+  static double hintConfirmBalanceShare = 0.25;
+
+  /// لمسة تلميح ثانية خلال هذه المدة من تلميح قُدِّم تُهمل (شراء مزدوج)
+  static Duration hintTapDebounce = const Duration(milliseconds: 600);
+
+  /// المرحلة الأولى: عمود التلميح يظهر بعد خطأين أو بعد هذه المدة بلا حلّ
+  static int tutorialRevealHintAfterWrongAttempts = 2;
+  static Duration tutorialRevealHintAfterIdle = const Duration(seconds: 20);
+
+  /// المرحلة الثانية: عرض الإصبع إن لم يلمس اللاعب العجلة خلال هذه المدة
+  static Duration tutorialDemoIfNoTouchAfter = const Duration(seconds: 5);
+
+  /// مساعدة متدرّجة في كل مرحلة: نبض زرّ التلميح بعد هذا العدد من
+  /// الأخطاء أو هذه المدة بلا كلمة جديدة — لا كشف تلقائي أبدا
+  static int assistAfterWrongAttempts = 3;
+  static Duration assistAfterIdle = const Duration(seconds: 30);
+
+  /// أقصى عدد كلمات مرفوضة تحملها أحداث المرحلة (اكتشاف كلمات ناقصة)
+  static int rejectedWordsCap = 15;
+
+  /// كم مرحلة غير مكتملة يُحفظ تقدّمها للاستئناف
+  static int resumeStagesKept = 3;
+
   static int coinsSkipStage = 250;
   static int failedAttemptsBeforeSkipOffered = 3;
 
@@ -444,7 +483,14 @@ class BalanceConfig {
   static int interstitialFirstEligibleStage = 13;
 
   /// (بداية المدى → كل كم مرحلة). يُقرأ تنازليا: أكبر مفتاح ≤ رقم المرحلة
-  static Map<int, int> interstitialCadenceByStage = {13: 5, 41: 4, 121: 3};
+  ///
+  /// 2026-11-09: كل 4 مراحل من المرحلة 21 (كانت من 41) — دخل أكثر بعد أن
+  /// يثبت اللاعب في اللعبة؛ التعليم والفصل الأول بلا أي إعلان بيني كما هما.
+  static Map<int, int> interstitialCadenceByStage = {13: 5, 21: 4, 121: 3};
+
+  /// إعادات التحميل التلقائية بعد إخفاقات متتالية قبل التوقّف حتى طلب صريح
+  /// (ads/ad_load_policy.dart) — لا طلبات بلا نهاية في بلد لا تملؤه الشبكة
+  static int adLoadMaxAutoRetries = 3;
 
   /// كل كم إتمام مرحلة يُعرض إعلان بيني عند [stageNumber].
   /// صفر يعني «ممنوع هنا» — لا «كل صفر مراحل».

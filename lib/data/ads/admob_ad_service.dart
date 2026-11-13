@@ -26,11 +26,36 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../ad_service.dart';
 import 'ad_format.dart';
+import 'ad_load_policy.dart';
+import 'mediation_privacy.dart';
 import 'ad_policy.dart';
 import 'admob_ids.dart';
 
 class AdMobAdService implements AdService {
-  AdMobAdService({this.policy = AdFormatPolicy.currentBuild});
+  AdMobAdService({
+    this.policy = AdFormatPolicy.currentBuild,
+    this.onEvent,
+    this.interstitialWanted,
+  });
+
+  /// هل يستحق الإعلان البيني التحميل الآن؟ (AdLoadPolicy.wantsInterstitial
+  /// بأعلى مرحلة مفتوحة). null = دوما. لاعب لم يقترب من المرحلة 13 لا
+  /// يطلب إعلانا بينيا لن يراه
+  final bool Function()? interstitialWanted;
+
+  /// أحداث دورة حياة الإعلان (loaded/load_failed/shown/clicked/
+  /// reward_earned/dismissed) من نداءات SDK الفعلية — هي وحدها ما يقول إن
+  /// إعلانا عُرض حقا
+  final AdEventSink? onEvent;
+
+  void _emit(String event, Map<String, Object?> props) {
+    try {
+      onEvent?.call(event, props);
+    } catch (_) {}
+  }
+
+  static String _short(String message) =>
+      message.length > 120 ? message.substring(0, 120) : message;
 
   /// AdMob متاح على الهاتف فقط
   static bool get isSupported =>
@@ -91,6 +116,8 @@ class AdMobAdService implements AdService {
       await MobileAds.instance.updateRequestConfiguration(
         childSafeRequestConfiguration,
       );
+      // شبكات الوساطة قبل أول طلب: لا بيع ولا مشاركة لبيانات اللاعب
+      await MediationPrivacy.apply(unity: GmaUnityPrivacy());
       await _gatherConsent();
       if (!await ConsentInformation.instance.canRequestAds()) {
         debugPrint('AdMob: لا يمكن طلب إعلانات (الموافقة غير مكتملة)');
@@ -154,6 +181,7 @@ class AdMobAdService implements AdService {
     if (!_interstitialAllowed || _interstitial != null || !_initialized) {
       return Future.value();
     }
+    if (!(interstitialWanted?.call() ?? true)) return Future.value();
     return _interstitialLoading ??= _doLoadInterstitial().whenComplete(
       () => _interstitialLoading = null,
     );
@@ -161,6 +189,8 @@ class AdMobAdService implements AdService {
 
   Future<void> _doLoadInterstitial() async {
     final done = Completer<void>();
+    final startedAt = DateTime.now();
+    final attempt = _interstitialFailures + 1;
     await InterstitialAd.load(
       adUnitId: AdMobIds.interstitial,
       request: adRequest,
@@ -172,17 +202,33 @@ class AdMobAdService implements AdService {
           } else {
             _interstitial = ad;
             _interstitialFailures = 0;
+            _emit('ad_loaded', {
+              'ad_type': 'interstitial',
+              'load_ms': DateTime.now().difference(startedAt).inMilliseconds,
+              'attempt': attempt,
+            });
           }
           if (!done.isCompleted) done.complete();
         },
         onAdFailedToLoad: (error) {
           debugPrint('AdMob: فشل تحميل البيني — ${error.message}');
+          _emit('ad_load_failed', {
+            'ad_type': 'interstitial',
+            'phase': 'load',
+            'error_code': error.code,
+            'error_message': _short(error.message),
+            'attempt': attempt,
+          });
           _interstitialFailures++;
           _interstitialRetry?.cancel();
-          _interstitialRetry = Timer(
-            _backoff(_interstitialFailures),
-            () => unawaited(_loadInterstitial()),
-          );
+          // بعد ثلاثة إخفاقات متتالية: لا إعادة تلقائية حتى طلب صريح
+          final delay = AdLoadPolicy.retryDelay(_interstitialFailures);
+          if (delay != null) {
+            _interstitialRetry = Timer(
+              delay,
+              () => unawaited(_loadInterstitial()),
+            );
+          }
           if (!done.isCompleted) done.complete();
         },
       ),
@@ -194,23 +240,45 @@ class AdMobAdService implements AdService {
   Future<InterstitialResult> showInterstitial(
     BuildContext context, {
     VoidCallback? onOpenShop,
+    String? placement,
   }) async {
     if (!_interstitialAllowed) return InterstitialResult.unavailable;
+    final props = {'ad_type': 'interstitial', 'placement': ?placement};
     final ad = _interstitial;
     if (ad == null) {
+      _emit('ad_skipped', {...props, 'reason': 'not_loaded'});
       unawaited(_loadInterstitial());
       return InterstitialResult.unavailable;
     }
     _interstitial = null;
 
+    DateTime? shownAt;
     final done = Completer<InterstitialResult>();
     ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (_) {
+        shownAt = DateTime.now();
+        _emit('ad_shown', props);
+      },
+      onAdClicked: (_) => _emit('ad_clicked', props),
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
+        final started = shownAt;
+        _emit('ad_dismissed', {
+          ...props,
+          'shown_ms': started == null
+              ? 0
+              : DateTime.now().difference(started).inMilliseconds,
+        });
         if (!done.isCompleted) done.complete(InterstitialResult.dismissed);
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         debugPrint('AdMob: فشل عرض البيني — ${error.message}');
+        _emit('ad_load_failed', {
+          ...props,
+          'phase': 'show',
+          'error_code': error.code,
+          'error_message': _short(error.message),
+        });
         ad.dispose();
         if (!done.isCompleted) done.complete(InterstitialResult.unavailable);
       },
@@ -219,6 +287,11 @@ class AdMobAdService implements AdService {
       await ad.show();
     } catch (e) {
       debugPrint('AdMob: استثناء عرض البيني — $e');
+      _emit('ad_load_failed', {
+        ...props,
+        'phase': 'show',
+        'error_message': _short('$e'),
+      });
       if (!done.isCompleted) done.complete(InterstitialResult.unavailable);
     }
     final result = await done.future;
@@ -239,6 +312,8 @@ class AdMobAdService implements AdService {
 
   Future<void> _doLoadRewarded() async {
     final done = Completer<void>();
+    final startedAt = DateTime.now();
+    final attempt = _rewardedFailures + 1;
     await RewardedInterstitialAd.load(
       adUnitId: AdMobIds.rewardedInterstitial,
       request: adRequest,
@@ -249,17 +324,29 @@ class AdMobAdService implements AdService {
           } else {
             _rewarded = ad;
             _rewardedFailures = 0;
+            _emit('ad_loaded', {
+              'ad_type': 'rewarded',
+              'load_ms': DateTime.now().difference(startedAt).inMilliseconds,
+              'attempt': attempt,
+            });
           }
           if (!done.isCompleted) done.complete();
         },
         onAdFailedToLoad: (error) {
           debugPrint('AdMob: فشل تحميل المكافأة — ${error.message}');
+          _emit('ad_load_failed', {
+            'ad_type': 'rewarded',
+            'phase': 'load',
+            'error_code': error.code,
+            'error_message': _short(error.message),
+            'attempt': attempt,
+          });
           _rewardedFailures++;
           _rewardedRetry?.cancel();
-          _rewardedRetry = Timer(
-            _backoff(_rewardedFailures),
-            () => unawaited(_loadRewarded()),
-          );
+          final delay = AdLoadPolicy.retryDelay(_rewardedFailures);
+          if (delay != null) {
+            _rewardedRetry = Timer(delay, () => unawaited(_loadRewarded()));
+          }
           if (!done.isCompleted) done.complete();
         },
       ),
@@ -271,7 +358,9 @@ class AdMobAdService implements AdService {
   Future<bool> showRewarded(
     BuildContext context, {
     required AdLength length,
+    String? placement,
   }) async {
+    final props = {'ad_type': 'rewarded', 'placement': ?placement};
     // قالب ممنوع: رفض فوري — لا مهلة التحميل أدناه ولا أي انتظار
     if (!_rewardedAllowed) return false;
     // اللاعب ضغط الزر الآن: نمهله بضع ثوان إن لم يكن الإعلان جاهزا
@@ -284,36 +373,66 @@ class AdMobAdService implements AdService {
       );
     }
     final ad = _rewarded;
-    if (ad == null) return false;
+    if (ad == null) {
+      // لم يتوفّر إعلان خلال مهلة الانتظار: «لا شيء محمَّل» لا عطل شبكة —
+      // العطل نفسه سُجّل ad_load_failed عند محاولة التحميل
+      _emit('ad_skipped', {...props, 'reason': 'not_loaded'});
+      return false;
+    }
     _rewarded = null;
 
     // المنح بنداء onUserEarnedReward وحده، لا بإغلاق الإعلان
     var earned = false;
+    DateTime? shownAt;
     final done = Completer<void>();
     ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (_) {
+        shownAt = DateTime.now();
+        _emit('ad_shown', props);
+      },
+      onAdClicked: (_) => _emit('ad_clicked', props),
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
+        final started = shownAt;
+        _emit('ad_dismissed', {
+          ...props,
+          'shown_ms': started == null
+              ? 0
+              : DateTime.now().difference(started).inMilliseconds,
+          'reward_earned': earned,
+        });
         if (!done.isCompleted) done.complete();
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         debugPrint('AdMob: فشل عرض المكافأة — ${error.message}');
+        _emit('ad_load_failed', {
+          ...props,
+          'phase': 'show',
+          'error_code': error.code,
+          'error_message': _short(error.message),
+        });
         ad.dispose();
         if (!done.isCompleted) done.complete();
       },
     );
     try {
-      await ad.show(onUserEarnedReward: (_, _) => earned = true);
+      await ad.show(
+        onUserEarnedReward: (_, _) {
+          earned = true;
+          _emit('ad_reward_earned', props);
+        },
+      );
     } catch (e) {
       debugPrint('AdMob: استثناء عرض المكافأة — $e');
+      _emit('ad_load_failed', {
+        ...props,
+        'phase': 'show',
+        'error_message': _short('$e'),
+      });
       if (!done.isCompleted) done.complete();
     }
     await done.future;
     unawaited(_loadRewarded());
     return earned;
   }
-
-  /// 15ث، 30ث، 60ث، … حتى 5 دقائق
-  static Duration _backoff(int failures) => Duration(
-    seconds: (15 * (1 << (failures - 1).clamp(0, 5))).clamp(15, 300),
-  );
 }

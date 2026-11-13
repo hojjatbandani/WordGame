@@ -27,6 +27,11 @@ void main() {
   });
 
   group('propertiesFor', () {
+    test('every event carries build_type', () {
+      // أحداث بناء التطوير تُفصل عن اللاعبين الحقيقيين بهذه الخاصية
+      expect(PostHogSink.propertiesFor(_event())['build_type'], 'debug');
+    });
+
     test('السياق أولا ثم الخصائص، والفارغ يُسقَط', () {
       final params = PostHogSink.propertiesFor(
         _event(
@@ -38,6 +43,7 @@ void main() {
       expect(params, {
         'player_level': 7,
         'coin_balance': 120,
+        'build_type': 'debug',
         'surface': 'wheel',
         'reward': 20,
       });

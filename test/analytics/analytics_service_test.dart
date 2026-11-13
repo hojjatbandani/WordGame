@@ -38,11 +38,26 @@ void main() {
       final seen = <AnalyticsEvent>[];
       final s = AnalyticsService(sink: seen.add);
       s.updateContext(playerLevel: 7, stageId: 42);
-      s.clearStage();
-      s.log(Ev.storeOpened, {'source': 'nav_bar'});
+      s.clearStage(42);
+      s.log(Ev.shopViewed, {'source': 'home_nav'});
 
       expect(seen.single.stageId, isNull);
       expect(seen.single.playerLevel, 7, reason: 'مستوى اللاعب باقٍ');
+    });
+
+    test('clearStage ignores another stage', () {
+      // شاشة المرحلة السابقة تُتلَف بعد أن تضبط اللاحقة سياقها (زرّ
+      // «التالي»): مسحها يجب ألّا يمحو مرحلة لم تعد مرحلتها
+      final seen = <AnalyticsEvent>[];
+      final s = AnalyticsService(sink: seen.add);
+      s.updateContext(stageId: 5);
+      s.clearStage(4);
+      s.log(Ev.coinsSpent);
+      s.clearStage(5);
+      s.log(Ev.coinsSpent);
+
+      expect(seen.first.stageId, 5);
+      expect(seen.last.stageId, isNull);
     });
 
     test('ناقل يرمي لا يُسقِط التسجيل ولا يمنع الأحداث التالية', () {
@@ -58,5 +73,27 @@ void main() {
 
       expect(calls, 2);
     });
+  });
+
+  test('Ev.all is unique snake_case and has no ad_failed', () {
+    final snake = RegExp(r'^[a-z]+(_[a-z]+)*$');
+    for (final name in Ev.all) {
+      expect(snake.hasMatch(name), isTrue, reason: name);
+    }
+    expect(Ev.all.toSet().length, Ev.all.length);
+    expect(Ev.all, isNot(contains('ad_failed')));
+    expect(Ev.all, isNot(contains('store_opened')));
+    expect(
+      Ev.all,
+      containsAll([
+        'home_viewed', 'continue_play_clicked', 'new_game_started',
+        'onboarding_started', 'onboarding_completed', 'stage_selected',
+        'next_stage_clicked', 'hint_viewed', 'hint_unavailable',
+        'coins_spend_failed', 'world_viewed', 'rewards_viewed', 'shop_viewed',
+        'purchase_failed', 'ad_requested', 'ad_eligible', 'ad_skipped',
+        'ad_loaded', 'ad_load_failed', 'ad_shown', 'ad_clicked',
+        'ad_reward_earned', 'ad_dismissed', 'ad_reward_granted',
+      ]),
+    );
   });
 }

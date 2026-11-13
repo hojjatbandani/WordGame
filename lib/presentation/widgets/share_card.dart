@@ -46,16 +46,17 @@ class ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rankText = ShareTemplates.rankLine(
-        rank: rank, totalPlayers: totalPlayers, lang: lang);
+      rank: rank,
+      totalPlayers: totalPlayers,
+      lang: lang,
+    );
 
     return Directionality(
       textDirection: lang.textDirection,
       child: Container(
         width: width,
         padding: const EdgeInsets.all(HurufTheme.s5),
-        decoration: const BoxDecoration(
-          gradient: HurufTheme.bgGradient,
-        ),
+        decoration: const BoxDecoration(gradient: HurufTheme.bgGradient),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,10 +123,10 @@ class _Grid extends StatelessWidget {
   static const _size = 34.0;
 
   Color _colorFor(ShareWordStatus s) => switch (s) {
-        ShareWordStatus.solved => HurufTheme.success,
-        ShareWordStatus.hinted => HurufTheme.gold,
-        ShareWordStatus.missed => HurufTheme.tileEmpty,
-      };
+    ShareWordStatus.solved => HurufTheme.success,
+    ShareWordStatus.hinted => HurufTheme.gold,
+    ShareWordStatus.missed => HurufTheme.tileEmpty,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +173,9 @@ class _StatRow extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-                fontSize: 13, color: HurufTheme.textSecondary),
+              fontSize: 13,
+              color: HurufTheme.textSecondary,
+            ),
           ),
           Text(
             value,
@@ -214,13 +217,18 @@ class _Footer extends StatelessWidget {
         Text(
           ReferralLink.domain,
           style: const TextStyle(
-              fontSize: 11, color: HurufTheme.textSecondary, letterSpacing: 1),
+            fontSize: 11,
+            color: HurufTheme.textSecondary,
+            letterSpacing: 1,
+          ),
         ),
         if (inviteCode != null) ...[
           const SizedBox(height: HurufTheme.s3),
           Container(
             padding: const EdgeInsets.symmetric(
-                horizontal: HurufTheme.s4, vertical: HurufTheme.s2),
+              horizontal: HurufTheme.s4,
+              vertical: HurufTheme.s2,
+            ),
             decoration: BoxDecoration(
               color: HurufTheme.gold.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(HurufTheme.rButton),
@@ -231,7 +239,9 @@ class _Footer extends StatelessWidget {
                 Text(
                   lang.t('رمز الدعوة', 'Invite code'),
                   style: const TextStyle(
-                      fontSize: 10, color: HurufTheme.textSecondary),
+                    fontSize: 10,
+                    color: HurufTheme.textSecondary,
+                  ),
                 ),
                 Text(
                   inviteCode!,

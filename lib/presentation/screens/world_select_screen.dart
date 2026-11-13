@@ -11,6 +11,7 @@ import '../providers.dart';
 import '../widgets/near_reward_banner.dart';
 import '../widgets/pressable.dart';
 import '../widgets/video_animation.dart';
+import 'map_entry.dart';
 import 'chapter_select_screen.dart';
 
 /// اشتقاق لون مميّز لكل عالم من colorSeed وحده — لا فنّ فعليا مرسوما لهذه
@@ -25,11 +26,24 @@ Color worldSeedColor(int colorSeed) {
 /// دوما من أول تشغيل (اختبار قبول 1)، المقفلة منها معتّمة لكن مقروءة
 /// بالكامل: الاسم، ظل الفنّ، ظل الشخصية، معاينة المكافأة، وشرط الفتح
 /// الدقيق — لا لوح فارغ أبدا.
-class WorldSelectScreen extends ConsumerWidget {
+class WorldSelectScreen extends ConsumerStatefulWidget {
   const WorldSelectScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WorldSelectScreen> createState() => _WorldSelectScreenState();
+}
+
+class _WorldSelectScreenState extends ConsumerState<WorldSelectScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.logEvent(Ev.worldViewed);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final lang = ref.watch(languageProvider);
     final snapshot = ref.watch(progressionProvider);
     final structure = ref.watch(progressionStructureProvider);
@@ -148,7 +162,7 @@ class _WorldCard extends ConsumerWidget {
             'previous_world_incomplete':
                 c != null && !c.requiredWorldLastChapterComplete,
           });
-          _showLockedSheet(context, card, lang);
+          _showLockedSheet(context, ref, card, lang);
         }
       },
       semanticLabel: card.isUnlocked
@@ -366,17 +380,19 @@ String _nameKeyForWorldId(int worldId) => _worldNameKeys[worldId - 1];
 
 void _showLockedSheet(
   BuildContext context,
+  WidgetRef ref,
   WorldCardViewData card,
   AppLanguage lang,
 ) {
   final condition = card.unlockCondition!;
+  final stage = ref.read(maxUnlockedProvider);
   showModalBottomSheet<void>(
     context: context,
     backgroundColor: HurufTheme.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder: (context) => SafeArea(
+    builder: (sheetContext) => SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(HurufTheme.s5),
         child: Column(
@@ -398,6 +414,29 @@ void _showLockedSheet(
               text: lang.t(
                 'أكمل عالم «${worldName(_nameKeyForWorldId(condition.requiredWorldId), lang)}»',
                 'Finish "${worldName(_nameKeyForWorldId(condition.requiredWorldId), lang)}"',
+              ),
+            ),
+            const SizedBox(height: HurufTheme.s4),
+            // من يلمس عالما مقفلا يبحث عن اللعب: الطريق إليه هنا مباشرة
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: HurufTheme.gold,
+                  foregroundColor: HurufTheme.bgTop,
+                  padding: const EdgeInsets.symmetric(vertical: HurufTheme.s3),
+                ),
+                onPressed: () {
+                  Navigator.of(sheetContext).pop();
+                  openCurrentStage(context, ref, source: 'world_locked_sheet');
+                },
+                child: Text(
+                  lang.t(
+                    'تابع اللعب — المرحلة $stage',
+                    'Continue playing — level $stage',
+                  ),
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
               ),
             ),
           ],

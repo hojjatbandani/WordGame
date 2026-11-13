@@ -32,7 +32,9 @@ class NearRewardBanner extends ConsumerWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
-          horizontal: HurufTheme.s4, vertical: HurufTheme.s3),
+        horizontal: HurufTheme.s4,
+        vertical: HurufTheme.s3,
+      ),
       decoration: BoxDecoration(
         color: HurufTheme.gold.withValues(alpha: 0.12),
         border: const Border(

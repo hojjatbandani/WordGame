@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,11 +11,13 @@ import '../../core/app_language.dart';
 import '../../core/theme.dart';
 import '../../main.dart';
 import '../../data/achievement_models.dart';
+import '../../data/analytics/analytics_event.dart';
 import '../../data/challenge_models.dart';
 import '../../data/progression/challenge_unlocks.dart';
 import '../../data/supabase_config.dart';
 import '../../data/world_models.dart';
 import '../home_widget_launch.dart';
+import '../widgets/rate_app_dialog.dart';
 import '../providers.dart';
 import '../widgets/achievement_toast.dart';
 import '../widgets/pressable.dart';
@@ -130,7 +132,7 @@ class HomeScreen extends ConsumerWidget {
           const _NotificationSync(),
           const _HomeWidgetSync(),
           const _WidgetPromoGate(),
-          const _NameGate(),
+          const _HomeViewTracker(),
         ],
       ),
     );
@@ -653,6 +655,11 @@ class _JourneyCard extends ConsumerWidget {
         : (maxUnlocked - world.firstLevelId) / world.levelCount;
     final remaining = world.lastLevelId - level + 1;
     final nextWorld = world.id < worlds.length ? worlds[world.id] : null;
+    // لاعب لم يُتمّ مرحلة بعد: «ابدأ»، ومن لعب: «تابع»
+    final isNewPlayer = maxUnlocked <= 1;
+    final ctaLabel = isNewPlayer
+        ? lang.t('ابدأ اللعب', 'Start playing')
+        : lang.t('تابع اللعب', 'Continue Playing');
 
     // عدد كلمات المرحلة الحالية من بيانات المراحل إن كانت محمّلة
     final wordCount = ref
@@ -763,11 +770,20 @@ class _JourneyCard extends ConsumerWidget {
           ),
           const SizedBox(height: 14),
           Pressable(
-            onTap: () => openMap(context, ref),
-            semanticLabel: lang.t(
-              'تابع اللعب، المرحلة $level',
-              'Continue playing, level $level',
-            ),
+            // مباشرة إلى المرحلة الحالية — كان يفتح الخريطة (عوالم ← فصول
+            // ← مسار ← مرحلة) فيمرّ اللاعب بأربع لمسات قبل أي حرف
+            onTap: () {
+              ref.logEvent(Ev.continuePlayClicked, {
+                'stage_id': level,
+                'cta': isNewPlayer ? 'start' : 'continue',
+              });
+              if (done) {
+                openMap(context, ref);
+              } else {
+                openCurrentStage(context, ref, source: 'home_cta');
+              }
+            },
+            semanticLabel: '$ctaLabel، ${lang.t('المرحلة', 'level')} $level',
             child: Container(
               height: 60,
               decoration: BoxDecoration(
@@ -801,7 +817,7 @@ class _JourneyCard extends ConsumerWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        lang.t('تابع اللعب', 'Continue Playing'),
+                        ctaLabel,
                         maxLines: 1,
                         style: _c(21, 800, color: _onGold, height: 1),
                       ),
@@ -814,6 +830,14 @@ class _JourneyCard extends ConsumerWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          // الخريطة باقية على بعد لمسة — لكن ليست طريق اللعب
+          TextButton(
+            onPressed: () => openMap(context, ref),
+            child: Text(
+              lang.t('خريطة المراحل', 'Level map'),
+              style: _c(13, 700, color: _sand.withValues(alpha: .7)),
             ),
           ),
         ],
@@ -1034,7 +1058,6 @@ class _ChallengeIcon extends StatelessWidget {
   }
 }
 
-
 // ─────────────────────── صف الإحصاءات ───────────────────────
 
 class _StatsRow extends ConsumerWidget {
@@ -1096,6 +1119,9 @@ class _NavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final flags = ref.watch(featureFlagsProvider);
+    // لاعب جديد لم يُتمّ التعليم: لا نقاط حمراء تجذبه إلى الجوائز والمتجر
+    // والعجلة قبل أول فوز — الجوائز نفسها تبقى قابلة للاستلام
+    final showBadges = ref.read(progressStoreProvider).onboardingCompleted;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
@@ -1122,7 +1148,7 @@ class _NavBar extends ConsumerWidget {
               label: lang.t('الجوائز', 'Rewards'),
               // النقطة الحمراء = جائزة جاهزة للاستلام، وتختفي فور
               // استلامها — نفس عقد نقطة العجلة تماما
-              badge: ref.watch(rewardTrackPendingProvider),
+              badge: showBadges && ref.watch(rewardTrackPendingProvider),
               onTap: () async {
                 await Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const RewardsScreen()),
@@ -1145,11 +1171,13 @@ class _NavBar extends ConsumerWidget {
               // جائزة الدخول اليومية أو قسط حزمة بداية مدفوعة — راجع
               // shopPendingProvider. نقطةٌ تعلن بيعا لا تختفي أبدا،
               // فتُعلّم اللاعب تجاهل النقاط كلها
-              badge: ref.watch(shopPendingProvider),
+              badge: showBadges && ref.watch(shopPendingProvider),
               onTap: () async {
-                await Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const ShopScreen()));
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ShopScreen(source: 'home_nav'),
+                  ),
+                );
                 // الجائزة اليومية تُستلم داخل المتجر، فتتقادم النقطة
                 // بمجرّد العودة منه
                 ref.invalidate(dailyRewardProvider);
@@ -1161,7 +1189,7 @@ class _NavBar extends ConsumerWidget {
             // النقطة الحمراء = دورة مجانية جاهزة، وتختفي فور استهلاكها.
             // انتقلت إلى هنا من زرّ الزاوية العائم الذي كان يكرّر نفس
             // المدخل فوق لوح اللعب
-            badge: ref.watch(wheelProvider).freeSpinAvailable,
+            badge: showBadges && ref.watch(wheelProvider).freeSpinAvailable,
             onTap: () => Navigator.of(
               context,
             ).push(MaterialPageRoute(builder: (_) => const WheelScreen())),
@@ -1352,10 +1380,7 @@ class PulseDotState extends State<PulseDot>
               shape: BoxShape.circle,
               border: Border.all(color: _navPanel, width: 1.6),
               boxShadow: [
-                BoxShadow(
-                  color: _redDot.withValues(alpha: .55),
-                  blurRadius: 7,
-                ),
+                BoxShadow(color: _redDot.withValues(alpha: .55), blurRadius: 7),
               ],
             ),
           ),
@@ -1752,29 +1777,70 @@ class _PendingRewardsClaimerState
 
 // ─────────────────────── اسم اللاعب ───────────────────────
 
-/// ودجة غير مرئية: تسأل اللاعب عن اسمه مرة واحدة عند أول دخول للعبة.
-///
-/// لماذا هنا لا في شاشة البدء: شاشة البدء تختفي من تلقائها بعد ثانيتين،
-/// وحوار فوقها يُقطع في منتصفه. وأول ظهور للرئيسية هو أول لحظة يرى فيها
-/// اللاعب اللعبة فعلا مستقرّة.
-class _NameGate extends ConsumerStatefulWidget {
-  const _NameGate();
+/// ودجة غير مرئية: كل مرة تصير الرئيسية هي الشاشة الظاهرة (بعد الإقلاع
+/// أو بعد العودة إليها) تسجّل home_viewed، ثم تسأل سؤالا واحدا إن لزم:
+///  - اسم اللاعب — بعد انتهاء التعليم لا عند أول فتح: كان حوارا بلوحة
+///    مفاتيح أول ما يراه اللاعب الجديد قبل أي حرف (المواصفة §5.3)؛
+///  - طلب التقييم المؤجَّل من نهاية فصل (لا يقاطع اللعب بين مرحلتين).
+class _HomeViewTracker extends ConsumerStatefulWidget {
+  const _HomeViewTracker();
 
   @override
-  ConsumerState<_NameGate> createState() => _NameGateState();
+  ConsumerState<_HomeViewTracker> createState() => _HomeViewTrackerState();
 }
 
-class _NameGateState extends ConsumerState<_NameGate> {
+class _HomeViewTrackerState extends ConsumerState<_HomeViewTracker>
+    with RouteAware {
+  PageRoute<dynamic>? _route;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final store = ref.read(progressStoreProvider);
-      // سُئل مرة = لا يُسأل ثانية، حتى لو تخطّى السؤال بلا اسم
-      if (store.playerNameAsked || store.playerName != null) return;
-      askPlayerName(context, ref, ref.read(languageProvider), firstTime: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _viewed('launch'));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute<dynamic> && route != _route) {
+      if (_route != null) hurufRouteObserver.unsubscribe(this);
+      _route = route;
+      hurufRouteObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    hurufRouteObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() => _viewed('return');
+
+  Future<void> _viewed(String source) async {
+    if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
+    final store = ref.read(progressStoreProvider);
+    final stages = ref
+        .read(achievementsProvider)
+        .valueOf(StatKey.levelsCompleted);
+    ref.logEvent(Ev.homeViewed, {
+      'source': source,
+      'is_new_player': ref.read(maxUnlockedProvider) <= 1,
+      'stages_completed': stages,
     });
+    if (!store.onboardingCompleted) return;
+    final lang = ref.read(languageProvider);
+    // سُئل مرة = لا يُسأل ثانية، حتى لو تخطّى السؤال بلا اسم
+    if (!store.playerNameAsked && store.playerName == null) {
+      await askPlayerName(context, ref, lang, firstTime: true);
+      return;
+    }
+    if (store.pendingRatingPrompt) {
+      await store.setPendingRatingPrompt(false);
+      if (mounted) await maybeAskForRating(context, ref, lang);
+    }
   }
 
   @override
@@ -2071,7 +2137,9 @@ class _WidgetPromoGateState extends ConsumerState<_WidgetPromoGate> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(_maybeShow()));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(_maybeShow()),
+    );
   }
 
   Future<void> _maybeShow() async {

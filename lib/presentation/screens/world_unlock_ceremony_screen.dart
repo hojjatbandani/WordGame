@@ -67,11 +67,15 @@ class _WorldUnlockCeremonyScreenState
   Future<void> _dismiss() async {
     if (_dismissed) return;
     _dismissed = true;
-    await ref.read(progressionProvider.notifier).markCeremonyShown(widget.worldId);
+    await ref
+        .read(progressionProvider.notifier)
+        .markCeremonyShown(widget.worldId);
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (_) => ChapterSelectScreen(worldId: widget.worldId),
-    ));
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => ChapterSelectScreen(worldId: widget.worldId),
+      ),
+    );
   }
 
   @override
@@ -134,11 +138,14 @@ class _WorldUnlockCeremonyScreenState
                             if (_canSkip) ...[
                               const SizedBox(height: HurufTheme.s2),
                               Text(
-                                lang.t('اضغط في أي مكان للتخطي',
-                                    'Tap anywhere to skip'),
+                                lang.t(
+                                  'اضغط في أي مكان للتخطي',
+                                  'Tap anywhere to skip',
+                                ),
                                 style: const TextStyle(
-                                    fontSize: 11,
-                                    color: HurufTheme.textSecondary),
+                                  fontSize: 11,
+                                  color: HurufTheme.textSecondary,
+                                ),
                               ),
                             ],
                           ],
@@ -203,7 +210,11 @@ class _NameBlock extends StatelessWidget {
   final WorldDef world;
   final AppLanguage lang;
   final double progress;
-  const _NameBlock({required this.world, required this.lang, required this.progress});
+  const _NameBlock({
+    required this.world,
+    required this.lang,
+    required this.progress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +236,9 @@ class _NameBlock extends StatelessWidget {
             Text(
               worldSubtitle(world.themeId, lang),
               style: const TextStyle(
-                  fontSize: 14, color: HurufTheme.textSecondary),
+                fontSize: 14,
+                color: HurufTheme.textSecondary,
+              ),
             ),
           ],
         ),
@@ -238,7 +251,11 @@ class _GuideBlock extends StatelessWidget {
   final WorldDef world;
   final AppLanguage lang;
   final double progress;
-  const _GuideBlock({required this.world, required this.lang, required this.progress});
+  const _GuideBlock({
+    required this.world,
+    required this.lang,
+    required this.progress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -265,14 +282,18 @@ class _GuideBlock extends StatelessWidget {
             Flexible(
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: HurufTheme.s3, vertical: HurufTheme.s2),
+                  horizontal: HurufTheme.s3,
+                  vertical: HurufTheme.s2,
+                ),
                 decoration: BoxDecoration(
                   color: HurufTheme.surface,
                   borderRadius: BorderRadius.circular(HurufTheme.rButton),
                 ),
                 child: Text(
-                  lang.t('أهلا بك! أنا مرشدك في هذا العالم الجديد',
-                      'Welcome! I\'ll guide you through this new world'),
+                  lang.t(
+                    'أهلا بك! أنا مرشدك في هذا العالم الجديد',
+                    'Welcome! I\'ll guide you through this new world',
+                  ),
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
@@ -299,17 +320,23 @@ class _RewardCardsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final cards = [
       (lang.t('مرشد جديد', 'New Guide'), '🧑', worldName(world.nameKey, lang)),
-      (lang.t('ثيم جديد', 'New Theme'), '🎨', worldSubtitle(world.themeId, lang)),
+      (
+        lang.t('ثيم جديد', 'New Theme'),
+        '🎨',
+        worldSubtitle(world.themeId, lang),
+      ),
       (
         lang.t('ميكانيكا جديدة', 'New Mechanic'),
         '⚙️',
-        mechanicName(world.mechanicId, lang)
+        mechanicName(world.mechanicId, lang),
       ),
       (
         lang.t('مكافآت جديدة', 'New Rewards'),
         '🏆',
-        lang.t('+${BalanceConfig.coinsWorldComplete} عند الإتمام',
-            '+${BalanceConfig.coinsWorldComplete} on completion')
+        lang.t(
+          '+${BalanceConfig.coinsWorldComplete} عند الإتمام',
+          '+${BalanceConfig.coinsWorldComplete} on completion',
+        ),
       ),
     ];
 
@@ -327,7 +354,10 @@ class _RewardCardsGrid extends StatelessWidget {
         final cardStart = i / cards.length;
         final cardEnd = (i + 1) / cards.length;
         final cardProgress =
-            ((overallProgress - cardStart) / (cardEnd - cardStart)).clamp(0.0, 1.0);
+            ((overallProgress - cardStart) / (cardEnd - cardStart)).clamp(
+              0.0,
+              1.0,
+            );
         return _FlipCard(
           progress: cardProgress,
           emoji: cards[i].$2,
@@ -374,17 +404,25 @@ class _FlipCard extends StatelessWidget {
             children: [
               Text(emoji, style: const TextStyle(fontSize: 28)),
               const SizedBox(height: 6),
-              Text(title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w800)),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               const SizedBox(height: 2),
-              Text(subtitle,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 10, color: HurufTheme.textSecondary)),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 10,
+                  color: HurufTheme.textSecondary,
+                ),
+              ),
             ],
           ),
         ),
@@ -397,7 +435,11 @@ class _CtaButton extends StatelessWidget {
   final double progress;
   final AppLanguage lang;
   final VoidCallback onTap;
-  const _CtaButton({required this.progress, required this.lang, required this.onTap});
+  const _CtaButton({
+    required this.progress,
+    required this.lang,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -419,9 +461,10 @@ class _CtaButton extends StatelessWidget {
             child: Text(
               lang.t('ابدأ الرحلة', 'Start the Journey'),
               style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900,
-                  color: HurufTheme.bgTop),
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: HurufTheme.bgTop,
+              ),
             ),
           ),
         ),

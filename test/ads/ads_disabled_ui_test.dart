@@ -77,6 +77,7 @@ class _RecordingAdService implements AdService {
   Future<InterstitialResult> showInterstitial(
     BuildContext context, {
     VoidCallback? onOpenShop,
+    String? placement,
   }) async {
     calls.add('showInterstitial');
     return InterstitialResult.dismissed;
@@ -86,6 +87,7 @@ class _RecordingAdService implements AdService {
   Future<bool> showRewarded(
     BuildContext context, {
     required AdLength length,
+    String? placement,
   }) async {
     calls.add('showRewarded(${length.name})');
     return true;
@@ -921,7 +923,8 @@ void main() {
         expect(rig.routes.entered, isEmpty);
         expect(find.byType(AdVideoOverlay), findsNothing);
         expect(find.byType(HomeScreen), findsOneWidget);
-        expect(find.text('تابع اللعب'), findsOneWidget);
+        // لاعب جديد (لم يُتمّ مرحلة): زرّ الرئيسية «ابدأ اللعب»
+        expect(find.text('ابدأ اللعب'), findsOneWidget);
       },
     );
   });

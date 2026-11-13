@@ -31,9 +31,9 @@ class LeaderboardScreen extends ConsumerWidget {
           IconButton(
             tooltip: lang.t('الأصدقاء', 'Friends'),
             icon: const Icon(Icons.person_add_alt_1_rounded),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const FriendsScreen()),
-            ),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const FriendsScreen())),
           ),
         ],
       ),
@@ -42,8 +42,12 @@ class LeaderboardScreen extends ConsumerWidget {
           children: [
             // مبدّل النطاق: بين ربعك أو بين كل اللاعبين
             Padding(
-              padding: const EdgeInsets.fromLTRB(HurufTheme.s3, HurufTheme.s3,
-                  HurufTheme.s3, 0),
+              padding: const EdgeInsets.fromLTRB(
+                HurufTheme.s3,
+                HurufTheme.s3,
+                HurufTheme.s3,
+                0,
+              ),
               child: Container(
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
@@ -58,19 +62,23 @@ class LeaderboardScreen extends ConsumerWidget {
                           onTap: () => ref
                               .read(leaderboardScopeProvider.notifier)
                               .select(s),
-                          semanticLabel: lang.t('عرض ${s.titleAr}',
-                              'Show ${s.titleEn}'),
+                          semanticLabel: lang.t(
+                            'عرض ${s.titleAr}',
+                            'Show ${s.titleEn}',
+                          ),
                           child: AnimatedContainer(
                             duration: HurufTheme.durFast,
                             padding: const EdgeInsets.symmetric(
-                                vertical: HurufTheme.s2),
+                              vertical: HurufTheme.s2,
+                            ),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: s == scope
                                   ? HurufTheme.surface
                                   : Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.circular(HurufTheme.rButton),
+                              borderRadius: BorderRadius.circular(
+                                HurufTheme.rButton,
+                              ),
                             ),
                             child: Text(
                               lang.t(s.titleAr, s.titleEn),
@@ -96,8 +104,7 @@ class LeaderboardScreen extends ConsumerWidget {
                   for (final m in LeaderboardMetric.values)
                     Expanded(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
                         child: _MetricTab(
                           metric: m,
                           selected: m == metric,
@@ -113,12 +120,13 @@ class LeaderboardScreen extends ConsumerWidget {
             ),
             Expanded(
               child: boardAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (_, _) => Center(
                   child: Text(
-                    lang.t('ما قدرنا نحمّل اللوحة، حاول لاحقا',
-                        'Couldn\'t load the leaderboard, try again later'),
+                    lang.t(
+                      'ما قدرنا نحمّل اللوحة، حاول لاحقا',
+                      'Couldn\'t load the leaderboard, try again later',
+                    ),
                     style: const TextStyle(color: HurufTheme.textSecondary),
                   ),
                 ),
@@ -139,10 +147,14 @@ class LeaderboardScreen extends ConsumerWidget {
                   }
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: HurufTheme.s4),
+                      horizontal: HurufTheme.s4,
+                    ),
                     itemCount: entries.length,
                     itemBuilder: (context, i) => _EntryTile(
-                        entry: entries[i], metric: metric, lang: lang),
+                      entry: entries[i],
+                      metric: metric,
+                      lang: lang,
+                    ),
                   );
                 },
               ),
@@ -158,12 +170,14 @@ class LeaderboardScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(HurufTheme.s3),
                   decoration: const BoxDecoration(
                     color: HurufTheme.surface,
-                    border: Border(
-                      top: BorderSide(color: Colors.white12),
-                    ),
+                    border: Border(top: BorderSide(color: Colors.white12)),
                   ),
                   child: _EntryTile(
-                      entry: me, metric: metric, lang: lang, pinned: true),
+                    entry: me,
+                    metric: metric,
+                    lang: lang,
+                    pinned: true,
+                  ),
                 );
               },
               orElse: () => const SizedBox.shrink(),
@@ -180,8 +194,11 @@ class LeaderboardScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.groups_rounded,
-              size: 56, color: HurufTheme.textSecondary),
+          const Icon(
+            Icons.groups_rounded,
+            size: 56,
+            color: HurufTheme.textSecondary,
+          ),
           const SizedBox(height: HurufTheme.s3),
           Text(
             lang.t('ما عندك أصدقاء بعد', 'You don\'t have any friends yet'),
@@ -189,20 +206,24 @@ class LeaderboardScreen extends ConsumerWidget {
           ),
           const SizedBox(height: HurufTheme.s2),
           Text(
-            lang.t('شارك رمزك مع ربعك وشوفوا مين الأقوى',
-                'Share your code with friends and see who\'s the best'),
+            lang.t(
+              'شارك رمزك مع ربعك وشوفوا مين الأقوى',
+              'Share your code with friends and see who\'s the best',
+            ),
             textAlign: TextAlign.center,
             style: const TextStyle(color: HurufTheme.textSecondary),
           ),
           const SizedBox(height: HurufTheme.s4),
           Pressable(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const FriendsScreen()),
-            ),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const FriendsScreen())),
             semanticLabel: lang.t('إضافة أصدقاء', 'Add friends'),
             child: Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: HurufTheme.s6, vertical: HurufTheme.s3),
+                horizontal: HurufTheme.s6,
+                vertical: HurufTheme.s3,
+              ),
               decoration: BoxDecoration(
                 gradient: HurufTheme.goldGradient,
                 borderRadius: BorderRadius.circular(HurufTheme.rButton),
@@ -241,7 +262,9 @@ class _MetricTab extends StatelessWidget {
     return Pressable(
       onTap: onTap,
       semanticLabel: lang.t(
-          'ترتيب حسب ${metric.titleAr}', 'Rank by ${metric.titleEn}'),
+        'ترتيب حسب ${metric.titleAr}',
+        'Rank by ${metric.titleEn}',
+      ),
       child: AnimatedContainer(
         duration: HurufTheme.durFast,
         padding: const EdgeInsets.symmetric(vertical: HurufTheme.s3),
@@ -285,7 +308,9 @@ class _EntryTile extends StatelessWidget {
       padding: EdgeInsets.only(bottom: pinned ? 0 : HurufTheme.s2),
       child: GlassCard(
         padding: const EdgeInsets.symmetric(
-            horizontal: HurufTheme.s4, vertical: HurufTheme.s3),
+          horizontal: HurufTheme.s4,
+          vertical: HurufTheme.s3,
+        ),
         child: Row(
           children: [
             SizedBox(
@@ -304,13 +329,14 @@ class _EntryTile extends StatelessWidget {
             Expanded(
               child: Text(
                 highlight
-                    ? lang.t('${entry.displayName} (أنت)',
-                        '${entry.displayName} (You)')
+                    ? lang.t(
+                        '${entry.displayName} (أنت)',
+                        '${entry.displayName} (You)',
+                      )
                     : entry.displayName,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  color:
-                      highlight ? HurufTheme.gold : HurufTheme.textPrimary,
+                  color: highlight ? HurufTheme.gold : HurufTheme.textPrimary,
                 ),
               ),
             ),

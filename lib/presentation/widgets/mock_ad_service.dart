@@ -16,6 +16,18 @@ import 'ad_video_overlay.dart';
 /// يعمل زرّ إغلاقها قبل نهاية العدّ (15 ثانية في الطويل). لذلك ترفض في
 /// بناء الإصدار كل عرض ولا تدّعي جاهزية، مهما سمحت سياسة القوالب.
 class MockAdService implements AdService {
+  MockAdService({this.onEvent});
+
+  /// نفس أحداث دورة الحياة التي يرسلها AdMob — كي يُفحص المسار كاملا
+  /// على الويب وسطح المكتب بلا شبكة إعلانات
+  final AdEventSink? onEvent;
+
+  void _emit(String event, Map<String, Object?> props) {
+    try {
+      onEvent?.call(event, props);
+    } catch (_) {}
+  }
+
   @override
   Future<void> init() async {}
 
@@ -35,8 +47,12 @@ class MockAdService implements AdService {
   Future<InterstitialResult> showInterstitial(
     BuildContext context, {
     VoidCallback? onOpenShop,
+    String? placement,
   }) async {
     if (kReleaseMode) return InterstitialResult.unavailable;
+    final props = {'ad_type': 'interstitial', 'placement': ?placement};
+    final shownAt = DateTime.now();
+    _emit('ad_shown', props);
     final result = await Navigator.of(context, rootNavigator: true)
         .push<InterstitialResult>(
           PageRouteBuilder<InterstitialResult>(
@@ -64,6 +80,10 @@ class MockAdService implements AdService {
             ),
           ),
         );
+    _emit('ad_dismissed', {
+      ...props,
+      'shown_ms': DateTime.now().difference(shownAt).inMilliseconds,
+    });
     return result ?? InterstitialResult.dismissed;
   }
 
@@ -71,11 +91,21 @@ class MockAdService implements AdService {
   Future<bool> showRewarded(
     BuildContext context, {
     required AdLength length,
+    String? placement,
   }) async {
     if (kReleaseMode) return false;
     await preload();
     if (!context.mounted) return false;
+    final props = {'ad_type': 'rewarded', 'placement': ?placement};
+    final shownAt = DateTime.now();
+    _emit('ad_shown', props);
     await playRewardedAdVideo(context, length: length);
+    _emit('ad_reward_earned', props);
+    _emit('ad_dismissed', {
+      ...props,
+      'shown_ms': DateTime.now().difference(shownAt).inMilliseconds,
+      'reward_earned': true,
+    });
     return true;
   }
 }

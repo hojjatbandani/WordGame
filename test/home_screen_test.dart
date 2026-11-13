@@ -16,6 +16,10 @@ Future<Widget> _app({Map<String, Object> extraPrefs = const {}}) async {
     'points': 120,
     'bonus_jar': 3,
     'player_name_asked': true,
+    // لاعب عائد أنهى التعليم: «تابع اللعب» ونقاط التنبيه ظاهرة (اللاعب
+    // الجديد يرى «ابدأ اللعب» بلا نقاط — test/presentation/entry_flow_test)
+    'max_unlocked': 2,
+    'onboarding_completed': true,
     ...extraPrefs,
   });
   final prefs = await SharedPreferences.getInstance();

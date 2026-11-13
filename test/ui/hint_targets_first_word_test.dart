@@ -19,8 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// الكلمة الأطول أولا في الملف عمدا — الترتيب الذي كان يكشف العيب:
 /// اللوح يعرض «ملح» في الصف الأول، والملف يضع «مسجد» أولا
+// خارج مراحل البداية (1-10) ومراحل التعليم: تلميح مدفوع عادي بلا ورقة
+// تأكيد مع رصيد وافر، فيبقى الاختبار عن موضع الكشف وحده
 const _level = GameLevel(
-  id: 1,
+  id: 17,
   letters: ['م', 'س', 'ج', 'د', 'ل', 'ح'],
   words: [
     WordEntry(word: 'مسجد', definition: 'بيت الصلاة'),
@@ -97,7 +99,9 @@ void main() {
           'لا على «مسجد» أول عنصر في levels.json',
     );
 
-    // ضغطة ثانية تتقدّم حرفا داخل الكلمة نفسها لا تقفز إلى كلمة أخرى
+    // ضغطة ثانية تتقدّم حرفا داخل الكلمة نفسها لا تقفز إلى كلمة أخرى.
+    // بعد مهلة منع الشراء المزدوج (600ms)
+    await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.byIcon(Icons.lightbulb_outline_rounded));
     await tester.pumpAndSettle();
     expect(tester.widget<WordGrid>(find.byType(WordGrid)).revealedHints, {

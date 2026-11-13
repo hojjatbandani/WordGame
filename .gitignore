@@ -59,3 +59,6 @@ goldie/out/
 
 # Build deliverables (AAB, mapping) — large, never commit
 /release/
+
+# Superpowers agent scratch (ledgers, scripts, logs)
+.superpowers/

@@ -6,6 +6,7 @@ import '../../core/theme.dart';
 import '../providers.dart';
 import '../widgets/animated_background.dart';
 import 'home_screen.dart';
+import 'map_entry.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -25,16 +26,35 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..forward();
-    Future.delayed(const Duration(milliseconds: 1700), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 500),
-          pageBuilder: (_, animation, _) =>
-              FadeTransition(opacity: animation, child: const HomeScreen()),
-        ),
+    Future.delayed(const Duration(milliseconds: 1700), _leave);
+  }
+
+  /// لاعب لم يُتمّ أي مرحلة بعد يدخل المرحلة الأولى مباشرة (القرار D1):
+  /// كان أمامه حوار اسم ثم الرئيسية ثم عوالم وفصول ومسار — دقيقة كاملة
+  /// قبل أول حرف. الرئيسية تُدفع تحتها في الإطار نفسه، فالرجوع يصل إليها.
+  Future<void> _leave() async {
+    if (!mounted) return;
+    final navigator = Navigator.of(context);
+    final analytics = ref.read(analyticsProvider);
+    final firstStage = ref.read(maxUnlockedProvider) == 1;
+    final levels = firstStage ? await ref.read(levelsProvider.future) : null;
+    if (!mounted) return;
+    navigator.pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        pageBuilder: (_, animation, _) =>
+            FadeTransition(opacity: animation, child: const HomeScreen()),
+      ),
+    );
+    if (levels != null && levels.isNotEmpty) {
+      pushStage(
+        navigator,
+        level: levels.first,
+        levels: levels,
+        source: 'first_launch',
+        analytics: analytics,
       );
-    });
+    }
   }
 
   @override

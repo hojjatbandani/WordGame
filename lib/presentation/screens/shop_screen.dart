@@ -16,6 +16,7 @@ import '../../data/login_calendar.dart';
 import '../../data/store/starter_pack.dart';
 import '../../data/store/store_catalog.dart';
 import '../providers.dart';
+import '../widgets/double_reward.dart';
 import '../widgets/ad_unavailable_toast.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/glass_card.dart';
@@ -34,7 +35,10 @@ class ShopScreen extends ConsumerStatefulWidget {
   /// السياق: اللاعب جاء لشيء بعينه لا ليتصفّح
   final String? highlightPackId;
 
-  const ShopScreen({super.key, this.highlightPackId});
+  /// من أين فُتح المتجر (home_nav، game_top_bar، near_miss، hint_sheet…)
+  final String source;
+
+  const ShopScreen({super.key, this.highlightPackId, this.source = 'other'});
 
   @override
   ConsumerState<ShopScreen> createState() => _ShopScreenState();
@@ -44,12 +48,19 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   bool _purchasing = false;
   int? _successPoints;
 
+  /// ما استُلم من المكافأة اليومية في هذه الزيارة — يُعرض تحته زرّ
+  /// مضاعفتها بإعلان يختاره اللاعب
+  int? _dailyClaimedCoins;
+
   @override
   void initState() {
     super.initState();
     // Google Play لم يُجب عند الإقلاع (بلا اتصال، أو لم يجهز بعد): يُسأل
     // ثانية الآن، فتظهر الأسعار بلا إعادة تشغيل التطبيق
     unawaited(ref.read(storeProvider.notifier).refresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.logEvent(Ev.shopViewed, {'source': widget.source});
+    });
   }
 
   static const _packGradients = <String, List<Color>>{
@@ -71,6 +82,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     final store = ref.read(storeProvider.notifier);
     setState(() => _purchasing = true);
     final result = await store.buy(sku);
+    if (!result.status.isSuccessLike) {
+      ref.logEvent(Ev.purchaseFailed, {
+        'sku': sku,
+        'reason': result.status.name,
+        'error': ?result.error,
+      });
+    }
     if (!mounted) return;
     setState(() => _purchasing = false);
 
@@ -310,7 +328,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     final reward = ref.read(dailyRewardProvider.notifier).claim();
     if (reward != null) {
       HapticFeedback.mediumImpact();
-      setState(() => _successPoints = reward.coins);
+      setState(() {
+        _successPoints = reward.coins;
+        _dailyClaimedCoins = reward.coins;
+      });
     }
   }
 
@@ -346,6 +367,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
           .showRewarded(
             context,
             length: AdFormats.forSurface(RewardedSurface.coinTopUp),
+            placement: RewardedSurface.coinTopUp.placement,
           );
     } finally {
       // الطبقة التي تحجب الشاشة وزرّ الرجوع لا تبقى بعد استثناء
@@ -622,6 +644,21 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 Flexible(child: _dayChipFor(day, daily.todayPosition)),
             ],
           ),
+          // مضاعفة ما استُلم للتوّ بإعلان — اختيار اللاعب لا مقاطعة، بشارة
+          // «إعلان» ومن الميزانية اليومية المشتركة؛ يختفي بعد المضاعفة
+          if (_dailyClaimedCoins != null)
+            Padding(
+              padding: const EdgeInsets.only(top: HurufTheme.s3),
+              child: Center(
+                child: DoubleRewardButton(
+                  amount: _dailyClaimedCoins!,
+                  lang: lang,
+                  surface: RewardedSurface.dailyReward,
+                  onDoubled: (granted) =>
+                      setState(() => _successPoints = granted),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -1271,4 +1308,10 @@ class _CoinPackCard extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on PurchaseStatus {
+  /// نتيجة لا تُعدّ فشلا: تمّ، أو قيد المعالجة ويُسلَّم تلقائيا
+  bool get isSuccessLike =>
+      this == PurchaseStatus.success || this == PurchaseStatus.pending;
 }

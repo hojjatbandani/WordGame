@@ -28,7 +28,10 @@ class AchievementsScreen extends ConsumerWidget {
         actions: [
           if (GamesServicesSync.isSignedIn)
             IconButton(
-              tooltip: lang.t('إنجازات Google Play', 'Google Play Achievements'),
+              tooltip: lang.t(
+                'إنجازات Google Play',
+                'Google Play Achievements',
+              ),
               icon: const Icon(Icons.sports_esports_rounded),
               onPressed: () => GamesServicesSync.showNativeAchievements(),
             ),
@@ -41,8 +44,9 @@ class AchievementsScreen extends ConsumerWidget {
             _SummaryCard(state: state, lang: lang),
             const SizedBox(height: HurufTheme.s5),
             // الفئات المعطّلة لا تُعرض — راجع AchievementCategory.isEnabled
-            for (final category
-                in AchievementCategory.values.where((c) => c.isEnabled)) ...[
+            for (final category in AchievementCategory.values.where(
+              (c) => c.isEnabled,
+            )) ...[
               _CategoryHeader(category: category, state: state, lang: lang),
               const SizedBox(height: HurufTheme.s3),
               for (final a in achievementsIn(category))
@@ -74,8 +78,10 @@ class _SummaryCard extends StatelessWidget {
           const Text('🏆', style: TextStyle(fontSize: 40)),
           const SizedBox(height: HurufTheme.s2),
           Text(
-            lang.t('${state.unlockedCount} من ${state.totalCount}',
-                '${state.unlockedCount} of ${state.totalCount}'),
+            lang.t(
+              '${state.unlockedCount} من ${state.totalCount}',
+              '${state.unlockedCount} of ${state.totalCount}',
+            ),
             style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.w900,
@@ -93,15 +99,16 @@ class _SummaryCard extends StatelessWidget {
               value: progress,
               minHeight: 10,
               backgroundColor: HurufTheme.tileEmpty,
-              valueColor:
-                  const AlwaysStoppedAnimation(HurufTheme.gold),
+              valueColor: const AlwaysStoppedAnimation(HurufTheme.gold),
             ),
           ),
           if (!GamesServicesSync.isSignedIn) ...[
             const SizedBox(height: HurufTheme.s3),
             Text(
-              lang.t('سجّل دخولك في Google Play كي تبقى إنجازاتك محفوظة',
-                  'Sign in to Google Play to keep your achievements saved'),
+              lang.t(
+                'سجّل دخولك في Google Play كي تبقى إنجازاتك محفوظة',
+                'Sign in to Google Play to keep your achievements saved',
+              ),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 11,
@@ -120,8 +127,11 @@ class _CategoryHeader extends StatelessWidget {
   final AchievementsState state;
   final AppLanguage lang;
 
-  const _CategoryHeader(
-      {required this.category, required this.state, required this.lang});
+  const _CategoryHeader({
+    required this.category,
+    required this.state,
+    required this.lang,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +174,11 @@ class _AchievementTile extends StatelessWidget {
   final AchievementsState state;
   final AppLanguage lang;
 
-  const _AchievementTile(
-      {required this.achievement, required this.state, required this.lang});
+  const _AchievementTile({
+    required this.achievement,
+    required this.state,
+    required this.lang,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -180,8 +193,10 @@ class _AchievementTile extends StatelessWidget {
       child: Semantics(
         label: unlocked
             ? lang.t('$title، مفتوح', '$title, unlocked')
-            : lang.t('$title، $value من ${achievement.target}',
-                '$title, $value of ${achievement.target}'),
+            : lang.t(
+                '$title، $value من ${achievement.target}',
+                '$title, $value of ${achievement.target}',
+              ),
         child: Container(
           padding: const EdgeInsets.all(HurufTheme.s3),
           decoration: BoxDecoration(
@@ -212,10 +227,15 @@ class _AchievementTile extends StatelessWidget {
                   ),
                 ),
                 child: unlocked
-                    ? Text(achievement.emoji,
-                        style: const TextStyle(fontSize: 24))
-                    : const Icon(Icons.lock_rounded,
-                        size: 20, color: HurufTheme.textSecondary),
+                    ? Text(
+                        achievement.emoji,
+                        style: const TextStyle(fontSize: 24),
+                      )
+                    : const Icon(
+                        Icons.lock_rounded,
+                        size: 20,
+                        color: HurufTheme.textSecondary,
+                      ),
               ),
               const SizedBox(width: HurufTheme.s3),
               Expanded(
@@ -246,14 +266,18 @@ class _AchievementTile extends StatelessWidget {
                         const SizedBox(width: HurufTheme.s2),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 1),
+                            horizontal: 6,
+                            vertical: 1,
+                          ),
                           decoration: BoxDecoration(
                             color: tierColor.withValues(alpha: 0.16),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            lang.t(achievement.tier.titleAr,
-                                achievement.tier.titleEn),
+                            lang.t(
+                              achievement.tier.titleAr,
+                              achievement.tier.titleEn,
+                            ),
                             style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.w700,
@@ -265,7 +289,9 @@ class _AchievementTile extends StatelessWidget {
                     ),
                     Text(
                       lang.t(
-                          achievement.descriptionAr, achievement.descriptionEn),
+                        achievement.descriptionAr,
+                        achievement.descriptionEn,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -308,8 +334,9 @@ class _AchievementTile extends StatelessWidget {
                         style: TextStyle(
                           fontSize: unlocked ? 18 : 11,
                           fontWeight: FontWeight.w800,
-                          color:
-                              unlocked ? tierColor : HurufTheme.textSecondary,
+                          color: unlocked
+                              ? tierColor
+                              : HurufTheme.textSecondary,
                         ),
                       ),
                     ),
@@ -350,15 +377,18 @@ class AchievementsEntryTile extends ConsumerWidget {
     final state = ref.watch(achievementsProvider);
     final lang = ref.watch(languageProvider);
     return Pressable(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const AchievementsScreen()),
-      ),
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const AchievementsScreen())),
       semanticLabel: lang.t(
-          'الإنجازات، ${state.unlockedCount} من ${state.totalCount}',
-          'Achievements, ${state.unlockedCount} of ${state.totalCount}'),
+        'الإنجازات، ${state.unlockedCount} من ${state.totalCount}',
+        'Achievements, ${state.unlockedCount} of ${state.totalCount}',
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(
-            horizontal: HurufTheme.s3, vertical: HurufTheme.s3),
+          horizontal: HurufTheme.s3,
+          vertical: HurufTheme.s3,
+        ),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.centerRight,
@@ -382,8 +412,10 @@ class AchievementsEntryTile extends ConsumerWidget {
               const SizedBox(width: HurufTheme.s2),
               Flexible(
                 child: Text(
-                  lang.t('الإنجازات ${state.unlockedCount}/${state.totalCount}',
-                      'Achievements ${state.unlockedCount}/${state.totalCount}'),
+                  lang.t(
+                    'الإنجازات ${state.unlockedCount}/${state.totalCount}',
+                    'Achievements ${state.unlockedCount}/${state.totalCount}',
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textDirection: lang.textDirection,

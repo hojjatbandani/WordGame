@@ -150,9 +150,7 @@ class WidgetPromoSheet extends StatelessWidget {
                       height: HurufTheme.minTouch,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          HurufTheme.rButton,
-                        ),
+                        borderRadius: BorderRadius.circular(HurufTheme.rButton),
                         border: Border.all(
                           color: Colors.white.withValues(alpha: .16),
                         ),
@@ -176,9 +174,7 @@ class WidgetPromoSheet extends StatelessWidget {
                       height: HurufTheme.minTouch,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          HurufTheme.rButton,
-                        ),
+                        borderRadius: BorderRadius.circular(HurufTheme.rButton),
                         color: HurufTheme.gold,
                       ),
                       child: Text(

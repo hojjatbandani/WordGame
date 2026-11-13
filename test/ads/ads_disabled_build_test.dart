@@ -282,13 +282,15 @@ void main() {
       }
 
       expect(c.read(rewardedAdsProvider).viewsUsed, 0);
-      final failures = boot.analytics.named(Ev.adFailed);
+      // كل طلب يُسجَّل ثم يُتخطّى بسبب السياسة — لا أهلية ولا عرض
+      final skipped = boot.analytics.named(Ev.adSkipped);
       expect(
-        [for (final f in failures) f['surface']],
-        [for (final s in RewardedSurface.values) s.name],
+        [for (final f in skipped) f['placement']],
+        [for (final s in RewardedSurface.values) s.placement],
       );
-      expect({for (final f in failures) f['reason']}, {'format_disabled'});
-      expect(boot.analytics.named(Ev.adRequested), isEmpty);
+      expect({for (final f in skipped) f['reason']}, {'format_disabled'});
+      expect(boot.analytics.named(Ev.adEligible), isEmpty);
+      expect(boot.analytics.named(Ev.adShown), isEmpty);
     });
 
     test('مضاعفة الجائزة تعيد صفرا بلا استدعاء العرض أصلا، ولا عملة ولا '
@@ -416,15 +418,10 @@ void main() {
       expect(boot.store.completionsSinceInterstitial, 111);
       expect(boot.store.lastAdShownAt, isNull);
 
-      final blocked = [
-        for (final e in boot.analytics.named(Ev.adFailed))
-          if (e['kind'] == 'interstitial') e,
-      ];
-      expect(blocked, hasLength(6));
-      expect({
-        for (final e in blocked) e['reason'],
-      }, {AdBlockReason.formatDisabled.name});
+      // بناء بلا قالب بيني صامت تماما: لا طلب ولا تخطٍّ ولا عرض (شاشة
+      // اللعب لا تسأل البوّابة أصلا حين يكون القالب مطفأ)
       expect(boot.analytics.named(Ev.adRequested), isEmpty);
+      expect(boot.analytics.named(Ev.adSkipped), isEmpty);
       expect(boot.analytics.named(Ev.adShown), isEmpty);
     });
   });
@@ -690,7 +687,7 @@ void main() {
               .begin(RewardedSurface.coinTopUp),
           isNull,
         );
-        return boot.analytics.named(Ev.adFailed).last['reason'];
+        return boot.analytics.named(Ev.adSkipped).last['reason'];
       }
 
       expect(blockReason(policyOff), 'format_disabled');

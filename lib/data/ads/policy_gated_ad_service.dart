@@ -46,18 +46,27 @@ class PolicyGatedAdService implements AdService {
   Future<InterstitialResult> showInterstitial(
     BuildContext context, {
     VoidCallback? onOpenShop,
+    String? placement,
   }) {
     if (!_interstitialAllowed) {
       return Future.value(InterstitialResult.unavailable);
     }
-    return _inner.showInterstitial(context, onOpenShop: onOpenShop);
+    return _inner.showInterstitial(
+      context,
+      onOpenShop: onOpenShop,
+      placement: placement,
+    );
   }
 
   @override
-  Future<bool> showRewarded(BuildContext context, {required AdLength length}) {
+  Future<bool> showRewarded(
+    BuildContext context, {
+    required AdLength length,
+    String? placement,
+  }) {
     // false = «لم يُشاهَد» — العقد نفسه لإعلان غير متاح: لا منح ولا
     // استهلاك من الميزانية
     if (!_rewardedAllowed) return Future.value(false);
-    return _inner.showRewarded(context, length: length);
+    return _inner.showRewarded(context, length: length, placement: placement);
   }
 }

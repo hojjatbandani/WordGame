@@ -122,8 +122,7 @@ class _WheelScreenState extends ConsumerState<WheelScreen>
   /// نتحقّق من الميزانية *قبل* العرض لا بعده: مشاهدة كاملة ثم رفض
   /// consumeSpin تعني إعلانا شُوهد بلا مقابل.
   Future<bool> _playAd() async {
-    if (!ref.read(rewardedAdsAvailableProvider)) return false;
-    if (ref.read(wheelProvider).adSpinsRemaining <= 0) return false;
+    if (!ref.read(wheelProvider.notifier).beginAdSpin()) return false;
 
     setState(() => _spinning = true);
     var watched = false;
@@ -133,6 +132,7 @@ class _WheelScreenState extends ConsumerState<WheelScreen>
           .showRewarded(
             context,
             length: AdFormats.forSurface(RewardedSurface.wheel),
+            placement: RewardedSurface.wheel.placement,
           );
     } finally {
       // _spinning يمنع الرجوع: استثناء من طبقة الإعلان لا يحبس اللاعب هنا

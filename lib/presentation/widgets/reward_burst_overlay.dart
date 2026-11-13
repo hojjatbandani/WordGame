@@ -124,7 +124,10 @@ class _RewardBurstOverlayState extends State<RewardBurstOverlay>
   }
 
   Widget _buildGem(_Gem gem, Size size) {
-    final local = ((_burst.value - gem.delay) / (1 - gem.delay)).clamp(0.0, 1.0);
+    final local = ((_burst.value - gem.delay) / (1 - gem.delay)).clamp(
+      0.0,
+      1.0,
+    );
     if (local == 0) return const SizedBox.shrink();
     final eased = Curves.easeOutCubic.transform(local);
     final origin = Offset(size.width / 2, size.height / 2);

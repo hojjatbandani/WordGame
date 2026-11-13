@@ -56,6 +56,9 @@ dependencies:
   purchases_flutter: ^10.17.0
   # التحليلات: PostHog وحده (lib/data/analytics/posthog_sink.dart)
   posthog_flutter: ^5.56.0
+  # وساطة الإعلانات: Unity Ads تتنافس على الإعلان البيني (لا تدعم البيني
+  # الجائزي) — الخصوصية في lib/data/ads/mediation_privacy.dart
+  gma_mediation_unity: ^1.12.0
 
 dev_dependencies:
   flutter_test:

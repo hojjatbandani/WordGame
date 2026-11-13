@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,6 +67,17 @@ class ProgressStore {
   static const _kLastAppOpenedAt = 'last_app_opened_at';
   static const _kSessionCount = 'session_count';
   static const _kNotificationPermissionRequested = 'notif_permission_requested';
+
+  // ─── رحلة اللاعب الأولى وجلسات المراحل (تحليلات + استئناف) ───
+  static const _kFirstOpenAt = 'first_open_at';
+  static const _kFirstStageStarted = 'first_stage_started';
+  static const _kOnboardingCompleted = 'onboarding_completed';
+  static const _kOnboardingStartedAt = 'onboarding_started_at';
+  static const _kStageAttempts = 'stage_attempts';
+  static const _kActiveStageSession = 'active_stage_session';
+  static const _kStageResume = 'stage_resume';
+  static const _kPendingRatingPrompt = 'pending_rating_prompt';
+  static const _kBonusWordExplained = 'bonus_word_explained';
 
   /// موضع تقويم الدخول اليومي — رقم يتزايد للأبد بمقدار 1 مع كل مطالبة
   /// ناجحة فقط، لا يُصفَّر أبدا بفوات يوم. مفتاح جديد يحلّ محلّ
@@ -510,6 +522,92 @@ class ProgressStore {
   /// - جلسة Supabase (مفاتيح `sb-`): يخزّنها supabase_flutter في نفس
   ///   SharedPreferences، ومسحها يُنشئ حسابا مجهولا جديدا فتضيع قائمة
   ///   الأصدقاء ورمز الصديق وسجلّ لوحة الترتيب كلها.
+  // ─────────── رحلة اللاعب الأولى وجلسات المراحل ───────────
+
+  /// لحظة أول فتح للتطبيق على هذا التثبيت (ms) — يُقاس منها «من
+  /// التثبيت إلى أول مرحلة»
+  int? get firstOpenAtMs => prefs.getInt(_kFirstOpenAt);
+  Future<void> ensureFirstOpenAt(int nowMs) async {
+    if (prefs.getInt(_kFirstOpenAt) == null) {
+      await prefs.setInt(_kFirstOpenAt, nowMs);
+    }
+  }
+
+  bool get firstStageStarted => prefs.getBool(_kFirstStageStarted) ?? false;
+  Future<void> setFirstStageStarted(bool value) =>
+      prefs.setBool(_kFirstStageStarted, value);
+
+  /// أتمّ مراحل التعليم الأولى — يرفع الحجب عن حوار الاسم ونقاط التنبيه
+  bool get onboardingCompleted => prefs.getBool(_kOnboardingCompleted) ?? false;
+  Future<void> setOnboardingCompleted(bool value) =>
+      prefs.setBool(_kOnboardingCompleted, value);
+
+  int? get onboardingStartedAtMs => prefs.getInt(_kOnboardingStartedAt);
+  Future<void> setOnboardingStartedAtMs(int value) =>
+      prefs.setInt(_kOnboardingStartedAt, value);
+
+  /// لاعب حدّث التطبيق من نسخة سبقت أعلام الرحلة ليس لاعبا جديدا: بلا
+  /// هذا يفقد نقاط التنبيه وطلب التقييم ويرى التعليم من جديد، وتُسجَّل له
+  /// new_game_started بزمن مقيس من لحظة التحديث فتلوّث مقياس الإصدار.
+  /// آمنة للتكرار — تُستدعى عند كل إقلاع.
+  Future<void> migrateJourneyFlags() async {
+    final unlocked = maxUnlocked;
+    if (unlocked > 1 && !firstStageStarted) {
+      await setFirstStageStarted(true);
+    }
+    if (unlocked > BalanceConfig.onboardingStageCount && !onboardingCompleted) {
+      await setOnboardingCompleted(true);
+    }
+  }
+
+  /// كم مرة بدأ اللاعب هذه المرحلة حتى الآن
+  int stageAttemptCount(int stageId) {
+    try {
+      final map = jsonDecode(prefs.getString(_kStageAttempts) ?? '{}') as Map;
+      return (map['$stageId'] as num?)?.toInt() ?? 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  /// كم مرة بدأ اللاعب هذه المرحلة — يعيد العدد الجديد
+  Future<int> bumpStageAttempt(int stageId) async {
+    Map<String, dynamic> map;
+    try {
+      map = (jsonDecode(prefs.getString(_kStageAttempts) ?? '{}') as Map)
+          .cast<String, dynamic>();
+    } catch (_) {
+      map = {};
+    }
+    final next = ((map['$stageId'] as num?)?.toInt() ?? 0) + 1;
+    map['$stageId'] = next;
+    await prefs.setString(_kStageAttempts, jsonEncode(map));
+    return next;
+  }
+
+  /// جلسة المرحلة الجارية الآن (JSON). بقاؤها بعد إقلاع جديد يعني أن
+  /// النظام أغلق التطبيق أثناء المرحلة
+  String? get activeStageSessionJson => prefs.getString(_kActiveStageSession);
+  Future<void> setActiveStageSessionJson(String? json) => json == null
+      ? prefs.remove(_kActiveStageSession)
+      : prefs.setString(_kActiveStageSession, json);
+
+  /// تقدّم المراحل غير المكتملة (JSON) — يُستأنف منه عند العودة
+  String? get stageResumeJson => prefs.getString(_kStageResume);
+  Future<void> setStageResumeJson(String? json) => json == null
+      ? prefs.remove(_kStageResume)
+      : prefs.setString(_kStageResume, json);
+
+  /// طلب تقييم مؤجَّل إلى أول عودة للرئيسية بعد إتمام فصل
+  bool get pendingRatingPrompt => prefs.getBool(_kPendingRatingPrompt) ?? false;
+  Future<void> setPendingRatingPrompt(bool value) =>
+      prefs.setBool(_kPendingRatingPrompt, value);
+
+  /// شُرحت الكلمة الإضافية للاعب مرة (مرحلة التعليم)
+  bool get bonusWordExplained => prefs.getBool(_kBonusWordExplained) ?? false;
+  Future<void> setBonusWordExplained(bool value) =>
+      prefs.setBool(_kBonusWordExplained, value);
+
   static const _preservedOnReset = <String>{
     _kLanguage,
     _kMusicEnabled,
@@ -519,6 +617,9 @@ class ProgressStore {
     _kNotifRewardTrackEnabled,
     _kNotifStreakEnabled,
     _kNotificationPermissionRequested,
+    // حقائق التثبيت لا اللعبة: «البدء من جديد» لا يجعل اللاعب جديدا
+    _kFirstOpenAt,
+    _kFirstStageStarted,
     _kPlayerName,
     _kPlayerNameAsked,
     _kAppRated,

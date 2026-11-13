@@ -45,19 +45,22 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
     if (!mounted || message.isEmpty) return;
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(
-        content: Text(message, textAlign: TextAlign.center),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: HurufTheme.surface,
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message, textAlign: TextAlign.center),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: HurufTheme.surface,
+        ),
+      );
   }
 
   Future<void> _submitCode() async {
     final code = _codeController.text.trim();
     if (code.isEmpty || _busy) return;
     setState(() => _busy = true);
-    final outcome =
-        await ref.read(socialRepositoryProvider).addFriendByCode(code);
+    final outcome = await ref
+        .read(socialRepositoryProvider)
+        .addFriendByCode(code);
     if (!mounted) return;
     setState(() => _busy = false);
     _codeController.clear();
@@ -118,7 +121,8 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
             tooltip: lang.t('لوحة الأصدقاء', 'Friends board'),
             icon: const Icon(Icons.leaderboard_rounded),
             onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const LeaderboardScreen())),
+              MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
+            ),
           ),
         ],
       ),
@@ -168,9 +172,12 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _SectionTitle(lang.t(
+                          _SectionTitle(
+                            lang.t(
                               'طلبات واردة (${list.length})',
-                              'Incoming requests (${list.length})')),
+                              'Incoming requests (${list.length})',
+                            ),
+                          ),
                           const SizedBox(height: HurufTheme.s3),
                           for (final r in list)
                             _RequestTile(
@@ -187,9 +194,9 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
               ),
 
               friendsAsync.when(
-                data: (friends) => _FriendsSection(friends: friends, lang: lang),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                data: (friends) =>
+                    _FriendsSection(friends: friends, lang: lang),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (_, _) => const SizedBox.shrink(),
               ),
             ],
@@ -206,9 +213,9 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        text,
-        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
-      );
+    text,
+    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
+  );
 }
 
 class _OfflineNotice extends StatelessWidget {
@@ -217,15 +224,16 @@ class _OfflineNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GlassCard(
-        padding: const EdgeInsets.all(HurufTheme.s4),
-        child: Text(
-          lang.t('الأصدقاء يحتاجون اتصالا — بقية اللعبة تعمل بدونه',
-              'Friends need a connection — the rest of the game works offline'),
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-              fontSize: 12, color: HurufTheme.textSecondary),
-        ),
-      );
+    padding: const EdgeInsets.all(HurufTheme.s4),
+    child: Text(
+      lang.t(
+        'الأصدقاء يحتاجون اتصالا — بقية اللعبة تعمل بدونه',
+        'Friends need a connection — the rest of the game works offline',
+      ),
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 12, color: HurufTheme.textSecondary),
+    ),
+  );
 }
 
 // ─────────────────────── بطاقة ملفّي ───────────────────────
@@ -261,7 +269,9 @@ class _MyProfileCard extends ConsumerWidget {
           Text(
             lang.t('رمزك', 'Your code'),
             style: const TextStyle(
-                fontSize: 12, color: HurufTheme.textSecondary),
+              fontSize: 12,
+              color: HurufTheme.textSecondary,
+            ),
           ),
           const SizedBox(height: HurufTheme.s1),
           Row(
@@ -280,16 +290,21 @@ class _MyProfileCard extends ConsumerWidget {
               Pressable(
                 onTap: () async {
                   await Clipboard.setData(
-                      ClipboardData(text: profile.friendCode));
+                    ClipboardData(text: profile.friendCode),
+                  );
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context)
                     ..clearSnackBars()
-                    ..showSnackBar(SnackBar(
-                      content: Text(lang.t('تم نسخ الرمز', 'Code copied'),
-                          textAlign: TextAlign.center),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: HurufTheme.surface,
-                    ));
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          lang.t('تم نسخ الرمز', 'Code copied'),
+                          textAlign: TextAlign.center,
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: HurufTheme.surface,
+                      ),
+                    );
                 },
                 semanticLabel: lang.t('نسخ الرمز', 'Copy code'),
                 child: Container(
@@ -300,10 +315,14 @@ class _MyProfileCard extends ConsumerWidget {
                     color: HurufTheme.tileEmpty,
                     shape: BoxShape.circle,
                     border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.15)),
+                      color: Colors.white.withValues(alpha: 0.15),
+                    ),
                   ),
-                  child: const Icon(Icons.copy_rounded,
-                      size: 16, color: HurufTheme.textSecondary),
+                  child: const Icon(
+                    Icons.copy_rounded,
+                    size: 16,
+                    color: HurufTheme.textSecondary,
+                  ),
                 ),
               ),
             ],
@@ -331,10 +350,9 @@ class ReferralCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final lang = ref.watch(languageProvider);
     final profile = ref.watch(myProfileProvider).asData?.value;
-    final status = ref.watch(referralStatusProvider).maybeWhen(
-          data: (s) => s,
-          orElse: () => const ReferralStatus.empty(),
-        );
+    final status = ref
+        .watch(referralStatusProvider)
+        .maybeWhen(data: (s) => s, orElse: () => const ReferralStatus.empty());
     if (profile == null) return const SizedBox.shrink();
 
     final code = profile.friendCode;
@@ -362,8 +380,9 @@ class ReferralCard extends ConsumerWidget {
               children: [
                 Text(
                   lang.t(
-                      'صديقك يأخذ ${BalanceConfig.referralRewardInvitee} عملة فور إدخال رمزك',
-                      'Your friend gets ${BalanceConfig.referralRewardInvitee} coins the moment they enter your code'),
+                    'صديقك يأخذ ${BalanceConfig.referralRewardInvitee} عملة فور إدخال رمزك',
+                    'Your friend gets ${BalanceConfig.referralRewardInvitee} coins the moment they enter your code',
+                  ),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 12,
@@ -376,11 +395,14 @@ class ReferralCard extends ConsumerWidget {
                 // يُشرح يُقرأ عطلا في المكافأة، والمشروح يُقرأ شرطا
                 Text(
                   lang.t(
-                      'وأنت تأخذ ${BalanceConfig.referralRewardInviter} عملة حين يوصل المستوى ${status.qualifyLevel}',
-                      'You get ${BalanceConfig.referralRewardInviter} coins once they reach level ${status.qualifyLevel}'),
+                    'وأنت تأخذ ${BalanceConfig.referralRewardInviter} عملة حين يوصل المستوى ${status.qualifyLevel}',
+                    'You get ${BalanceConfig.referralRewardInviter} coins once they reach level ${status.qualifyLevel}',
+                  ),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                      fontSize: 12, color: HurufTheme.textSecondary),
+                    fontSize: 12,
+                    color: HurufTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -392,34 +414,40 @@ class ReferralCard extends ConsumerWidget {
           ],
           if (next != null)
             Text(
-              lang.t('عند $next دعوات ناجحة: زينة حصرية 🎁',
-                  'At $next successful invites: an exclusive cosmetic 🎁'),
+              lang.t(
+                'عند $next دعوات ناجحة: زينة حصرية 🎁',
+                'At $next successful invites: an exclusive cosmetic 🎁',
+              ),
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 11, color: HurufTheme.textSecondary),
+                fontSize: 11,
+                color: HurufTheme.textSecondary,
+              ),
             ),
           if (status.atCap)
             Text(
-              lang.t('وصلت سقف ${status.cap} دعوة ناجحة 🏆',
-                  'You\'ve hit the ${status.cap} successful invite cap 🏆'),
+              lang.t(
+                'وصلت سقف ${status.cap} دعوة ناجحة 🏆',
+                'You\'ve hit the ${status.cap} successful invite cap 🏆',
+              ),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 11, color: HurufTheme.gold),
+              style: const TextStyle(fontSize: 11, color: HurufTheme.gold),
             ),
           const SizedBox(height: HurufTheme.s4),
           Pressable(
             onTap: () {
               ref.logEvent(Ev.referralSent, {'channel': 'share_sheet'});
-              SharePlus.instance.share(ShareParams(
-              text: ShareTemplates.invite(
-                code: code,
-                lang: lang,
-                joinerReward: BalanceConfig.referralRewardInvitee,
-              ),
-            ));
+              SharePlus.instance.share(
+                ShareParams(
+                  text: ShareTemplates.invite(
+                    code: code,
+                    lang: lang,
+                    joinerReward: BalanceConfig.referralRewardInvitee,
+                  ),
+                ),
+              );
             },
-            semanticLabel:
-                lang.t('مشاركة رمز دعوتك', 'Share your invite code'),
+            semanticLabel: lang.t('مشاركة رمز دعوتك', 'Share your invite code'),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: HurufTheme.s3),
               alignment: Alignment.center,
@@ -430,8 +458,11 @@ class ReferralCard extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.share_rounded,
-                      size: 18, color: HurufTheme.bgTop),
+                  const Icon(
+                    Icons.share_rounded,
+                    size: 18,
+                    color: HurufTheme.bgTop,
+                  ),
                   const SizedBox(width: HurufTheme.s2),
                   Text(
                     lang.t('ادعُ صديقك', 'Invite a friend'),
@@ -449,7 +480,9 @@ class ReferralCard extends ConsumerWidget {
             ReferralLink.forCode(code),
             textAlign: TextAlign.center,
             style: const TextStyle(
-                fontSize: 10, color: HurufTheme.textSecondary),
+              fontSize: 10,
+              color: HurufTheme.textSecondary,
+            ),
           ),
         ],
       ),
@@ -481,8 +514,10 @@ class _ReferralProgress extends StatelessWidget {
         if (status.pending > 0)
           _Stat(
             value: '${status.pending}',
-            label: lang.t('ينتظرون المستوى ${status.qualifyLevel}',
-                'reaching level ${status.qualifyLevel}'),
+            label: lang.t(
+              'ينتظرون المستوى ${status.qualifyLevel}',
+              'reaching level ${status.qualifyLevel}',
+            ),
           ),
       ],
     );
@@ -502,26 +537,25 @@ class _Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: highlight ? HurufTheme.gold : HurufTheme.textPrimary,
-            ),
-          ),
-          SizedBox(
-            width: 92,
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 10, color: HurufTheme.textSecondary),
-            ),
-          ),
-        ],
-      );
+    children: [
+      Text(
+        value,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w900,
+          color: highlight ? HurufTheme.gold : HurufTheme.textPrimary,
+        ),
+      ),
+      SizedBox(
+        width: 92,
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 10, color: HurufTheme.textSecondary),
+        ),
+      ),
+    ],
+  );
 }
 
 // ─────────────────────── إدخال رمز دعوة ───────────────────────
@@ -590,8 +624,12 @@ class _RedeemInviteSectionState extends ConsumerState<_RedeemInviteSection> {
       ref.invalidate(leaderboardProvider);
       if (!mounted) return;
       setState(() => _done = true);
-      _toast(lang.t('أهلا فيك! أخذت ${result.reward} عملة هدية 🎁',
-          'Welcome! You got ${result.reward} bonus coins 🎁'));
+      _toast(
+        lang.t(
+          'أهلا فيك! أخذت ${result.reward} عملة هدية 🎁',
+          'Welcome! You got ${result.reward} bonus coins 🎁',
+        ),
+      );
       return;
     }
 
@@ -611,11 +649,13 @@ class _RedeemInviteSectionState extends ConsumerState<_RedeemInviteSection> {
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(
-        content: Text(message, textAlign: TextAlign.center),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: HurufTheme.surface,
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message, textAlign: TextAlign.center),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: HurufTheme.surface,
+        ),
+      );
   }
 
   @override
@@ -630,11 +670,14 @@ class _RedeemInviteSectionState extends ConsumerState<_RedeemInviteSection> {
         const SizedBox(height: HurufTheme.s1),
         Text(
           _fromLink
-              ? lang.t('جاك رمز من رابط صديقك — اضغط استلم',
-                  'A code came from your friend\'s link — tap redeem')
+              ? lang.t(
+                  'جاك رمز من رابط صديقك — اضغط استلم',
+                  'A code came from your friend\'s link — tap redeem',
+                )
               : lang.t(
                   'أدخل رمز من دعاك وخذ ${BalanceConfig.referralRewardInvitee} عملة هدية — مرة واحدة فقط',
-                  'Enter the code from whoever invited you and get ${BalanceConfig.referralRewardInvitee} bonus coins — one time only'),
+                  'Enter the code from whoever invited you and get ${BalanceConfig.referralRewardInvitee} bonus coins — one time only',
+                ),
           style: TextStyle(
             fontSize: 12,
             color: _fromLink ? HurufTheme.success : HurufTheme.textSecondary,
@@ -655,21 +698,23 @@ class _RedeemInviteSectionState extends ConsumerState<_RedeemInviteSection> {
               semanticLabel: lang.t('استخدام رمز الدعوة', 'Redeem invite code'),
               child: Container(
                 height: 56,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: HurufTheme.s5),
+                padding: const EdgeInsets.symmetric(horizontal: HurufTheme.s5),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: HurufTheme.success.withValues(alpha: 0.22),
                   borderRadius: BorderRadius.circular(HurufTheme.rButton),
                   border: Border.all(
-                      color: HurufTheme.success.withValues(alpha: 0.5)),
+                    color: HurufTheme.success.withValues(alpha: 0.5),
+                  ),
                 ),
                 child: _busy
                     ? const SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
-                            strokeWidth: 2, color: HurufTheme.success),
+                          strokeWidth: 2,
+                          color: HurufTheme.success,
+                        ),
                       )
                     : Text(
                         lang.t('استلم', 'Redeem'),
@@ -729,7 +774,9 @@ class _AddFriendRow extends StatelessWidget {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: HurufTheme.bgTop),
+                      strokeWidth: 2,
+                      color: HurufTheme.bgTop,
+                    ),
                   )
                 : Text(
                     lang.t('إضافة', 'Add'),
@@ -824,9 +871,10 @@ class _RequestTile extends StatelessWidget {
                   Text(
                     request.fromCode,
                     style: const TextStyle(
-                        color: HurufTheme.textSecondary,
-                        fontSize: 11,
-                        letterSpacing: 2),
+                      color: HurufTheme.textSecondary,
+                      fontSize: 11,
+                      letterSpacing: 2,
+                    ),
                   ),
                 ],
               ),
@@ -835,23 +883,32 @@ class _RequestTile extends StatelessWidget {
             // موجود كي لا يكون تجاهل الطلب هو الخيار الوحيد
             Pressable(
               onTap: onDecline,
-              semanticLabel: lang.t('رفض طلب ${request.fromName}',
-                  'Decline ${request.fromName}\'s request'),
+              semanticLabel: lang.t(
+                'رفض طلب ${request.fromName}',
+                'Decline ${request.fromName}\'s request',
+              ),
               child: Container(
                 width: 40,
                 height: 36,
                 alignment: Alignment.center,
-                child: const Icon(Icons.close_rounded,
-                    size: 20, color: HurufTheme.textSecondary),
+                child: const Icon(
+                  Icons.close_rounded,
+                  size: 20,
+                  color: HurufTheme.textSecondary,
+                ),
               ),
             ),
             Pressable(
               onTap: onAccept,
-              semanticLabel: lang.t('قبول طلب ${request.fromName}',
-                  'Accept ${request.fromName}\'s request'),
+              semanticLabel: lang.t(
+                'قبول طلب ${request.fromName}',
+                'Accept ${request.fromName}\'s request',
+              ),
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: HurufTheme.s4, vertical: HurufTheme.s2),
+                  horizontal: HurufTheme.s4,
+                  vertical: HurufTheme.s2,
+                ),
                 decoration: BoxDecoration(
                   color: HurufTheme.success.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(HurufTheme.rButton),
@@ -859,7 +916,9 @@ class _RequestTile extends StatelessWidget {
                 child: Text(
                   lang.t('قبول', 'Accept'),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w800, color: HurufTheme.success),
+                    fontWeight: FontWeight.w800,
+                    color: HurufTheme.success,
+                  ),
                 ),
               ),
             ),
@@ -887,10 +946,14 @@ class _FriendsSection extends ConsumerWidget {
           _SectionTitle(lang.t('أصدقائي', 'My friends')),
           const SizedBox(height: HurufTheme.s3),
           Text(
-            lang.t('ما عندك أصدقاء بعد — أرسل رمزك لأحدهم',
-                'No friends yet — send your code to someone'),
+            lang.t(
+              'ما عندك أصدقاء بعد — أرسل رمزك لأحدهم',
+              'No friends yet — send your code to someone',
+            ),
             style: const TextStyle(
-                fontSize: 12, color: HurufTheme.textSecondary),
+              fontSize: 12,
+              color: HurufTheme.textSecondary,
+            ),
           ),
         ],
       );
@@ -917,8 +980,10 @@ class _FriendsSection extends ConsumerWidget {
         if (full) ...[
           const SizedBox(height: HurufTheme.s1),
           Text(
-            lang.t('قائمتك ممتلئة — احذف صديقا لتضيف غيره',
-                'Your list is full — remove someone to add another'),
+            lang.t(
+              'قائمتك ممتلئة — احذف صديقا لتضيف غيره',
+              'Your list is full — remove someone to add another',
+            ),
             style: const TextStyle(fontSize: 11, color: HurufTheme.error),
           ),
         ],
@@ -937,7 +1002,6 @@ class _FriendTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Padding(
       padding: const EdgeInsets.only(bottom: HurufTheme.s2),
       child: GlassCard(
@@ -973,7 +1037,9 @@ class _FriendTile extends ConsumerWidget {
                             ? HurufTheme.error
                             : HurufTheme.textSecondary,
                         semantic: lang.t(
-                            'سلسلة ${friend.streak} يوم', '${friend.streak} day streak'),
+                          'سلسلة ${friend.streak} يوم',
+                          '${friend.streak} day streak',
+                        ),
                       ),
                       // ترتيب اليوم داخل دائرة الأصدقاء — «الثالث بين
                       // أصدقائك» رقم يعني شيئا، بخلاف رتبة عالمية
@@ -988,9 +1054,12 @@ class _FriendTile extends ConsumerWidget {
                         semantic: friend.playedToday
                             ? lang.t(
                                 'ترتيب اليوم ${friend.todayRank} من ${friend.circleSize}',
-                                'today\'s rank ${friend.todayRank} of ${friend.circleSize}')
-                            : lang.t('ما لعب تحدي اليوم',
-                                'hasn\'t played today\'s challenge'),
+                                'today\'s rank ${friend.todayRank} of ${friend.circleSize}',
+                              )
+                            : lang.t(
+                                'ما لعب تحدي اليوم',
+                                'hasn\'t played today\'s challenge',
+                              ),
                       ),
                     ],
                   ),
@@ -1019,22 +1088,25 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: semantic,
-        child: ExcludeSemantics(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 13, color: color),
-              const SizedBox(width: 2),
-              Text(
-                text,
-                style: TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.w700, color: color),
-              ),
-            ],
+    label: semantic,
+    child: ExcludeSemantics(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: color),
+          const SizedBox(width: 2),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class _UpperCaseFormatter extends TextInputFormatter {
@@ -1042,6 +1114,5 @@ class _UpperCaseFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
-  ) =>
-      newValue.copyWith(text: newValue.text.toUpperCase());
+  ) => newValue.copyWith(text: newValue.text.toUpperCase());
 }

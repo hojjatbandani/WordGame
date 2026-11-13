@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/analytics/analytics_event.dart';
 import '../../core/app_icons.dart';
 import '../../core/app_language.dart';
 import '../../core/theme.dart';
@@ -39,6 +40,9 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
     // تُسجّل نفسها كي لا تُكدَّس نسخة ثانية عند نقرة ودجة تالية —
     // راجع HomeWidgetLaunch.openRewards
     HomeWidgetLaunch.setRewardsOpen(true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.logEvent(Ev.rewardsViewed);
+    });
   }
 
   @override
@@ -73,7 +77,10 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
     final trackComplete = RewardTrackEngine.isTrackComplete(track);
     // الطبقة المنتهية تختفي بدل أن تعلن انتهاءها. راجع [_TrackSummary]:
     // لا شيء في هذه الشاشة يقول للاعب كم بقي من مسار محدود.
-    final statuses = [for (final s in all) if (!s.isComplete) s];
+    final statuses = [
+      for (final s in all)
+        if (!s.isComplete) s,
+    ];
 
     return Scaffold(
       backgroundColor: HurufTheme.bgTop,
@@ -152,12 +159,18 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen> {
   }
 
   String _claimCaption(RewardTier tier, AppLanguage lang) => switch (tier) {
-    RewardTier.daily => lang.t('جائزة اليوم — أضيفت إلى رصيدك',
-        "Today's reward — added to your balance"),
-    RewardTier.weekly => lang.t('جائزة الأسبوع — أضيفت إلى رصيدك',
-        "This week's reward — added to your balance"),
-    RewardTier.monthly => lang.t('جائزة الشهر — أضيفت إلى رصيدك',
-        "This month's reward — added to your balance"),
+    RewardTier.daily => lang.t(
+      'جائزة اليوم — أضيفت إلى رصيدك',
+      "Today's reward — added to your balance",
+    ),
+    RewardTier.weekly => lang.t(
+      'جائزة الأسبوع — أضيفت إلى رصيدك',
+      "This week's reward — added to your balance",
+    ),
+    RewardTier.monthly => lang.t(
+      'جائزة الشهر — أضيفت إلى رصيدك',
+      "This month's reward — added to your balance",
+    ),
   };
 }
 

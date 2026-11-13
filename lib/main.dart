@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme.dart';
 import 'data/ad_service.dart';
+import 'data/ads/ad_load_policy.dart';
 import 'data/ads/ad_policy.dart';
 import 'data/ads/admob_ad_service.dart';
 import 'data/ads/admob_ids.dart';
@@ -25,6 +26,8 @@ import 'data/store/revenuecat_keys.dart';
 import 'data/supabase_config.dart';
 import 'presentation/home_widget_launch.dart';
 import 'presentation/providers.dart';
+import 'presentation/screens/game/stage_session_tracker.dart';
+import 'presentation/screens/map_entry.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'presentation/widgets/mock_ad_service.dart';
 
@@ -86,6 +89,14 @@ Future<void> main() async {
       // await، وما يُسجَّل قبل انتهائها ينتظر دوره فلا يضيع
       final analytics = AnalyticsService(sink: PostHogSink.create()?.track);
 
+      // لحظة أول فتح (لقياس «من التثبيت إلى أول مرحلة»)، وجلسة مرحلة لم
+      // تُغلق = أغلق النظام التطبيق أثناءها: تُسجَّل مغادرتها الآن ويبقى
+      // تقدّمها للاستئناف (المواصفة §4.3)
+      final nowMs = DateTime.now().millisecondsSinceEpoch;
+      await store.migrateJourneyFlags();
+      unawaited(store.ensureFirstOpenAt(nowMs));
+      recoverStageSessions(store, analytics, nowMs);
+
       // الإعلانات: AdMob على الهاتف، ومحاكاة على سطح المكتب/الويب — وكلاهما
       // خلف بوّابة سياسة القوالب (data/ads/ad_policy.dart). السياسة الفعلية
       // تُحسب هنا مرة واحدة وتصل إلى الخدمة والمزوّدات معا: نسخة إصدار بلا
@@ -100,8 +111,14 @@ Future<void> main() async {
       );
       final AdService adService = PolicyGatedAdService(
         AdMobAdService.isSupported
-            ? AdMobAdService(policy: adPolicy)
-            : MockAdService(),
+            ? AdMobAdService(
+                policy: adPolicy,
+                onEvent: analytics.log,
+                interstitialWanted: () => AdLoadPolicy.wantsInterstitial(
+                  maxUnlocked: store.maxUnlocked,
+                ),
+              )
+            : MockAdService(onEvent: analytics.log),
         policy: adPolicy,
       );
       unawaited(adService.init());
@@ -219,6 +236,7 @@ class HurufApp extends ConsumerWidget {
       // نقرة ودجة الشاشة الرئيسية تصل خارج شجرة الودجات (بدء بارد
       // خصوصا)، فلا سياق بيدها تنطلق منه — راجع HomeWidgetLaunch
       navigatorKey: HomeWidgetLaunch.navigatorKey,
+      navigatorObservers: [hurufRouteObserver],
       theme: HurufTheme.build(),
       // اتجاه القوائم يتبع اللغة المختارة؛ شاشة اللعب تفرض RTL محليا دوما
       builder: (context, child) =>

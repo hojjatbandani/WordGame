@@ -23,12 +23,31 @@ class LevelCompleteOverlay extends ConsumerStatefulWidget {
   final int bonusFound;
   final bool isLastLevel;
 
-  /// آخر مرحلة في فصلها: زرّ المتابعة يقول "أنهيت الفصل" ويقود إلى
-  /// قائمة الفصول مع التهنئة، لا إلى المرحلة التالية مباشرة
+  /// آخر مرحلة في فصلها (لا في عالمها): العنوان «أتممت الفصل!» والزرّ
+  /// يكمل مباشرة إلى أول مراحل الفصل التالي (القرار D2)
   final bool isChapterFinale;
 
+  /// المتابعة — الزرّ الأوضح على الشاشة
   final VoidCallback onNext;
+
+  /// الرئيسية — ثانوي
+  final VoidCallback onHome;
+
+  /// آخر مرحلة في اللعبة: لا «تالية»، فالزرّ الرئيسي يفتح الخريطة
   final VoidCallback onMap;
+
+  /// نصّ الزرّ الرئيسي («المرحلة التالية»، «الفصل التالي»...)
+  final String primaryLabel;
+
+  /// سطر التقدّم الصغير («المرحلة 4 من 12 · الفصل 1»)
+  final String? progressLabel;
+
+  /// صندوق الفصل المستلَم للتوّ — 0 بلا صندوق
+  final int chestCoins;
+
+  /// جملة تهنئة الفصل
+  final String? chapterLine;
+
   final String? characterId;
   final int worldBonus;
   final String? worldName;
@@ -42,7 +61,12 @@ class LevelCompleteOverlay extends ConsumerStatefulWidget {
     required this.isLastLevel,
     this.isChapterFinale = false,
     required this.onNext,
+    required this.onHome,
     required this.onMap,
+    required this.primaryLabel,
+    this.progressLabel,
+    this.chestCoins = 0,
+    this.chapterLine,
     this.characterId,
     this.worldBonus = 0,
     this.worldName,
@@ -123,6 +147,8 @@ class _LevelCompleteOverlayState extends ConsumerState<LevelCompleteOverlay>
                       Text(
                         widget.worldBonus > 0
                             ? lang.t('أتممت العالم!', 'World complete!')
+                            : widget.isChapterFinale
+                            ? lang.t('أتممت الفصل!', 'Chapter complete!')
                             : lang.t('أحسنت!', 'Well done!'),
                         style: const TextStyle(
                           fontSize: 32,
@@ -134,7 +160,9 @@ class _LevelCompleteOverlayState extends ConsumerState<LevelCompleteOverlay>
                         Padding(
                           padding: const EdgeInsets.only(top: HurufTheme.s1),
                           child: Text(
-                            randomMessage(CharacterEmotion.celebrating),
+                            widget.chapterLine ??
+                                randomMessage(CharacterEmotion.celebrating),
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 14,
                               color: HurufTheme.textSecondary,
@@ -183,6 +211,31 @@ class _LevelCompleteOverlayState extends ConsumerState<LevelCompleteOverlay>
                             ),
                           ),
                         ),
+                      if (widget.chestCoins > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(top: HurufTheme.s2),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.card_giftcard_rounded,
+                                size: 18,
+                                color: HurufTheme.gold,
+                              ),
+                              const SizedBox(width: HurufTheme.s1),
+                              Text(
+                                lang.t(
+                                  'صندوق الفصل +${widget.chestCoins}',
+                                  'Chapter chest +${widget.chestCoins}',
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  color: HurufTheme.gold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       if (widget.bonusFound > 0)
                         Padding(
                           padding: const EdgeInsets.only(top: HurufTheme.s2),
@@ -196,20 +249,46 @@ class _LevelCompleteOverlayState extends ConsumerState<LevelCompleteOverlay>
                             ),
                           ),
                         ),
-                      // مضاعفة جائزة المرحلة بمشاهدة فيديو قصير — يختفي
-                      // الزرّ بعد المضاعفة أو حين تنفد ميزانية إعلانات اليوم
+                      if (widget.progressLabel != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: HurufTheme.s2),
+                          child: Text(
+                            widget.progressLabel!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: HurufTheme.textSecondary,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: HurufTheme.s4),
+                      // الزرّ الأوضح: متابعة اللعب فورا — المسار «مرحلة ←
+                      // نجاح ← التالية» بلا احتكاك (المواصفة §9.1)
+                      SizedBox(
+                        width: double.infinity,
+                        child: _GoldButton(
+                          label: widget.primaryLabel,
+                          onTap: widget.isLastLevel
+                              ? widget.onMap
+                              : widget.onNext,
+                        ),
+                      ),
+                      // ثانوي: مضاعفة الجائزة بإعلان (أو الصندوق في نهاية
+                      // الفصل) — يختفي بعد المضاعفة أو حين تنفد الميزانية
                       Padding(
                         padding: const EdgeInsets.only(top: HurufTheme.s3),
                         child: DoubleRewardButton(
-                          amount: widget.reward,
+                          amount: widget.chestCoins > 0
+                              ? widget.chestCoins
+                              : widget.reward,
                           lang: lang,
-                          // نهاية المرحلة — إعلان قصير
-                          surface: RewardedSurface.levelReward,
+                          surface: widget.chestCoins > 0
+                              ? RewardedSurface.chapterChest
+                              : RewardedSurface.levelReward,
                           onDoubled: (granted) =>
                               setState(() => _doubledBonus = granted),
                         ),
                       ),
-                      const SizedBox(height: HurufTheme.s4),
+                      const SizedBox(height: HurufTheme.s3),
                       ShareResultRow(
                         text: ShareTemplates.level(
                           levelId: widget.levelId,
@@ -218,37 +297,17 @@ class _LevelCompleteOverlayState extends ConsumerState<LevelCompleteOverlay>
                           lang: lang,
                         ),
                       ),
-                      const SizedBox(height: HurufTheme.s4),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // مرن لا ثابت: عناوين الأزرار الإنجليزية أطول من
-                          // العربية، وبعرض ثابت تفيض البطاقة على الشاشات
-                          // الضيّقة بدل أن يتقلّص الزرّ
-                          Flexible(
-                            child: _GoldButton(
-                              label: widget.isLastLevel
-                                  ? lang.t('خريطة المراحل', 'Level Map')
-                                  : widget.isChapterFinale
-                                  ? lang.t('أتممت الفصل!', 'Chapter complete!')
-                                  : lang.t('المرحلة التالية', 'Next Level'),
-                              onTap: widget.isLastLevel
-                                  ? widget.onMap
-                                  : widget.onNext,
+                      if (!widget.isLastLevel)
+                        TextButton(
+                          onPressed: widget.onHome,
+                          child: Text(
+                            lang.t('الرئيسية', 'Home'),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: HurufTheme.textSecondary,
                             ),
                           ),
-                          const SizedBox(width: HurufTheme.s3),
-                          if (!widget.isLastLevel)
-                            IconButton(
-                              tooltip: lang.t('خريطة المراحل', 'Level Map'),
-                              onPressed: widget.onMap,
-                              icon: const Icon(
-                                Icons.map_outlined,
-                                color: HurufTheme.textSecondary,
-                              ),
-                            ),
-                        ],
-                      ),
+                        ),
                     ],
                   ),
                 ),

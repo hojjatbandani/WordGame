@@ -21,8 +21,10 @@ import 'package:huruf/presentation/providers.dart';
 import 'package:huruf/presentation/screens/game_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// خارج مراحل البداية (1-10): هناك أول تلميح «مجاني» والسعر مخفّض —
+// هذا الاختبار عن سطر الشحنة/السعر العادي
 const _level = GameLevel(
-  id: 7,
+  id: 17,
   letters: ['ح', 'ل', 'م'],
   words: [
     WordEntry(word: 'ملح', definition: 'ما يطيب به الطعام'),

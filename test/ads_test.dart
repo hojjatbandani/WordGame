@@ -102,8 +102,9 @@ void main() {
       addTearDown(c.dispose);
       final now = DateTime(2026, 8, 26, 12);
 
+      // المدى 13-20 (كل 5 مراحل)؛ من 21 صار كل 4 — ad_pacing_test
       expect(
-        _finishAndRequest(c, stage: 20, completions: 5, now: now),
+        _finishAndRequest(c, stage: 14, completions: 5, now: now),
         AdCue.interstitial,
       );
       expect(c.read(interstitialGateProvider), 0);
@@ -111,11 +112,11 @@ void main() {
       // بعد ساعتين (خارج المهلة) يحتاج خمسة إتمامات جديدة كاملة
       final later = now.add(const Duration(hours: 2));
       expect(
-        _finishAndRequest(c, stage: 21, completions: 4, now: later),
+        _finishAndRequest(c, stage: 15, completions: 4, now: later),
         AdCue.none,
       );
       expect(
-        _finishAndRequest(c, stage: 21, completions: 1, now: later),
+        _finishAndRequest(c, stage: 15, completions: 1, now: later),
         AdCue.interstitial,
       );
     });

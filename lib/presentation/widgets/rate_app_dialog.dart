@@ -25,8 +25,7 @@ Future<void> maybeAskForRating(
   if (kIsWeb) return;
   // iOS بلا معرّف App Store بعد: الضغط على «قيّم» كان يفتح صفحة غير
   // موجودة ثم يُعلَّم اللاعب «قيّم» فلا يُسأل ثانية أبدا
-  if (defaultTargetPlatform == TargetPlatform.iOS &&
-      !StoreLinks.hasIosAppId) {
+  if (defaultTargetPlatform == TargetPlatform.iOS && !StoreLinks.hasIosAppId) {
     return;
   }
   if (!context.mounted) return;
@@ -92,9 +91,7 @@ class _RateAppDialog extends ConsumerWidget {
                 semanticLabel: lang.t('قيّم اللعبة', 'Rate the game'),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: HurufTheme.s3,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: HurufTheme.s3),
                   decoration: BoxDecoration(
                     gradient: HurufTheme.goldGradient,
                     borderRadius: BorderRadius.circular(HurufTheme.rButton),

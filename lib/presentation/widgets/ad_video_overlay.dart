@@ -71,7 +71,9 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: HurufTheme.s2, vertical: 2),
+                      horizontal: HurufTheme.s2,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
@@ -92,14 +94,15 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                     builder: (context, _) {
                       final done = _countdown.isCompleted;
                       final secondsLeft =
-                          (_duration.inSeconds * (1 - _countdown.value))
-                              .ceil();
+                          (_duration.inSeconds * (1 - _countdown.value)).ceil();
                       return Pressable(
                         onTap: done ? widget.onDone : null,
                         semanticLabel: done
                             ? lang.t('إغلاق الإعلان', 'Close the ad')
-                            : lang.t('يمكن الإغلاق بعد $secondsLeft ثانية',
-                                'You can close in $secondsLeft seconds'),
+                            : lang.t(
+                                'يمكن الإغلاق بعد $secondsLeft ثانية',
+                                'You can close in $secondsLeft seconds',
+                              ),
                         child: Container(
                           width: 34,
                           height: 34,
@@ -112,8 +115,11 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                             ),
                           ),
                           child: done
-                              ? const Icon(Icons.close_rounded,
-                                  color: Colors.white, size: 20)
+                              ? const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                )
                               : Text(
                                   '$secondsLeft',
                                   style: const TextStyle(
@@ -138,8 +144,9 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                 decoration: BoxDecoration(
                   gradient: HurufTheme.bgGradient,
                   borderRadius: BorderRadius.circular(HurufTheme.rCard),
-                  border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -153,10 +160,14 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                         shape: BoxShape.circle,
                         color: Colors.white.withValues(alpha: 0.12),
                         border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3)),
+                          color: Colors.white.withValues(alpha: 0.3),
+                        ),
                       ),
-                      child: Icon(Icons.play_arrow_rounded,
-                          color: Colors.white, size: isLong ? 40 : 30),
+                      child: Icon(
+                        Icons.play_arrow_rounded,
+                        color: Colors.white,
+                        size: isLong ? 40 : 30,
+                      ),
                     ),
                     const SizedBox(height: HurufTheme.s4),
                     ShaderMask(
@@ -173,8 +184,10 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                     ),
                     const SizedBox(height: HurufTheme.s3),
                     Text(
-                      lang.t('تابع رحلتك في عالم الكلمات العربية',
-                          'Continue your journey through Arabic words'),
+                      lang.t(
+                        'تابع رحلتك في عالم الكلمات العربية',
+                        'Continue your journey through Arabic words',
+                      ),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 15,
@@ -191,8 +204,9 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                           value: _countdown.value,
                           minHeight: 4,
                           backgroundColor: Colors.white.withValues(alpha: 0.15),
-                          valueColor:
-                              const AlwaysStoppedAnimation(HurufTheme.gold),
+                          valueColor: const AlwaysStoppedAnimation(
+                            HurufTheme.gold,
+                          ),
                         ),
                       ),
                     ),
@@ -203,8 +217,10 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
               if (widget.onOpenShop != null)
                 Pressable(
                   onTap: widget.onOpenShop,
-                  semanticLabel: lang.t('أزل الإعلانات نهائيا من المتجر',
-                      'Remove ads permanently from the shop'),
+                  semanticLabel: lang.t(
+                    'أزل الإعلانات نهائيا من المتجر',
+                    'Remove ads permanently from the shop',
+                  ),
                   child: GlassCard(
                     radius: HurufTheme.rButton,
                     padding: const EdgeInsets.symmetric(
@@ -214,12 +230,17 @@ class _AdVideoOverlayState extends ConsumerState<AdVideoOverlay>
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.block_rounded,
-                            color: HurufTheme.gold, size: 18),
+                        const Icon(
+                          Icons.block_rounded,
+                          color: HurufTheme.gold,
+                          size: 18,
+                        ),
                         const SizedBox(width: HurufTheme.s2),
                         Text(
-                          lang.t('أزل الإعلانات نهائيا من المتجر',
-                              'Remove ads permanently from the shop'),
+                          lang.t(
+                            'أزل الإعلانات نهائيا من المتجر',
+                            'Remove ads permanently from the shop',
+                          ),
                           style: const TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 13,

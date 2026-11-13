@@ -45,12 +45,16 @@ class AdFormats {
   static AdLength forSurface(RewardedSurface surface) => switch (surface) {
     // ── قصير ──
     RewardedSurface.levelReward => AdLength.short,
+    // تلميح واحد في منتصف المرحلة — في طريق اللاعب، فقصير
+    RewardedSurface.hint => AdLength.short,
 
     // ── طويل ──
     RewardedSurface.wheel => AdLength.long,
     RewardedSurface.coinTopUp => AdLength.long,
     RewardedSurface.chapterChest => AdLength.long,
     RewardedSurface.safetyMode => AdLength.long,
+    // اللاعب في المتجر واختار المضاعفة بنفسه — ثمن دفعه قاصدا
+    RewardedSurface.dailyReward => AdLength.long,
 
     // سطح بلا هوية بعد (أو محفوظ قديم فُكّ إلى `other`): الأخفّ هو
     // الافتراض الآمن
